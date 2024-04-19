@@ -6,8 +6,8 @@ import algorithms from '@/store/modules/algorithms';
         deleteAlgorithm(id) {
             this.$store.dispatch('deleteAlgorithm', id)
         },
-        copyAlgorithm(id) {
-            this.$store.dispatch('copyAlgorithm', id)
+        copyAlgorithm(algorithm) {
+            this.$store.dispatch('copyAlgorithm', algorithm)
         }
     },
     computed: {
@@ -65,7 +65,7 @@ import algorithms from '@/store/modules/algorithms';
                                 <img src="@/assets/images/bot-down-arrow.svg">
                             </div>
                             <div class="bot-events-script-script-part2-buttons">
-                                <div @click="copyAlgorithm(algorithm.id)" class="bot-events-script-script-part2-button">
+                                <div @click="copyAlgorithm(algorithm)" class="bot-events-script-script-part2-button">
                                     <img src="@/assets/images/copyscript.svg">
                                 </div>
                                 <div @click="deleteAlgorithm(algorithm.id)" class="bot-events-script-script-part2-button">

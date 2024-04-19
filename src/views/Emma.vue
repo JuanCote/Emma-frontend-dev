@@ -3,6 +3,8 @@ import EmmaLeftMenu from "@/components/Emma/EmmaLeftMenu.vue"
 import EmmaAnalytic from "@/components/Emma/EmmaAnalytic.vue"
 import EmmaRightContainer from "@/components/Emma/EmmaRightContainer.vue"
 
+import { BACKEND_URL_WS } from '@/config.js'
+
 
 export default {
     data() {
@@ -28,7 +30,7 @@ export default {
             this.chatsLoaded = true
         })
         this.$store.dispatch('checkUser').then(() => {
-            this.socket = new WebSocket('ws://localhost:8000/ws/');
+            this.socket = new WebSocket(`${BACKEND_URL_WS}/ws/`);
             this.socket.onopen = () => {
                 const data = {
                     type: 'manager',

@@ -1,5 +1,7 @@
 // modules/chat.js
 
+import { BACKEND_URL } from '@/config.js'
+
 const state = {
     chats: null,
     archive: [],
@@ -21,7 +23,7 @@ const state = {
   const actions = {
     async fetchChats({ commit }) {
       try {
-        const response = await fetch('http://localhost:8000/get_chats', {
+        const response = await fetch(`${BACKEND_URL}/get_chats`, {
           credentials: 'include'
         });
         const data = await response.json();

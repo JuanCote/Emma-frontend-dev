@@ -8,7 +8,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: Main
+      component: Emma
     },
     {
       path: '/emma/:pathMatch(.*)*',

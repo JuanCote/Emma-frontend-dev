@@ -1,4 +1,5 @@
 import { BACKEND_URL } from '@/config.js'
+import router from '../../router/index.js'
 
 const state = {
     user: null
@@ -24,7 +25,7 @@ const state = {
           const user = await response.json();
           commit('updateUser', user); // Обновление состояния хранилища с помощью мутации
         } else {
-          window.location.href = '/auth'; // Редирект на страницу аутентификации в случае ошибки
+          router.push('/auth'); // Редирект на страницу аутентификации в случае ошибки
         }
       } catch (error) {
         console.error('Ошибка при запросе checkUser:', error);

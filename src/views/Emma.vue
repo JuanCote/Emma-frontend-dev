@@ -3,6 +3,7 @@ import EmmaLeftMenu from "@/components/Emma/EmmaLeftMenu.vue"
 import EmmaAnalytic from "@/components/Emma/EmmaAnalytic.vue"
 import EmmaRightContainer from "@/components/Emma/EmmaRightContainer.vue"
 
+
 export default {
     data() {
         return {
@@ -16,8 +17,8 @@ export default {
         EmmaRightContainer
     },
     beforeRouteEnter(to, from, next) {
-        if (to.path === '/emma') {
-            next('/emma/analytic');
+        if (to.path === `/emma`) {
+            next(`/emma/analytic`);
         } else {
             next();
         }

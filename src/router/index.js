@@ -3,19 +3,22 @@ import Main from "@/views/Main.vue"
 import Emma from "@/views/Emma.vue"
 import Auth from "@/views/Auth.vue"
 
+import { BASE_URL } from '@/config.js'
+
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('/Emma-frontend/'),
   routes: [
     {
-      path: '/',
+      path: `/`,
       component: Emma
     },
     {
-      path: '/emma/:pathMatch(.*)*',
+      path: `/emma/:pathMatch(.*)*`,
       component: Emma,
     },
     {
-      path: '/auth',
+      path: `/auth`,
       component: Auth
     },
   ]

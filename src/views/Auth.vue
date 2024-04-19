@@ -23,7 +23,7 @@ export default {
             })
             .then(response => {
                 if (response.ok) {
-                    window.location.href = '/emma/analytic'
+                    this.$router.push('/emma/analytic')
                 } else {
                     throw new Error('Ошибка HTTP: ' + response.status);
                 }
@@ -49,7 +49,7 @@ export default {
         })
         .then(response => {
             if (response.ok) {
-                window.location.href = '/emma/analytic'
+                this.$router.push('/emma/analytic')
             } else {
                 throw new Error('Ошибка HTTP: ' + response.status);
             }

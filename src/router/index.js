@@ -3,8 +3,6 @@ import Main from "@/views/Main.vue"
 import Emma from "@/views/Emma.vue"
 import Auth from "@/views/Auth.vue"
 
-import { BASE_URL } from '@/config.js'
-
 
 const router = createRouter({
   history: createWebHistory('/Emma-frontend/'),

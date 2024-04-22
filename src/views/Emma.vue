@@ -4,7 +4,6 @@ import EmmaAnalytic from "@/components/Emma/EmmaAnalytic.vue"
 import EmmaRightContainer from "@/components/Emma/EmmaRightContainer.vue"
 
 import { BACKEND_URL_WS } from '@/config.js'
-import { BASE_URL } from '@/config.js'
 
 export default {
     data() {
@@ -19,8 +18,8 @@ export default {
         EmmaRightContainer
     },
     beforeRouteEnter(to, from, next) {
-        if (to.path === `${BASE_URL}/emma`) {
-            next(`${BASE_URL}/emma/analytic`);
+        if (to.path === `/emma` || to.path === '/') {
+            this.$router.push(`/emma/analytic`);
         } else {
             next();
         }

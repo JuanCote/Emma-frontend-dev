@@ -18,8 +18,9 @@ export default {
         EmmaRightContainer
     },
     beforeRouteEnter(to, from, next) {
+        console.log(to.path)
         if (to.path === `/emma` || to.path === '/') {
-            this.$router.push(`/emma/analytic`);
+            next(`/emma/analytic`);
         } else {
             next();
         }

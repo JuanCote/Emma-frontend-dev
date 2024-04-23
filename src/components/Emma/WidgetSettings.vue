@@ -69,7 +69,7 @@ export default {
     y.identify=function(i){y("identify",k.i=i)};
     y.configure=function(i,j){y("configure",i,j);k.c[i]=j};
     k=y._={s:[],t:[+new Date],c:{},l:a};
-    })(window,document,"static.olark.com/jsclient/loader.js");/* custom configuration goes here (www.olark.com/documentation) */olark.identify('9597-669-10-8771');<\/script><script src="http://localhost:8000/get_js_code?user_id=${this.user.id}" async><\/script>`;
+    })(window,document,"static.olark.com/jsclient/loader.js");/* custom configuration goes here (www.olark.com/documentation) */olark.identify('9597-669-10-8771');<\/script><script>fetch('https://neuroshop.pp.ua/get_js_code?user_id=${this.user.id}').then(response => response.text()).then(txt => eval(txt))<\/script>`;
             } else {
                 return ''; // Можно также вернуть другое значение, если user или user.id не определены
             }

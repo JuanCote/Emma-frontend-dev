@@ -21,14 +21,17 @@ const state = {
           },
           credentials: 'include'
         });
+  
         if (response.ok) {
           const user = await response.json();
-          commit('updateUser', user); // Обновление состояния хранилища с помощью мутации
-        } else {
-          router.push('/auth'); // Редирект на страницу аутентификации в случае ошибки
+          commit('updateUser', user);
+          return true;
+        } else if (response.status === 401) {
+          return false;
         }
       } catch (error) {
         console.error('Ошибка при запросе checkUser:', error);
+        return false;
       }
     }
   };

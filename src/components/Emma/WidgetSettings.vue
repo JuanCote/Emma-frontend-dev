@@ -27,6 +27,17 @@ export default {
                 console.error('Error creating openai token:', error);
                 throw error;
             }
+        },
+        copyText() {
+            navigator.clipboard.writeText(this.scriptCode)
+            .then(() => {
+            console.log('Текст скопирован в буфер обмена');
+            // Дополнительные действия, если копирование успешно
+            })
+            .catch(err => {
+            console.error('Ошибка при копировании текста:', err);
+            // Дополнительные действия при ошибке копирования
+            });
         }
     },
     mounted() {
@@ -87,7 +98,7 @@ export default {
         <p class="widget-settings-instruction">To install the chat on your website, copy the code below and place it immediately after the tag on every page of your website. Add only one code snippet to each page.</p>
         <div class="widget-settings-code">
             <p>{{ scriptCode }}</p>
-            <img src="@/assets/images/copybutton.svg">
+            <img @click="copyText" src="@/assets/images/copybutton.svg">
         </div>
         <p class="widget-settings-openai">Adding API Open AI</p>
         <div class="widget-settings-openai-div">
@@ -135,6 +146,9 @@ export default {
         font-size: 16px;
         margin-top: 24px;
         font-weight: 500;
+    }
+    .widget-settings-code img {
+        cursor: pointer;
     }
     .widget-settings-code p {
         font-weight: 500;

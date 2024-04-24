@@ -3,6 +3,10 @@
         methods: {
             saveKnowledgeBase() {
                 this.$store.dispatch('saveKnowledgeBase')
+                if (this.tutorial.currentStep == 2 && !this.tutorial.done) {
+                    this.$store.dispatch('setNextStep')
+                    this.$router.push('/emma/bot_events')
+                }
             }
         },
         computed: {
@@ -11,6 +15,9 @@
             },
             noKnowledgeBase() {
                 return this.$store.state.knowledgeBase.noKnowledgeBase
+            },
+            tutorial() {
+                return this.$store.getters.getTutorial
             }
         },
         mounted() {
@@ -40,7 +47,7 @@
     </div>
 </div>
 <p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Currently, no sections have been added to the knowledge base</p>
-<ul class="bot-knowledge-inputs">
+<ul class="bot-knowledge-inputs" :class="{'tutorial': tutorial.currentStep == 2 && !tutorial.done}">
     <div class="bot-knowledge-input-div">
         <p>What field should bot be good at?</p>
         <input v-model="knowledgeBase.field" placeholder="Enter the answer">
@@ -140,11 +147,22 @@
         flex-direction: column;
         gap: 8px;
     }
+    .bot-knowledge-inputs.tutorial {
+        position: absolute;
+        background: white;
+        padding-left: 5px;
+        padding-right: 5px;
+        transform: translateX(-5px);
+        z-index: 10000;
+        border-radius: 8px;
+    }
     .bot-knowledge-inputs {
-        margin-top: 24px;
+        margin-top: 14px;
         display: flex;
         flex-direction: column;
         gap: 24px;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
     .bot-knowledge-no-base {
         width: 100%;

@@ -16,10 +16,20 @@ import algorithms from '@/store/modules/algorithms';
         createAlgorithm() {
             if (this.newAlgorithm.name && this.newAlgorithm.if_the_user && this.newAlgorithm.then && this.newAlgorithm.keywords){
                 this.$store.dispatch('createAlgorithm', this.newAlgorithm)
-                this.$router.push('/emma/bot_events')
+                if (this.tutorial.currentStep == 4 && !this.tutorial.done) {
+                    this.$router.push('/emma/settings/bot_settings')
+                    this.$store.dispatch('setNextStep')
+                }else {
+                    this.$router.push('/emma/bot_events')
+                }
             }
         }
         
+    },
+    computed: {
+        tutorial() {
+            return this.$store.getters.getTutorial
+        }
     }
  }
 </script>
@@ -62,38 +72,40 @@ import algorithms from '@/store/modules/algorithms';
                         <p>Keyboard</p>
                     </div>
                 </div>
-                <p class="create-script-input-label">Name</p>
-                <input v-model="newAlgorithm.name" placeholder="Enter the name" class="create-script-input">
-                <div class="create-script-radiobuttons">
-                    <div class="create-script-radiobutton">
-                        <input name="messageType" type="radio">
-                        <p>Start event</p>
-                        <img src="@/assets/images/question_creating_script.svg">
+                <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="create-script-form-content">
+                    <p class="create-script-input-label-name">Name</p>
+                    <input v-model="newAlgorithm.name" placeholder="Enter the name" class="create-script-input">
+                    <div class="create-script-radiobuttons">
+                        <div class="create-script-radiobutton">
+                            <input name="messageType" type="radio">
+                            <p>Start event</p>
+                            <img src="@/assets/images/question_creating_script.svg">
+                        </div>
+                        <div class="create-script-radiobutton">
+                            <input name="messageType" type="radio">
+                            <p>Unknown message</p>
+                            <img src="@/assets/images/question_creating_script.svg">
+                        </div>
+                        <div class="create-script-radiobutton">
+                            <input name="messageType" type="radio">
+                            <p>Operator connection</p>
+                            <img src="@/assets/images/question_creating_script.svg">
+                        </div>
                     </div>
-                    <div class="create-script-radiobutton">
-                        <input name="messageType" type="radio">
-                        <p>Unknown message</p>
-                        <img src="@/assets/images/question_creating_script.svg">
+                    <p class="create-script-input-label">Question</p>
+                    <input v-model="newAlgorithm.if_the_user" placeholder="Enter a question" class="create-script-input">
+                    <p class="create-script-input-label">Answer</p>
+                    <input v-model="newAlgorithm.then" placeholder="Enter the answer" class="create-script-input">
+                    <p class="create-script-input-label">Keywords</p>
+                    <input v-model="newAlgorithm.keywords" placeholder="Enter a keywords" class="create-script-input">
+                    <div class="create-script-buttons">
+                        <button @click="createAlgorithm" class="create-script-button chosen">Save</button>
+                        <button class="create-script-button"><p>Remove</p></button>
                     </div>
-                    <div class="create-script-radiobutton">
-                        <input name="messageType" type="radio">
-                        <p>Operator connection</p>
-                        <img src="@/assets/images/question_creating_script.svg">
-                    </div>
-                </div>
-                <p class="create-script-input-label">Question</p>
-                <input v-model="newAlgorithm.if_the_user" placeholder="Enter a question" class="create-script-input">
-                <p class="create-script-input-label">Answer</p>
-                <input v-model="newAlgorithm.then" placeholder="Enter the answer" class="create-script-input">
-                <p class="create-script-input-label">Keywords</p>
-                <input v-model="newAlgorithm.keywords" placeholder="Enter a keywords" class="create-script-input">
-                <div class="create-script-buttons">
-                    <button @click="createAlgorithm" class="create-script-button chosen">Save</button>
-                    <button class="create-script-button"><p>Remove</p></button>
                 </div>
             </div>
             <div class="create-script-phone">
-                <img src="@/assets/images/phone.svg">
+                <img src="@/assets/images/phone.png">
             </div>
         </div>
     </div>
@@ -157,6 +169,9 @@ import algorithms from '@/store/modules/algorithms';
         padding: 8px 16px;
         border: 1px solid rgba(31, 31, 41, 0.16);
     }
+    .create-script-input-label-name {
+        font-size: 14px;
+    }
     .create-script-input-label {
         margin-top: 24px;
         font-size: 14px;
@@ -183,6 +198,17 @@ import algorithms from '@/store/modules/algorithms';
     .create-script-form-buttons {
         display: flex;
         gap: 4px;
+    }
+    .create-script-form-content {
+        margin-top: 24px;
+    }
+    .create-script-form-content.tutorial {
+        position: relative;
+        background: white;
+        padding: 10px 10px 10px 10px;
+        transform: translateX(-10px);
+        border-radius: 8px;
+        z-index: 10000;
     }
     .create-script-main {
         display: flex;

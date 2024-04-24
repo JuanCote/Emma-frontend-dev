@@ -21,8 +21,10 @@ export default {
                         leased_token: false
                     })
                 });
-
-            
+            if (this.tutorial.currentStep == 1 && !this.tutorial.done) {
+                this.$store.dispatch('setNextStep')
+                this.$router.push('/emma/settings/knowledge_base')
+            }
             } catch (error) {
                 console.error('Error creating openai token:', error);
                 throw error;
@@ -38,6 +40,9 @@ export default {
             console.error('Ошибка при копировании текста:', err);
             // Дополнительные действия при ошибке копирования
             });
+            if (this.tutorial.currentStep == 5 && !this.tutorial.done) {
+                this.$store.dispatch('finishTutorial')
+            }
         }
     },
     mounted() {
@@ -87,6 +92,9 @@ export default {
         },
         user() {
             return this.$store.state.user.user;
+        },
+        tutorial() {
+            return this.$store.getters.getTutorial
         }
     }
 }
@@ -96,12 +104,12 @@ export default {
 <template>
     <div class="widget-settings">
         <p class="widget-settings-instruction">To install the chat on your website, copy the code below and place it immediately after the tag on every page of your website. Add only one code snippet to each page.</p>
-        <div class="widget-settings-code">
+        <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="widget-settings-code">
             <p>{{ scriptCode }}</p>
             <img @click="copyText" src="@/assets/images/copybutton.svg">
         </div>
         <p class="widget-settings-openai">Adding API Open AI</p>
-        <div class="widget-settings-openai-div">
+        <div class="widget-settings-openai-div" :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}">
             <input v-model="tokenInput" placeholder="API">
             <button @click="createToken" class="colored"><p>Check the API</p></button>
             <button><p>Rent API</p></button>
@@ -135,6 +143,12 @@ export default {
         border: 1px solid rgba(31, 31, 41, 0.16);
         border-radius: 8px;
     }
+    .widget-settings-openai-div.tutorial {
+        position: relative;
+        background: white;
+        border-radius: 8px;
+        z-index: 10000;
+    }
     .widget-settings-openai-div {
         gap: 8px;
         width: 740px;
@@ -154,6 +168,12 @@ export default {
         font-weight: 500;
         font-size: 12px;
         margin-top: 2px;
+    }
+    .widget-settings-code.tutorial {
+        position: relative;
+        background: white;
+        border-radius: 8px;
+        z-index: 10000;
     }
     .widget-settings-code {
         margin-top: 16px;

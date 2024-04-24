@@ -8,11 +8,20 @@ import algorithms from '@/store/modules/algorithms';
         },
         copyAlgorithm(algorithm) {
             this.$store.dispatch('copyAlgorithm', algorithm)
+        },
+        createScript() {
+            if (this.tutorial.currentStep == 3 && !this.tutorial.done) {
+                this.$store.dispatch('setNextStep')
+            }
+            this.$router.push('/emma/bot_events/create_script')
         }
     },
     computed: {
         algorithms() {
             return this.$store.state.algorithms.algorithms
+        },
+        tutorial() {
+            return this.$store.getters.getTutorial
         }
     },
     mounted() {
@@ -30,7 +39,7 @@ import algorithms from '@/store/modules/algorithms';
                 <p class="bot-settings-right-menu-header-botSettings">Bot settings</p>
             </div>
             <div class="bot-events-header-buttons">
-                <button @click="this.$router.push('/emma/bot_events/create_script')" class="bot-events-header-button">
+                <button :class="{'tutorial': tutorial.currentStep == 3 && !tutorial.done}" @click="createScript" class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Add script</p>
                 </button>
@@ -205,6 +214,10 @@ import algorithms from '@/store/modules/algorithms';
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+    .bot-events-header-button.tutorial {
+        position: relative;
+        z-index: 10000;
     }
     .bot-events-header-button {
         width: 171px;

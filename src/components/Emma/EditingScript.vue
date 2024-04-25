@@ -212,6 +212,16 @@ import { BACKEND_URL } from '@/config.js'
         cursor: pointer;
         background: none;
         color: #b371ff;
+        transition: background 0.5s ease, transform 0.5s ease;
+    }
+
+    .create-script-button:hover {
+        background: linear-gradient(to top right, rgba(90, 85, 220, 1), rgba(150, 85, 220, 1)); /* Darker shades */
+        transform: scale(1.05);
+    }
+    .create-script-button:active {
+        transform: scale(0.95);
+        transition: transform 0.2s;
     }
     .create-script-buttons {
         margin-top: 24px;
@@ -436,6 +446,16 @@ import { BACKEND_URL } from '@/config.js'
         align-items: center;
         border-radius: 8px;
         background: linear-gradient(to bottom left, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+        transition: background 0.5s ease, transform 0.5s ease; /* Ensure transitions are applied smoothly */
+    }
+
+    .bot-events-header-button:hover {
+        background: linear-gradient(to top right, rgba(90, 85, 220, 1), rgba(150, 85, 220, 1)); /* Darker shades */
+        transform: scale(1.05);
+    }
+    .bot-events-header-button:active {
+        transform: scale(0.95);
+        transition: transform 0.2s;
     }
     .bot-events-header-buttons {
         display: flex;

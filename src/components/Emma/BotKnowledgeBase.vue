@@ -106,6 +106,16 @@
         height: 43px;
         width: 79px;
         cursor: pointer;
+        transition: background 0.5s ease, transform 0.5s ease;
+    }
+
+    .bot-knowledge-save:hover {
+        background: linear-gradient(to top right, rgba(90, 85, 220, 1), rgba(150, 85, 220, 1)); /* Darker shades */
+        transform: scale(1.05);
+    }
+    .bot-knowledge-save:active {
+    transform: scale(0.95);
+    transition: transform 0.2s;
     }
     .bot-knowledge-input-div-question-checkboxes span {
         font-size: 12px;

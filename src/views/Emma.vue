@@ -127,57 +127,107 @@ export default {
 <style scoped>
     .finish-button {
         margin-top: 10px;
-        border-radius: 8px;
+        border-radius: 20px; 
         border: none;
-        height: 30px;
-        padding: 5px;
-        background: #e9e9e9;
+        height: 40px; 
+        padding: 10px 20px; 
+        background: linear-gradient(to right, #7F00FF, #E100FF); /* Added the missing semicolon */
+        color: white;
+        font-weight: bold; 
         cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 1s ease;
+    }
+    .finish-button:hover {
+        transform: translateY(-5px); /* Slight upward movement on hover */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+    }
+
+    .finish-button:active {
+        transition: all 1s ease;
+        transform: translateY(1px); /* Slight downward movement on click */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow on click */
     }
     .tutorial-block-get-widjet {
         color: white;
         position: absolute;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
         top: 30%; /* Позиционируйте контент в нужное место */
         left: 10%;
         width: 25em;
         z-index: 101;
         padding: 20px;
     }
+    .tutorial-block-get-widjet p {
+        text-align: center; /* Center the text within the paragraph */
+    }
     .tutorial-block-form-script {
         color: white;
         position: absolute;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
         top: 35%; /* Позиционируйте контент в нужное место */
         left: -1%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;
+
+    }
+    .tutorial-block-form-script p {
+        text-align: center;
     }
     .tutorial-block-add-script {
         color: white;
         position: absolute;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
         top: 8%; /* Позиционируйте контент в нужное место */
-        left: 51%;
+        left: 45%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;
     }
+    .tutorial-block-add-script p {
+        text-align: center; /* Center the text within the paragraph */
+    }
     .tutorial-block-knowledge {
         color: white;
         position: absolute;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
         top: 50%; /* Позиционируйте контент в нужное место */
         left: 17%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;
     }
+    .tutorial-block-knowledge p {
+        text-align: center; /* Center the text within the paragraph */
+    }
     .tutorial-block-api {
         color: white;
         position: absolute;
-        top: 55%; /* Позиционируйте контент в нужное место */
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 65%; /* Позиционируйте контент в нужное место */
         left: 67%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;
+    }
+    .tutorial-block-api p {
+        text-align: center; /* Center the text within the paragraph */
     }
     .tutorial-background {
         position: fixed;
@@ -214,5 +264,7 @@ export default {
         position: relative;
         margin: auto;
         background-color: white;
+        
+        
     }
 </style>

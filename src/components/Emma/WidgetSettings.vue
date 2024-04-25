@@ -121,10 +121,20 @@ export default {
     .widget-settings-openai-div button p {
         margin-top: -3px;
     }
-    .widget-settings-openai-div button.colored {
-        background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
-        color: white;
-        width: 120px;
+.widget-settings-openai-div button.colored {
+    background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+    color: white;
+    width: 120px;
+    transition: background 0.5s ease, transform 0.5s ease;
+}
+
+.widget-settings-openai-div button.colored:hover {
+    background: linear-gradient(to top right, rgba(90, 85, 220, 1), rgba(150, 85, 220, 1)); /* Darker shades */
+    transform: scale(1.05);
+}
+    .widget-settings-openai-div button.colored:active {
+    transform: scale(0.95);
+    transition: transform 0.2s;
     }
     .widget-settings-openai-div button {
         border-radius: 8px;

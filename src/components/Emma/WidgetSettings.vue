@@ -103,16 +103,16 @@ export default {
 
 <template>
     <div class="widget-settings">
-        <p class="widget-settings-instruction">Для встановлення чату на вашому веб-сайті скопіюйте код нижче і розмістіть його безпосередньо після тегу на кожній сторінці вашого веб-сайту. Додайте лише один фрагмент коду на кожну сторінку.</p>
+        <p class="widget-settings-instruction">Для встановлення чату на вашому веб-сайті скопіюйте код нижче і розмістіть його безпосередньо після тегу &lt;/body&gt; на кожній сторінці вашого веб-сайту. Додайте лише один фрагмент коду на кожну сторінку.</p>
         <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="widget-settings-code">
             <p>{{ scriptCode }}</p>
             <img @click="copyText" src="@/assets/images/copybutton.svg">
         </div>
-        <p class="widget-settings-openai">Додавання API Open AI</p>
+        <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>
         <div class="widget-settings-openai-div" :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}">
             <input v-model="tokenInput" placeholder="API">
             <button @click="createToken" class="colored"><p>Додати ключ</p></button>
-            <button><p>Rent API</p></button>
+            <button><p>Арендувати ключ</p></button>
         </div>
     </div>
 </template>
@@ -142,14 +142,14 @@ export default {
         padding: 16px 8px;
         font-size: 12px;
         border: none;
-        min-width: 64px;
+        min-width: 120px;
         cursor: pointer;
     }
     .widget-settings-openai-div input {
         font-size: 12px;
         padding: 16px 8px;
-        outline: none;
         width: 100%;
+        outline: none;
         border: 1px solid rgba(31, 31, 41, 0.16);
         border-radius: 8px;
     }
@@ -161,7 +161,6 @@ export default {
     }
     .widget-settings-openai-div {
         gap: 8px;
-        width: 740px;
         display: flex;
         height: 40px;
         margin-top: 16px;

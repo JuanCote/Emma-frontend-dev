@@ -30,14 +30,14 @@
                     <div class="emma-analytic-bot-analytics-part">
                         <img src="@/assets/images/analytic-users-total.svg">
                         <div>
-                            <p class="emma-analytic-bot-analytics-part-total-users">Total Users</p>
+                            <p class="emma-analytic-bot-analytics-part-total-users">Всі користувачі</p>
                             <p class="emma-analytic-bot-analytics-part-total-users-number">80 000</p>
                         </div>
                     </div>
                     <div class="emma-analytic-bot-analytics-part">
                         <img src="@/assets/images/new-users-per-day.svg">
                         <div>
-                            <p class="emma-analytic-bot-analytics-part-total-users">New users per day</p>
+                            <p class="emma-analytic-bot-analytics-part-total-users">Нових користувачів за день</p>
                             <p class="emma-analytic-bot-analytics-part-total-users-number">14</p>
                         </div>
                     </div>

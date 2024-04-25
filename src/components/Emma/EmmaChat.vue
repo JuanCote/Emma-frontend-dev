@@ -174,14 +174,14 @@ export default {
         <div v-if="chats" class="emma-chat">
             <div class="bot-events-header">
                 <div class="bot-settings-right-menu-header">
-                    <p class="bot-settings-right-menu-header-settings">Settings</p>
+                    <p class="bot-settings-right-menu-header-settings">Чати</p>
                     <img src="@/assets/images/right-arrow.svg">
-                    <p class="bot-settings-right-menu-header-botSettings">Bot settings</p>
+                    <p class="bot-settings-right-menu-header-botSettings">Всі чати</p>
                 </div>
                 <div class="bot-events-header-buttons">
                     <button class="bot-events-header-button">
                         <img src="@/assets/images/plus-instr.svg">
-                        <p>Add category</p>
+                        <p>Додати категорію</p>
                     </button>
                 </div>
             </div>
@@ -189,37 +189,37 @@ export default {
                 
             </div>
             <div class="bot-events-script-header">
-                    <p class="bot-events-script-header-p">Chats: {{ 1 }}</p>
+                    <p class="bot-events-script-header-p">Чати: {{ chats.length }}</p>
                     <div class="bot-events-script-header-search-and-bots">
                         <div class="bot-events-script-bots">
-                            <p>All bots</p>
+                            <p>Всі боти</p>
                             <img src="@/assets/images/bot-down-arrow.svg">
                         </div>
-                        <input placeholder="Search chat"><img class="bot-events-script-bot-lupa" src="@/assets/images/search-script.svg"></input>
+                        <input placeholder="Знайти чат"><img class="bot-events-script-bot-lupa" src="@/assets/images/search-script.svg"></input>
                     </div>
                 </div>
             <div class="emma-chat-container">
                 <div class="emma-chat-chats">
                     <ul class="emma-chat-chats-ul">
-                        <li class="emma-chats-empty" v-if="chats.length == 0 && archive.length == 0">You don't have chats</li>
+                        <li class="emma-chats-empty" v-if="chats.length == 0 && archive.length == 0">У вас немає чатів</li>
                         <li v-for="(chat) in chats" :key="chat.id" :class="{ 'choosen': chat == selectedChat }" @click="selectChat(chat.id)" class="emma-chat-chats-li">
                             <p>{{ chat.name }}</p>
                             <img @click="toggleDropdown(chat.id)" class="emma-chat-chats-3dots" src="@/assets/images/3dots.svg">
                             <div v-if="chat.dropdown" class="emma-chat-chats-dropdown">
                                 <ul>
-                                    <li @click="toArchive(chat.id)"><img src="@/assets/images/archive.svg"><span>Archive</span></li>
-                                    <li :class="{'taken': chat.takeToWork == true}" @click="takeToWork(chat.id)"><img src="@/assets/images/takeon.svg"><span>Take on</span></li>
+                                    <li @click="toArchive(chat.id)"><img src="@/assets/images/archive.svg"><span>Архів</span></li>
+                                    <li :class="{'taken': chat.takeToWork == true}" @click="takeToWork(chat.id)"><img src="@/assets/images/takeon.svg"><span>До роботи</span></li>
                                 </ul>
                             </div>
                         </li>
-                        <li v-if="archive.length != 0" class="emma-chats-archive"><img src="@/assets/images/fromarchive.svg"><span>From archive</span></li>
+                        <li v-if="archive.length != 0" class="emma-chats-archive"><img src="@/assets/images/fromarchive.svg"><span>З архіву</span></li>
                         <li v-for="(chat) in archive" :key="chat.id" :class="{ 'choosen': chat == selectedChat }" @click="selectChatById(chat.id, this.archive)" class="emma-chat-chats-li">
                             <p>{{ chat.name }}</p>
                             <img @click="toggleDropdown(chat.id, true)" class="emma-chat-chats-3dots" src="@/assets/images/3dots.svg">
                             <div v-if="chat.dropdown" class="emma-chat-chats-dropdown-archive">
                                 <ul>
-                                    <li @click="takeToWork()">Take to work</li>
-                                    <li @click="fromArchive()">Retrieve from archive</li>
+                                    <li :class="{'taken': chat.takeToWork == true}" @click="takeToWork()">До роботи</li>
+                                    <li @click="fromArchive()">Витягнути з архіву</li>
                                 </ul>
                             </div>
                         </li>
@@ -250,7 +250,7 @@ export default {
                         <img @click="openFilePicker" src="@/assets/images/clip.svg" class="emma-chat-input-clip">
                         <div class="emma-chat-chat-input-container">
                             <input type="file" ref="fileInput" class="emma-chat-fileinput" @change="handleFileUpload">
-                            <input @keyup.enter="sendMessage" v-model="selectedChat.input" class="emma-chat-input" placeholder="Text">
+                            <input @keyup.enter="sendMessage" v-model="selectedChat.input" class="emma-chat-input" placeholder="Текст">
                             <img @click="sendMessage" class="emma-chat-input-send" src="@/assets/images/send.svg">
                         </div>
                     </div>
@@ -401,6 +401,9 @@ export default {
         justify-content: center;
         align-items: center;
     }
+    .emma-chat-chats-dropdown-archive li.taken {
+        color: green
+    }
     .emma-chat-chats-dropdown li.taken {
         color: green
     }
@@ -426,7 +429,8 @@ export default {
     .emma-chat-chats-dropdown {
         z-index: 10;
         border: 1px solid rgba(31,31,31,0.16);
-        right: -7.8rem;
+        right: -10px;
+        transform: translateX(100%);
         position: absolute;
         top: 0;        
         font-weight: 500;
@@ -436,7 +440,8 @@ export default {
     .emma-chat-chats-dropdown-archive {
         z-index: 10;
         border: 1px solid rgba(31,31,31,0.16);
-        right: -10.8rem;
+        right: -10px;
+        transform: translateX(100%);
         position: absolute;
         top: 0;        
         font-weight: 500;

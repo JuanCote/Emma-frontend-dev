@@ -32,12 +32,12 @@
 </div>
 <div v-if="knowledgeBase">
     <div class="bot-settings-right-menu-header">
-        <p class="bot-settings-right-menu-header-settings">Settings</p>
+        <p class="bot-settings-right-menu-header-settings">Налаштування</p>
         <img src="@/assets/images/right-arrow.svg">
-        <p class="bot-settings-right-menu-header-botSettings">Bot Knowledge Base</p>
+        <p class="bot-settings-right-menu-header-botSettings">База знань бота</p>
     </div>
-<p class="bot-knowledge-name">Knowledge base</p>
-<p class="bot-knowledge-describe">Describe to the bot what tasks it should do and how to respond</p>
+<p class="bot-knowledge-name">База знань</p>
+<p class="bot-knowledge-describe">Опишіть боту, які завдання він має виконувати та як реагувати</p>
 <div class="bot-knowledge-sections">
     <div class="bot-knowledge-section chosen">
         <p>Section</p>
@@ -46,39 +46,39 @@
         <p>Articles</p>
     </div>
 </div>
-<p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Currently, no sections have been added to the knowledge base</p>
+<p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Наразі жодного розділу до бази знань не додано</p>
 <ul class="bot-knowledge-inputs" :class="{'tutorial': tutorial.currentStep == 2 && !tutorial.done}">
     <div class="bot-knowledge-input-div">
-        <p>What field should bot be good at?</p>
+        <p>У якій сфері бот повинен розбиратися?</p>
         <input v-model="knowledgeBase.field" placeholder="Enter the answer">
     </div>
     <div class="bot-knowledge-input-div">
-        <p>What role should your bot play?</p>
+        <p>Яку роль бот повинен відігравати?</p>
         <input v-model="knowledgeBase.role" placeholder="Enter the answer">
     </div>
     <div class="bot-knowledge-input-div">
-        <p>In what manner should the bot communicate?</p>
+        <p>У якій манері бот повинен спілкуватися?</p>
         <input v-model="knowledgeBase.manner" placeholder="Enter the answer">
     </div>
     <div class="bot-knowledge-input-div-question">
-        <p>If the question are not related to the topic of your company or your activity, should a bot answer?</p>
+        <p>Чи повинен бот відповідати на запитання, що не стосується теми або вашої компанії?</p>
         <div class="bot-knowledge-input-div-question-checkboxes">
             <div>
                 <input v-model="knowledgeBase.reply_to_non_company_topics" class="bot-knowledge-input-div-checkbox" type="radio" name="answer" value='true'>
-                <span class="checkmark">Yes</span>
+                <span class="checkmark">Так</span>
             </div>
             <div>
                 <input v-model="knowledgeBase.reply_to_non_company_topics" class="bot-knowledge-input-div-checkbox" type="radio" name="answer" value="false">
-                <span class="checkmark">No</span>
+                <span class="checkmark">Ні</span>
             </div>
         </div>
 
     </div>
     <div class="bot-knowledge-input-div">
-        <p>In which language should the bot communicate</p>
+        <p>На якій мові бот повинен спілкуватися?</p>
         <input v-model="knowledgeBase.language" placeholder="Enter the answer">
     </div>
-    <button @click="saveKnowledgeBase" class="bot-knowledge-save">Save</button>
+    <button @click="saveKnowledgeBase" class="bot-knowledge-save">Зберегти</button>
 </ul>
 </div>
 

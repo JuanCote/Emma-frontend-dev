@@ -1,5 +1,6 @@
 <script>
-import algorithms from '@/store/modules/algorithms';
+import { BACKEND_URL } from '@/config.js'
+
 
  export default {
     data() {
@@ -8,8 +9,9 @@ import algorithms from '@/store/modules/algorithms';
                 name: '',
                 if_the_user: '',
                 then: '',
-                keywords: ''
-            }
+                keywords: []
+            },
+            loadKeywords: false
         }
     },
     methods: {
@@ -23,8 +25,29 @@ import algorithms from '@/store/modules/algorithms';
                     this.$router.push('/emma/bot_events')
                 }
             }
+        },
+        removeKeyword(keyword) {
+            const index = this.newAlgorithm.keywords.indexOf(keyword)
+            if (index !== -1) {
+                this.newAlgorithm.keywords.splice(index, 1)
+            }
+        },
+        async generateKeywords() {
+            if (this.newAlgorithm.if_the_user) {
+                try {
+                this.loadKeywords = true
+                const response = await fetch(`${BACKEND_URL}/get_keywords?question=${this.newAlgorithm.if_the_user}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                this.loadKeywords = false
+                const data = await response.json();
+                this.newAlgorithm.keywords = data
+                } catch (error) {
+                    console.error('Ошибка генерации ключевых слов:', error);
+                }
+            }
         }
-        
     },
     computed: {
         tutorial() {
@@ -38,18 +61,18 @@ import algorithms from '@/store/modules/algorithms';
     <div class="bot-events">
         <div class="bot-events-header">
             <div class="bot-settings-right-menu-header">
-                <p class="bot-settings-right-menu-header-settings">Settings</p>
+                <p class="bot-settings-right-menu-header-settings">Події</p>
                 <img src="@/assets/images/right-arrow.svg">
-                <p class="bot-settings-right-menu-header-botSettings">Creating Script</p>
+                <p class="bot-settings-right-menu-header-botSettings">Створення інструкції</p>
             </div>
             <div class="bot-events-header-buttons">
                 <button class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
-                    <p>Add script</p>
+                    <p>Додати інструкцію</p>
                 </button>
                 <button class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
-                    <p>Add category</p>
+                    <p>Додати кнопку</p>
                 </button>
             </div>
         </div>
@@ -73,8 +96,8 @@ import algorithms from '@/store/modules/algorithms';
                     </div>
                 </div>
                 <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="create-script-form-content">
-                    <p class="create-script-input-label-name">Name</p>
-                    <input v-model="newAlgorithm.name" placeholder="Enter the name" class="create-script-input">
+                    <p class="create-script-input-label-name">Назва</p>
+                    <input v-model="newAlgorithm.name" placeholder="Введіть назву" class="create-script-input">
                     <div class="create-script-radiobuttons">
                         <div class="create-script-radiobutton">
                             <input name="messageType" type="radio">
@@ -92,15 +115,24 @@ import algorithms from '@/store/modules/algorithms';
                             <img src="@/assets/images/question_creating_script.svg">
                         </div>
                     </div>
-                    <p class="create-script-input-label">Question</p>
-                    <input v-model="newAlgorithm.if_the_user" placeholder="Enter a question" class="create-script-input">
-                    <p class="create-script-input-label">Answer</p>
-                    <input v-model="newAlgorithm.then" placeholder="Enter the answer" class="create-script-input">
-                    <p class="create-script-input-label">Keywords</p>
-                    <input v-model="newAlgorithm.keywords" placeholder="Enter a keywords" class="create-script-input">
+                    <p class="create-script-input-label">Запитання</p>
+                    <input v-model="newAlgorithm.if_the_user" placeholder="Введіть запитання" class="create-script-input">
+                    <p class="create-script-input-label">Відповідь</p>
+                    <input v-model="newAlgorithm.then" placeholder="Введіть відповідь" class="create-script-input">
+                    <p class="create-script-input-label">Ключові слова</p>
+                    <div class="create-script-container-all">
+                        <div class="create-script-container-keywords">
+                            <p v-if="newAlgorithm.keywords.length == 0">Не вказано ключових слів</p>
+                            <div class="create-script-keyword" v-for="keyword in newAlgorithm.keywords">
+                                <p>{{ keyword }}</p>
+                                <img @click="removeKeyword(keyword)" src="@/assets/images/keyword_cross.svg">
+                            </div>
+                        </div>
+                        <button @click="generateKeywords">Згенерувати слова<img v-if="loadKeywords" src="@/assets/images/load.gif"></button>
+                    </div>
                     <div class="create-script-buttons">
-                        <button @click="createAlgorithm" class="create-script-button chosen">Save</button>
-                        <button class="create-script-button"><p>Remove</p></button>
+                        <button @click="createAlgorithm" class="create-script-button chosen">Зберегти</button>
+                        <button class="create-script-button"><p>Видалити</p></button>
                     </div>
                 </div>
             </div>
@@ -112,6 +144,58 @@ import algorithms from '@/store/modules/algorithms';
 </template>
 
 <style>
+    .create-script-container-all button img {
+        height: 10px;
+    }
+    .create-script-container-all button {
+        border-radius: 8px;
+        display: flex;align-items: center;
+        justify-content: center;
+        gap: 5px;
+        background: #EAEAF3;
+        font-size: 12px;
+        color: #5A5A76;
+        height: 40px;
+        max-height: 60px;
+        cursor: pointer;
+        border: none;
+        min-width: 140px;
+    }
+    .create-script-container-all {
+        display: flex;
+        gap: 8px;
+    }
+    .create-script-container-keywords p {
+        margin-top: 3px;
+        color: rgba(31, 31, 41, 0.7); 
+        font-size: 13px;
+    }
+    .create-script-keyword img {
+        cursor: pointer;
+    }
+    .create-script-keyword p {
+        margin-top: 2px;
+        font-size: 12px;
+    }
+    .create-script-keyword {
+        display: flex;
+        border-radius: 4px;
+        border: 1px solid rgba(31, 31, 41, 0.15);
+        padding: 8px;
+        gap: 8px;
+    }
+    .create-script-container-keywords {
+        border-radius: 8px;
+        align-items: center;
+        background: white;
+        border: 1px solid rgba(31, 31, 41, 0.16);
+        padding: 8px;
+        display: flex;
+        gap: 4px;
+        min-height: 40px;
+        width: 100%;
+        flex-wrap: wrap;
+    }
     .create-script-button.chosen {
         border: none;
         background: linear-gradient(to bottom left, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
@@ -166,7 +250,7 @@ import algorithms from '@/store/modules/algorithms';
         width: 100%;
         border-radius: 8px;
         outline: none;
-        padding: 8px 16px;
+        padding: 8px 8px;
         border: 1px solid rgba(31, 31, 41, 0.16);
     }
     .create-script-input-label-name {

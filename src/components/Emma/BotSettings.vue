@@ -14,9 +14,9 @@
 
 <template>
 <div class="bot-settings-right-menu-header">
-    <p class="bot-settings-right-menu-header-settings">Settings</p>
+    <p class="bot-settings-right-menu-header-settings">Налаштування</p>
     <img src="@/assets/images/right-arrow.svg">
-    <p class="bot-settings-right-menu-header-botSettings">Bot settings</p>
+    <p class="bot-settings-right-menu-header-botSettings">Налаштування бота</p>
 </div>
 <div class="bot-settings-right-menu-bots">
     <div @click="chosenBot = 'Telegram'" :class="{ 'chosen': chosenBot === 'Telegram'}">

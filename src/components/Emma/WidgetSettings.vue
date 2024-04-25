@@ -103,15 +103,15 @@ export default {
 
 <template>
     <div class="widget-settings">
-        <p class="widget-settings-instruction">To install the chat on your website, copy the code below and place it immediately after the tag on every page of your website. Add only one code snippet to each page.</p>
+        <p class="widget-settings-instruction">Для встановлення чату на вашому веб-сайті скопіюйте код нижче і розмістіть його безпосередньо після тегу на кожній сторінці вашого веб-сайту. Додайте лише один фрагмент коду на кожну сторінку.</p>
         <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="widget-settings-code">
             <p>{{ scriptCode }}</p>
             <img @click="copyText" src="@/assets/images/copybutton.svg">
         </div>
-        <p class="widget-settings-openai">Adding API Open AI</p>
+        <p class="widget-settings-openai">Додавання API Open AI</p>
         <div class="widget-settings-openai-div" :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}">
             <input v-model="tokenInput" placeholder="API">
-            <button @click="createToken" class="colored"><p>Check the API</p></button>
+            <button @click="createToken" class="colored"><p>Додати ключ</p></button>
             <button><p>Rent API</p></button>
         </div>
     </div>

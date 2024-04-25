@@ -34,27 +34,27 @@ import algorithms from '@/store/modules/algorithms';
     <div class="bot-events">
         <div class="bot-events-header">
             <div class="bot-settings-right-menu-header">
-                <p class="bot-settings-right-menu-header-settings">Settings</p>
+                <p class="bot-settings-right-menu-header-settings">Події</p>
                 <img src="@/assets/images/right-arrow.svg">
-                <p class="bot-settings-right-menu-header-botSettings">Bot settings</p>
+                <p class="bot-settings-right-menu-header-botSettings">Всі події</p>
             </div>
             <div class="bot-events-header-buttons">
                 <button :class="{'tutorial': tutorial.currentStep == 3 && !tutorial.done}" @click="createScript" class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
-                    <p>Add script</p>
+                    <p>Додати інструкцію</p>
                 </button>
                 <button class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
-                    <p>Add category</p>
+                    <p>Додати кнопку</p>
                 </button>
             </div>
         </div>
         <div class="bot-events-scripts">
             <div class="bot-events-script-header">
-                <p class="bot-events-script-header-p">Events found: {{ algorithms.length }}</p>
+                <p class="bot-events-script-header-p">Знайдені події: {{ algorithms.length }}</p>
                 <div class="bot-events-script-header-search-and-bots">
                     <div class="bot-events-script-bots">
-                        <p>All bots</p>
+                        <p>Всі боти</p>
                         <img src="@/assets/images/bot-down-arrow.svg">
                     </div>
                     <input placeholder="Search chat"><img class="bot-events-script-bot-lupa" src="@/assets/images/search-script.svg"></input>
@@ -70,7 +70,7 @@ import algorithms from '@/store/modules/algorithms';
                         <div class="bot-events-script-script-part2">
                     
                             <div class="bot-events-script-script-selection">
-                                <p>Not selected</p>
+                                <p>Не вибрано</p>
                                 <img src="@/assets/images/bot-down-arrow.svg">
                             </div>
                             <div class="bot-events-script-script-part2-buttons">

@@ -13,9 +13,9 @@
     <div class="bot-settings">
         <div class="bot-settings-left-menu">
             <ul>
-                <li @click="this.$router.push('/emma/settings/bot_settings')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings')}">Bots settings</li>
-                <li @click="this.$router.push('/emma/settings/knowledge_base')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/knowledge_base')}">Bot Knowledge Base</li>
-                <li @click="this.$router.push('/emma/settings/templates')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/templates')}">Templates</li>
+                <li @click="this.$router.push('/emma/settings/bot_settings')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings')}">Налаштування ботів</li>
+                <li @click="this.$router.push('/emma/settings/knowledge_base')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/knowledge_base')}">База знань бота</li>
+                <li @click="this.$router.push('/emma/settings/templates')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/templates')}">Шаблони</li>
             </ul>
         </div>
         <div class="bot-settings-right-menu">

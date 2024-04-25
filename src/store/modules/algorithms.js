@@ -40,8 +40,6 @@ const state = {
       console.log(algorithm)
     },
     async createAlgorithm({commit, dispatch}, algorithm) {
-      const algorithmToSend = Object.assign({}, algorithm);
-      algorithmToSend.keywords = algorithmToSend.keywords.split(' ')
       try {
         const response = await fetch(`${BACKEND_URL}/create_algorithm`, {
           method: 'POST',
@@ -49,7 +47,7 @@ const state = {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(algorithmToSend)
+          body: JSON.stringify(algorithm)
       }).then(() => {
         dispatch('fetchAlgorithms')
       })

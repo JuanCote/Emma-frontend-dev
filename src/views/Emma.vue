@@ -103,16 +103,16 @@ export default {
 </script>
 
 <template>
-    <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-api"><p>First, add the OpenAI API key so bot can generate responses. To do this, insert the key into the field and click "Check the API"</p><button class="finish-button" @click="finishTutorial">Finish tutorial</button></div>
-    <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge"><p>Great, now describe the bot by filling out this form, once you fill it out - click "Save"</p><button class="finish-button" @click="finishTutorial">Finish tutorial</button></div>
-    <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-add-script"><p>Now create your first script</p><button class="finish-button" @click="finishTutorial">Finish tutorial</button></div>
-    <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-form-script"><p>In this form, you need to describe the script that will respond to specific messages. "Name" - any of your choice, in "Question" you need to write the question to which the script will respond, in "Answer" write how the bot should respond, in "Keywords" you need to write words that the script will react to in the message from user</p><button class="finish-button" @click="finishTutorial">Finish tutorial</button></div>
-    <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-get-widjet"><p>Now, to add the chat to your website, take this piece of code and paste it right before the &lt;/body&gt; tag in your markup</p>
-        <button class="finish-button" @click="finishTutorial">Finish tutorial</button>
-    </div>
-    <div v-if="!tutorial.done" class="tutorial-background"></div>
     <div class="emma-background">
         <div class="emma-container">
+            <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-api"><p>Спочатку додайте ключ API OpenAI, щоб бот міг генерувати відповіді. Для цього вставте ключ у відповідне поле і натисніть "Додати ключ"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge"><p>Чудово, тепер заповніть форму, щоб описати бота, і після цього натисніть "Зберегти"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-add-script"><p>Тепер створіть свій перший скрипт</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-form-script"><p>У цій формі вам потрібно описати скрипт, який буде реагувати на конкретні повідомлення. "Назва" - будь-яке на ваш вибір, у "Запитання" вам потрібно написати запитання, на яке скрипт буде реагувати, у "Відповідь" напишіть, як бот має відповісти, у "Ключові слова" вам потрібно написати слова, на які скрипт буде реагувати у повідомленні від користувача.</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
+                <button class="finish-button" @click="finishTutorial">Закінчити туторіал</button>
+            </div>
+            <div v-if="!tutorial.done" class="tutorial-background"></div>
             <EmmaLeftMenu/>
             <div class="right-container">
                 <div v-if="!socket" class="right-container-loading">
@@ -138,7 +138,7 @@ export default {
         color: white;
         position: absolute;
         top: 30%; /* Позиционируйте контент в нужное место */
-        left: 24%;
+        left: 10%;
         width: 25em;
         z-index: 101;
         padding: 20px;
@@ -147,8 +147,8 @@ export default {
         color: white;
         position: absolute;
         top: 35%; /* Позиционируйте контент в нужное место */
-        left: 10%;
-        width: 25em;
+        left: -1%;
+        width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;
     }
@@ -165,7 +165,7 @@ export default {
         color: white;
         position: absolute;
         top: 50%; /* Позиционируйте контент в нужное место */
-        left: 28%;
+        left: 17%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;
@@ -211,6 +211,7 @@ export default {
     .emma-container {
         display: flex;
         width: 1280px;
+        position: relative;
         margin: auto;
         background-color: white;
     }

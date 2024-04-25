@@ -62,7 +62,7 @@ export default {
     <div class="auth-background">
         <div class="auth-container">
             <div class="auth-header">
-                <img src="@/assets/images/auth-logo.svg">
+                <img src="@/assets/images/logo.jpg">
                 <h1>EMMA</h1>
             </div>
             <div class="auth-google-container">

@@ -1,5 +1,4 @@
 import { BACKEND_URL } from '@/config.js'
-import router from '../../router/index.js'
 
 const state = {
     user: null

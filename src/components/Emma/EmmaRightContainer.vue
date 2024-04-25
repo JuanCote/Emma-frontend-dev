@@ -23,7 +23,7 @@ export default {
     <div class="emma-analytic-header">
         <div>
             <img src="@/assets/images/analyticquestion.svg">
-            <button>Tooltips</button>
+            <button>Підказки</button>
         </div>
         <div>
             <img src="@/assets/images/user-question.svg">

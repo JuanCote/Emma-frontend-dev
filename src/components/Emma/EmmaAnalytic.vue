@@ -22,8 +22,8 @@
     <div class="emma-analytic">
         <div class="emma-analytic-main">
             <div class="emma-analytic-menu">
-                <button @click="chosenMenu = 'botAnalytics'" :class="{ 'chosen': chosenMenu === 'botAnalytics' }">Bot analytics</button>
-                <button @click="chosenMenu = 'QueryAnalytics'" :class="{ 'chosen': chosenMenu === 'QueryAnalytics' }">Query analytics</button>
+                <button @click="chosenMenu = 'botAnalytics'" :class="{ 'chosen': chosenMenu === 'botAnalytics' }">Аналітика бота</button>
+                <button @click="chosenMenu = 'QueryAnalytics'" :class="{ 'chosen': chosenMenu === 'QueryAnalytics' }">Аналітика запитів</button>
             </div>
             <div class="emma-analytic-bot-analytics">
                 <div class="emma-analytic-bot-analytics-top">
@@ -46,17 +46,17 @@
                     <div class="emma-analytic-bot-graphic">
                         <div class="emma-analytic-bot-graphic-header">
                             <div class="emma-analytic-bot-graphic-header-1">
-                                <p>Activity</p>
-                                <h1>Users</h1>
+                                <p>Активність</p>
+                                <h1>Користувачі</h1>
                             </div>
                             <div class="emma-analytic-bot-graphic-header-2">
                                 <div @click="graphic1Dropdown = !graphic1Dropdown">
-                                    <p>Weekly</p>
+                                    <p>Тижнева</p>
                                     <img :class="{'dropdown': graphic1Dropdown}" src="@/assets/images/down_arrow_graphic.svg">
                                 </div>
                                 <ul v-if="graphic1Dropdown">
-                                    <li>Weekly</li>
-                                    <li>Month</li>
+                                    <li>Тижнева</li>
+                                    <li>За місяць</li>
                                 </ul>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                                         <div class="last-line"></div>
                                     </div>
                                     <div class="emma-analytic-bot-graphic-chart-columns">
-                                        <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                                        <!-- <div></div><div></div><div></div><div></div><div></div><div></div><div></div> -->
                                     </div>
                                     <ul class="emma-analytic-bot-graphic-chart-days">
                                         <li>MON</li>
@@ -258,7 +258,6 @@
         background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
     }
     .emma-analytic-menu button {
-        width: 150px;
         height: 40px;
         cursor: pointer;
         padding: 10px 24px;

@@ -12,36 +12,36 @@ export default {
     <div class="emma-left-menu-container" :class="{'expanded': !menuExpanded}">
         <div>
                 <div class="emma-left-menu-header">
-                <img src="@/assets/images/logo.svg">
+                <img src="@/assets/images/logo.jpg">
                 <h1 v-if="menuExpanded" class="emma-left-menu-h1">EMMA</h1>
             </div>
             <ul class="emma-left-menu-ul">
                 <li @click="this.$router.push('/emma/settings/bot_settings')" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/settings') }">
                   <img v-if="$route.path.startsWith('/emma/settings')" src="@/assets/images/bot_settings_white.svg">
                   <img v-if="!($route.path.startsWith('/emma/settings'))" src="@/assets/images/bot_settings.svg">
-                  <p v-if="menuExpanded">Bot settings</p>
+                  <p v-if="menuExpanded">Налаштування бота</p>
                 </li>
                 <li @click="this.$router.push('/emma/analytic')" class="emma-left-menu-li" :class="{ 'chosen': $route.path == '/emma/analytic' }">
                   <img v-if="$route.path == '/emma/analytic'" src="@/assets/images/analytic.svg">
                   <img v-if="$route.path != '/emma/analytic'" src="@/assets/images/analytic-black.svg">
-                  <p v-if="menuExpanded">Analytic</p>
+                  <p v-if="menuExpanded">Аналітика</p>
                 </li>
                 <li @click="this.$router.push('/emma/chats')" class="emma-left-menu-li" :class="{ 'chosen': $route.path == '/emma/chats' }">
                   <img v-if="$route.path != '/emma/chats'" src="@/assets/images/chats.svg">
                   <img v-if="$route.path == '/emma/chats'" src="@/assets/images/chats-white.svg">
-                  <p v-if="menuExpanded">Chats</p>
+                  <p v-if="menuExpanded">Чати</p>
                 </li>
                 <li @click="this.$router.push('/emma/bot_events')" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/bot_events') }">
                   <img v-if="!($route.path.startsWith('/emma/bot_events'))" src="@/assets/images/bot-events.svg">
                   <img v-if="$route.path.startsWith('/emma/bot_events')" src="@/assets/images/bot_events_white.svg">
-                  <p v-if="menuExpanded">Bot events</p>
+                  <p v-if="menuExpanded">Події бота</p>
                 </li>
             </ul>
         </div>
         <div :class="{'expanded': !menuExpanded}" class="emma-left-menu-settings">
             <div class="emma-left-menu-settings-block">
                 <img @click="this.$router.push('/emma/settings/bot_settings')" src="@/assets/images/settings.svg">
-                <p @click="this.$router.push('/emma/settings/bot_settings')" v-if="menuExpanded">Settings</p>
+                <p @click="this.$router.push('/emma/settings/bot_settings')" v-if="menuExpanded">Налаштування</p>
             </div>
             <img @click="menuExpanded = !menuExpanded" src="@/assets/images/dropdown.svg" class="emma-left-menu-button" :class="{'expanded': !menuExpanded}"></img>
         </div>

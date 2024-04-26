@@ -1,11 +1,27 @@
 <script>
     import BotKnowledgeBase from '@/components/Emma/BotKnowledgeBase.vue'
     import BotSettings from '@/components/Emma/BotSettings.vue'
+import router from '@/router';
+import knowledgeBase from '@/store/modules/knowledgeBase';
     export default {
         components: {
             BotKnowledgeBase,
             BotSettings
         },
+        computed: {
+            tutorial() {
+                return this.$store.getters.getTutorial
+            }
+        },
+        methods: {
+            knowledgeBase() {
+                if (this.tutorial.currentStep == 2 && !this.tutorial.done) {
+                    this.$store.dispatch('setNextStep')
+                    this.$router.push('/emma/settings/knowledge_base')
+                }
+                this.$router.push('/emma/settings/knowledge_base')
+            }
+        }
     }
 </script>
 
@@ -14,7 +30,7 @@
         <div class="bot-settings-left-menu">
             <ul>
                 <li @click="this.$router.push('/emma/settings/bot_settings')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings')}">Налаштування ботів</li>
-                <li @click="this.$router.push('/emma/settings/knowledge_base')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/knowledge_base')}">База знань бота</li>
+                <li @click="knowledgeBase" :class="{ 'chosen': $route.path.startsWith('/emma/settings/knowledge_base'), 'tutorial': tutorial.currentStep == 2 && !tutorial.done}">База знань бота</li>
                 <li @click="this.$router.push('/emma/settings/templates')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/templates')}">Шаблони</li>
             </ul>
         </div>
@@ -67,6 +83,11 @@
         padding: 16px;
         width: 100%;
         background: #f0f3fa;
+    }
+    .bot-settings-left-menu ul li.tutorial {
+        position: relative;
+        background: white;
+        z-index: 10000;
     }
     .bot-settings-left-menu ul li.chosen {
         background: linear-gradient(to bottom left, rgba(117, 112, 255, 0.2), rgba(188, 112, 255, 0.2));

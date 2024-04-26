@@ -5,6 +5,7 @@ import { BACKEND_URL } from '@/config.js'
  export default {
     data() {
         return {
+            editing: false,
             newAlgorithm: {
                 name: '',
                 if_the_user: '',
@@ -17,12 +18,18 @@ import { BACKEND_URL } from '@/config.js'
     methods: {
         createAlgorithm() {
             if (this.newAlgorithm.name && this.newAlgorithm.if_the_user && this.newAlgorithm.then && this.newAlgorithm.keywords){
-                this.$store.dispatch('createAlgorithm', this.newAlgorithm)
-                if (this.tutorial.currentStep == 4 && !this.tutorial.done) {
-                    this.$router.push('/emma/settings/bot_settings')
-                    this.$store.dispatch('setNextStep')
+                if (this.editing) {
+                    this.$store.dispatch('editAlgorithm', {algorithm: this.newAlgorithm, id: this.$route.query.algorithm_id}).then(() => {
+                        this.$router.push('/emma/bot_events')
+                    })
                 }else {
-                    this.$router.push('/emma/bot_events')
+                    this.$store.dispatch('createAlgorithm', this.newAlgorithm)
+                    if (this.tutorial.currentStep == 5 && !this.tutorial.done) {
+                        this.$router.push('/emma/settings/bot_settings')
+                        this.$store.dispatch('setNextStep')
+                    }else {
+                        this.$router.push('/emma/bot_events')
+                    }
                 }
             }
         },
@@ -52,7 +59,27 @@ import { BACKEND_URL } from '@/config.js'
     computed: {
         tutorial() {
             return this.$store.getters.getTutorial
-        }
+        },
+        algorithms() {
+            return this.$store.state.algorithms.algorithms
+        },
+    },
+    created() {
+        this.$store.dispatch('fetchAlgorithms').then(() => {
+            if (this.$route.query.algorithm_id) {
+                const id = this.$route.query.algorithm_id
+                this.editing = true
+                
+                this.algorithms.forEach(element => {
+                    if (element.id == id) {
+                        this.newAlgorithm.name = element.name
+                        this.newAlgorithm.if_the_user = element.if_the_user
+                        this.newAlgorithm.then = element.then
+                        this.newAlgorithm.keywords = element.keywords_to_show
+                    }
+                });
+            }
+        })
     }
  }
 </script>
@@ -95,7 +122,7 @@ import { BACKEND_URL } from '@/config.js'
                         <p>Клавіатура</p>
                     </div>
                 </div>
-                <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="create-script-form-content">
+                <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="create-script-form-content">
                     <p class="create-script-input-label-name">Назва</p>
                     <input v-model="newAlgorithm.name" placeholder="Введіть назву" class="create-script-input">
                     <div class="create-script-radiobuttons">

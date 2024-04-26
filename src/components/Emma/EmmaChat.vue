@@ -79,37 +79,39 @@ export default {
                 this.selectChat(this.archive[0].id, true)
             } 
         },
-        sendMessage() {
-            if (this.selectedChat.input || this.image) {
-                if (this.image) {
-                    this.selectedChat.messages.push({sender: 'assistant', message: this.selectedChat.input, imageUrl: this.imageUrl})
-                }else {
-                    this.selectedChat.messages.push({sender: 'assistant', message: this.selectedChat.input})
-                }
-                
-                const data = {
-                    type: 'message',
-                    from: 'manager',
-                    user_id: this.user.id,
-                    to: this.selectedChat.name,
-                    text: this.selectedChat.input
-                };
-                this.socket.send(JSON.stringify(data));
-
-                this.selectedChat.input = ''
-                this.selectedChat.displayProposal = false
-                this.image = null
-                this.imageUrl = null
-                this.archive.forEach(element => {
-                    if (element.id == this.selectedChat.id) {
-                        this.fromArchive()
-                        this.selectChatById(element.id, this.chats)
+        sendMessage(event) {
+            if (!event.shiftKey) {
+                    if (this.selectedChat.input || this.image) {
+                    if (this.image) {
+                        this.selectedChat.messages.push({sender: 'assistant', message: this.selectedChat.input, imageUrl: this.imageUrl})
+                    }else {
+                        this.selectedChat.messages.push({sender: 'assistant', message: this.selectedChat.input})
                     }
-                });
-                this.$nextTick(() => {
-                    let container = document.querySelector('.emma-chat-messages');
-                    container.scrollTop = container.scrollHeight;
-                });
+
+                    const data = {
+                        type: 'message',
+                        from: 'manager',
+                        user_id: this.user.id,
+                        to: this.selectedChat.name,
+                        text: this.selectedChat.input
+                    };
+                    this.socket.send(JSON.stringify(data));
+
+                    this.selectedChat.input = ''
+                    this.selectedChat.displayProposal = false
+                    this.image = null
+                    this.imageUrl = null
+                    this.archive.forEach(element => {
+                        if (element.id == this.selectedChat.id) {
+                            this.fromArchive()
+                            this.selectChatById(element.id, this.chats)
+                        }
+                    });
+                    this.$nextTick(() => {
+                        let container = document.querySelector('.emma-chat-messages');
+                        container.scrollTop = container.scrollHeight;
+                    });
+                }
             }
         },
         openFilePicker() {
@@ -227,7 +229,7 @@ export default {
                 </div>
                 <div v-if="chats.length > 0 || archive.length > 0" class="emma-chat-field">
                     <div class="emma-chat-messages">
-                        <div v-for="(message) in selectedChat.messages">
+                        <div class="emma-chat-message-for" v-for="(message) in selectedChat.messages">
                             <div :class='"emma-chat-message-container-" + message.sender'>
                                 <div :class='"emma-chat-message-object-" + message.sender'>
                                     <img :class="'emma-chat-message-img' + (!message.message ? ' nonemessage' : '')" v-if="message.imageUrl" :src="message.imageUrl">
@@ -237,20 +239,20 @@ export default {
                                 </div>
                             </div> 
                         </div>
-                    </div>
-                    <div v-if="selectedChat.displayProposal" class="emma-chat-proposal">
+                        <div v-if="selectedChat.displayProposal" class="emma-chat-proposal">
                         <p class="emma-chat-proposal-p">{{ selectedChat.emmaProposal }}</p>
                         <div class="emma-chat-proposal-buttons">
                             <button @click="selectedChat.input = selectedChat.emmaProposal" class="emma-chat-proposal-send"><img src="@/assets/images/Frame 29307.svg"></button>
                             <button @click="selectedChat.displayProposal = false" class="emma-chat-proposal-cross"><img src="@/assets/images/close.svg"></button>        
                         </div>
                     </div>
+                    </div>
                     <img class="emma-chat-chosen-image" :src="imageUrl" alt="Selected Image" v-if="imageUrl" />
                     <div class="emma-chat-input-and-clip">
                         <img @click="openFilePicker" src="@/assets/images/clip.svg" class="emma-chat-input-clip">
                         <div class="emma-chat-chat-input-container">
                             <input type="file" ref="fileInput" class="emma-chat-fileinput" @change="handleFileUpload">
-                            <input @keyup.enter="sendMessage" v-model="selectedChat.input" class="emma-chat-input" placeholder="Текст">
+                            <textarea @keyup.enter="sendMessage" v-model="selectedChat.input" class="emma-chat-input" placeholder="Текст"></textarea>
                             <img @click="sendMessage" class="emma-chat-input-send" src="@/assets/images/send.svg">
                         </div>
                     </div>
@@ -261,6 +263,9 @@ export default {
 </template>
 
 <style>
+    .emma-chat-message-for {
+        
+    }
     .emma-chat-loading img {
         height: 3em;
     }
@@ -302,6 +307,7 @@ export default {
     .emma-chat-message-assistant p {
         overflow-wrap: break-word; 
         word-wrap: break-word;
+        white-space: pre-line;
     }
     .emma-chat-message-assistant.image {
         text-align: start;
@@ -322,6 +328,7 @@ export default {
         padding: 16px;
         color: white;
         font-size: 15px;
+        white-space: pre-line;
         color: #1F1F29;
         border-radius: 16px 16px 16px 4px;
         background-color: #EAEAF3;
@@ -517,6 +524,7 @@ export default {
         width: 100%;
         padding: 12px;
         background: white;
+        overflow-x: hidden;
         display: flex;
         flex-direction: column;
         justify-content: end;
@@ -524,13 +532,16 @@ export default {
     .emma-chat-input {
         width: 87%;
         height: 40px;
-        padding: 16px;
         font-size: 15px;
         font-weight: 500;
+        padding: 12px 16px;
+        overflow: hidden;
         outline: none;
-        max-width: 540px;
+        resize: none;
         border: none;
         border-radius: 12px;
+        font-family: Fixel;
+        font-weight: 400;
     }
     .emma-chat-chat-input-container {
         border: 1px solid rgba(31,31,31,0.16);
@@ -570,9 +581,9 @@ export default {
         padding: 16px;
         justify-content: space-between;
         display: flex;
+        word-wrap: break-word;
     }
     .emma-chat-proposal-p {
-        width: 400px;
         font-size: 15px;
         display: flex;
         align-items: center;

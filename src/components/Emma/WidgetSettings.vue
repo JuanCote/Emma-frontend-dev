@@ -23,7 +23,6 @@ export default {
                 });
             if (this.tutorial.currentStep == 1 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep')
-                this.$router.push('/emma/settings/knowledge_base')
             }
             } catch (error) {
                 console.error('Error creating openai token:', error);
@@ -40,7 +39,7 @@ export default {
             console.error('Ошибка при копировании текста:', err);
             // Дополнительные действия при ошибке копирования
             });
-            if (this.tutorial.currentStep == 5 && !this.tutorial.done) {
+            if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
                 this.$store.dispatch('finishTutorial')
             }
         }
@@ -104,7 +103,7 @@ export default {
 <template>
     <div class="widget-settings">
         <p class="widget-settings-instruction">Для вставки чату на ваш веб-сайт скопіюйте цей код і вставте його безпосередньо перед закриваючим тегом &lt;/body&gt; у вашому HTML-коді.</p>
-        <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="widget-settings-code">
+        <div :class="{'tutorial': tutorial.currentStep == 6 && !tutorial.done}" class="widget-settings-code">
             <p>{{ scriptCode }}</p>
             <img @click="copyText" src="@/assets/images/copybutton.svg">
         </div>
@@ -119,7 +118,7 @@ export default {
 
 <style>
     .widget-settings-openai-div button p {
-        margin-top: -3px;
+        
     }
 .widget-settings-openai-div button.colored {
     background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
@@ -142,6 +141,9 @@ export default {
         padding: 16px 8px;
         font-size: 12px;
         border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         min-width: 120px;
         cursor: pointer;
     }
@@ -156,6 +158,9 @@ export default {
     .widget-settings-openai-div.tutorial {
         position: relative;
         background: white;
+        height: 48px;
+        padding: 8px;
+        margin-left: -8px;
         border-radius: 8px;
         z-index: 10000;
     }

@@ -28,7 +28,6 @@ export default {
       };
       this.socket.onmessage = (event) => {
           const eventData = JSON.parse(event.data);
-          console.log(eventData)
           const chats = this.chats.slice()
           let chatFound = false; 
           chats.forEach((chat) => {
@@ -106,10 +105,11 @@ export default {
     <div class="emma-background">
         <div class="emma-container">
             <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-api"><p>Спочатку вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge"><p>Чудово! Тепер заповніть форму для опису бота і після цього натисніть кнопку "Зберегти"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-add-script"><p>Тепер створіть свій перший скрипт</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-form-script"><p>У цій формі потрібно описати скрипт, який реагуватиме на конкретні повідомлення. В полі "Назва" ви можете вказати будь-яку назву на ваш вибір. У поле "Запитання" вам потрібно ввести запитання, на яке скрипт буде реагувати. У поле "Відповідь" вкажіть, як бот має відповісти на це запитання. У поле "Ключові слова" ви можете вказати слова, на які скрипт буде реагувати у повідомленні від користувача</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
+            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до бази знань бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-knowledge"><p>Чудово! Тепер заповніть форму для опису бота і після цього натисніть кнопку "Зберегти"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-add-script"><p>Тепер створіть свій перший скрипт</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-form-script"><p>У цій формі потрібно описати скрипт, який реагуватиме на конкретні повідомлення. В полі "Назва" ви можете вказати будь-яку назву на ваш вибір. У поле "Запитання" вам потрібно ввести запитання, на яке скрипт буде реагувати. У поле "Відповідь" вкажіть, як бот має відповісти на це запитання. У поле "Ключові слова" ви можете вказати слова, на які скрипт буде реагувати у повідомленні від користувача</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
                 <button class="finish-button" @click="finishTutorial">Закінчити туторіал</button>
             </div>
             <div v-if="!tutorial.done" class="tutorial-background"></div>
@@ -125,6 +125,22 @@ export default {
 </template>
 
 <style scoped>
+    .tutorial-block-knowledge-transition p {
+        text-align: center;
+    }
+    .tutorial-block-knowledge-transition {
+        color: white;
+        position: absolute;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 11em; /* Позиционируйте контент в нужное место */
+        left: 16%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
     .finish-button {
         margin-top: 10px;
         border-radius: 20px; 
@@ -172,7 +188,7 @@ export default {
         align-items: center;
         justify-content: center;
         top: 35%; /* Позиционируйте контент в нужное место */
-        left: -1%;
+        left: -2%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;
@@ -241,6 +257,7 @@ export default {
     .right-container {
         position: relative;
         width: 100%;
+        overflow-x: auto;
     }
     .right-container-loading img {
         height: 3em;

@@ -34,6 +34,7 @@ export default {
     <EmmaBotSettings v-if="$route.path.startsWith('/emma/settings')"></EmmaBotSettings>
     <EmmaBotEvents v-if="$route.path == '/emma/bot_events'"></EmmaBotEvents>
     <EditingScript v-if="$route.path == '/emma/bot_events/create_script'"></EditingScript>
+    <EditingScript v-if="$route.path == '/emma/bot_events/edit_script'"></EditingScript>
     <EmmaChat :chatsLoaded="chatsLoaded" :socket="socket" v-if="$route.path == '/emma/chats'"></EmmaChat>
 </div>
 </template>

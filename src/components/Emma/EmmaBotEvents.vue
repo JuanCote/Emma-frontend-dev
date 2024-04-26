@@ -10,7 +10,7 @@ import algorithms from '@/store/modules/algorithms';
             this.$store.dispatch('copyAlgorithm', algorithm)
         },
         createScript() {
-            if (this.tutorial.currentStep == 3 && !this.tutorial.done) {
+            if (this.tutorial.currentStep == 4 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep')
             }
             this.$router.push('/emma/bot_events/create_script')
@@ -39,7 +39,7 @@ import algorithms from '@/store/modules/algorithms';
                 <p class="bot-settings-right-menu-header-botSettings">Всі події</p>
             </div>
             <div class="bot-events-header-buttons">
-                <button :class="{'tutorial': tutorial.currentStep == 3 && !tutorial.done}" @click="createScript" class="bot-events-header-button">
+                <button :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" @click="createScript" class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати інструкцію</p>
                 </button>
@@ -65,7 +65,7 @@ import algorithms from '@/store/modules/algorithms';
                     <div class="bot-events-script-script">
                         <div class="bot-events-script-script-part1">
                             <p>1</p>
-                            <h1>{{ algorithm.name }}</h1>
+                            <h1 @click="$router.push(`/emma/bot_events/edit_script?algorithm_id=${algorithm.id}`)">{{ algorithm.name }}</h1>
                         </div>
                         <div class="bot-events-script-script-part2">
                     
@@ -137,6 +137,7 @@ import algorithms from '@/store/modules/algorithms';
         display: flex;
         align-items: center;
         font-weight: 500;
+        cursor: pointer;
     }
     .bot-events-script-script-part1 p {
         border-radius: 4px;

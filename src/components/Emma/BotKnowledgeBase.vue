@@ -3,7 +3,7 @@
         methods: {
             saveKnowledgeBase() {
                 this.$store.dispatch('saveKnowledgeBase')
-                if (this.tutorial.currentStep == 2 && !this.tutorial.done) {
+                if (this.tutorial.currentStep == 3 && !this.tutorial.done) {
                     this.$store.dispatch('setNextStep')
                     this.$router.push('/emma/bot_events')
                 }
@@ -47,7 +47,7 @@
     </div>
 </div>
 <p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Наразі жодного розділу до бази знань не додано</p>
-<ul class="bot-knowledge-inputs" :class="{'tutorial': tutorial.currentStep == 2 && !tutorial.done}">
+<ul class="bot-knowledge-inputs" :class="{'tutorial': tutorial.currentStep == 3 && !tutorial.done}">
     <div class="bot-knowledge-input-div">
         <p>У якій сфері бот повинен розбиратися?</p>
         <input v-model="knowledgeBase.field" placeholder="Enter the answer">

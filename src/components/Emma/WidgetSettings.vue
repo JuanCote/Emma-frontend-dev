@@ -103,7 +103,7 @@ export default {
 
 <template>
     <div class="widget-settings">
-        <p class="widget-settings-instruction">Для встановлення чату на вашому веб-сайті скопіюйте код нижче і розмістіть його безпосередньо після тегу &lt;/body&gt; на кожній сторінці вашого веб-сайту. Додайте лише один фрагмент коду на кожну сторінку.</p>
+        <p class="widget-settings-instruction">Для вставки чату на ваш веб-сайт скопіюйте цей код і вставте його безпосередньо перед закриваючим тегом &lt;/body&gt; у вашому HTML-коді.</p>
         <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="widget-settings-code">
             <p>{{ scriptCode }}</p>
             <img @click="copyText" src="@/assets/images/copybutton.svg">

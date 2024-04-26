@@ -80,19 +80,19 @@ import { BACKEND_URL } from '@/config.js'
             <div class="create-script-form">
                 <div class="create-script-form-buttons">
                     <div :class="{'chosen': true}" class="create-script-form-button">
-                        <p>Main settings</p>
+                        <p>Головні налаштування</p>
                     </div>
                     <div class="create-script-form-button">
-                        <p>Media files</p>
+                        <p>Медіа файли</p>
                     </div>
                     <div class="create-script-form-button">
-                        <p>Additional</p>
+                        <p>Додатково</p>
                     </div>
                     <div class="create-script-form-button">
-                        <p>Tags</p>
+                        <p>Теги</p>
                     </div>
                     <div class="create-script-form-button">
-                        <p>Keyboard</p>
+                        <p>Клавіатура</p>
                     </div>
                 </div>
                 <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="create-script-form-content">
@@ -101,17 +101,17 @@ import { BACKEND_URL } from '@/config.js'
                     <div class="create-script-radiobuttons">
                         <div class="create-script-radiobutton">
                             <input name="messageType" type="radio">
-                            <p>Start event</p>
+                            <p>Стартова подія</p>
                             <img src="@/assets/images/question_creating_script.svg">
                         </div>
                         <div class="create-script-radiobutton">
                             <input name="messageType" type="radio">
-                            <p>Unknown message</p>
+                            <p>Невідоме повідомлення</p>
                             <img src="@/assets/images/question_creating_script.svg">
                         </div>
                         <div class="create-script-radiobutton">
                             <input name="messageType" type="radio">
-                            <p>Operator connection</p>
+                            <p>Під'єднання оператора</p>
                             <img src="@/assets/images/question_creating_script.svg">
                         </div>
                     </div>

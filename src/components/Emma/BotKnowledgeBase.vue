@@ -40,10 +40,10 @@
 <p class="bot-knowledge-describe">Опишіть боту, які завдання він має виконувати та як реагувати</p>
 <div class="bot-knowledge-sections">
     <div class="bot-knowledge-section chosen">
-        <p>Section</p>
+        <p>Секція</p>
     </div>
     <div class="bot-knowledge-section">
-        <p>Articles</p>
+        <p>Артиклі</p>
     </div>
 </div>
 <p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Наразі жодного розділу до бази знань не додано</p>

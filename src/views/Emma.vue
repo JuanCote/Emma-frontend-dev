@@ -220,7 +220,7 @@ export default {
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 65%; /* Позиционируйте контент в нужное место */
+        top: 31em; /* Позиционируйте контент в нужное место */
         left: 67%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */

@@ -28,10 +28,6 @@ export default {
                     throw new Error('Ошибка HTTP: ' + response.status);
                 }
             })
-            .then(data => {
-                // Обработка успешного ответа от сервера
-                console.log('Успешный ответ от сервера:', data);
-            })
             .catch(error => {
                 // Обработка ошибки
                 console.error('Ошибка при обработке ответа:', error);

@@ -5,6 +5,7 @@ import { BACKEND_URL } from '@/config.js'
  export default {
     data() {
         return {
+            buttonBlock: false,
             editing: false,
             newAlgorithm: {
                 name: '',
@@ -17,18 +18,23 @@ import { BACKEND_URL } from '@/config.js'
     },
     methods: {
         createAlgorithm() {
-            if (this.newAlgorithm.name && this.newAlgorithm.if_the_user && this.newAlgorithm.then && this.newAlgorithm.keywords){
-                if (this.editing) {
-                    this.$store.dispatch('editAlgorithm', {algorithm: this.newAlgorithm, id: this.$route.query.algorithm_id}).then(() => {
-                        this.$router.push('/emma/bot_events')
-                    })
-                }else {
-                    this.$store.dispatch('createAlgorithm', this.newAlgorithm)
-                    if (this.tutorial.currentStep == 5 && !this.tutorial.done) {
-                        this.$router.push('/emma/settings/bot_settings')
-                        this.$store.dispatch('setNextStep')
+            if (!this.buttonBlock) {
+                if (this.newAlgorithm.name && this.newAlgorithm.if_the_user && this.newAlgorithm.then && this.newAlgorithm.keywords){
+                    if (this.editing) {
+                        this.buttonBlock = true
+                        this.$store.dispatch('editAlgorithm', {algorithm: this.newAlgorithm, id: this.$route.query.algorithm_id}).then(() => {
+                            this.$router.push('/emma/bot_events')
+                        })
                     }else {
-                        this.$router.push('/emma/bot_events')
+                        this.buttonBlock = true
+                        this.$store.dispatch('createAlgorithm', this.newAlgorithm).then(() => {
+                            if (this.tutorial.currentStep == 5 && !this.tutorial.done) {
+                                this.$router.push('/emma/settings/bot_settings')
+                                this.$store.dispatch('setNextStep')
+                            }else {
+                                this.$router.push('/emma/bot_events')
+                            }
+                        })
                     }
                 }
             }
@@ -158,7 +164,7 @@ import { BACKEND_URL } from '@/config.js'
                         <button @click="generateKeywords">Згенерувати слова<img v-if="loadKeywords" src="@/assets/images/load.gif"></button>
                     </div>
                     <div class="create-script-buttons">
-                        <button @click="createAlgorithm" class="create-script-button chosen">Зберегти</button>
+                        <button @click="createAlgorithm" class="create-script-button chosen">Зберегти<img v-if="buttonBlock" src="@/assets/images/load.gif"></button>
                         <button class="create-script-button"><p>Видалити</p></button>
                     </div>
                 </div>
@@ -249,6 +255,14 @@ import { BACKEND_URL } from '@/config.js'
     .create-script-button:active {
         transform: scale(0.95);
         transition: transform 0.2s;
+    }
+    .create-script-buttons img {
+        height: 10px;
+        position: absolute;
+        right: 10px;
+    }
+    .create-script-buttons button {
+        position: relative;
     }
     .create-script-buttons {
         margin-top: 24px;

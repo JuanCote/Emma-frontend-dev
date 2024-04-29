@@ -20,7 +20,7 @@ import { BACKEND_URL } from '@/config.js'
     methods: {
         createAlgorithm() {
             if (!this.buttonBlock) {
-                if (this.newAlgorithm.name && this.newAlgorithm.if_the_user && this.newAlgorithm.then && this.newAlgorithm.keywords){
+                if (this.newAlgorithm.name && this.newAlgorithm.if_the_user && this.newAlgorithm.then && this.newAlgorithm.keywords.length != 0){
                     if (this.editing) {
                         this.buttonBlock = true
                         this.$store.dispatch('editAlgorithm', {algorithm: this.newAlgorithm, id: this.$route.query.algorithm_id}).then(() => {

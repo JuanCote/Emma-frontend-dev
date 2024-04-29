@@ -31,12 +31,6 @@ router.beforeEach((to, from, next) => {
     } else if (!tutorial.done && response) {
       switch (tutorial.currentStep) {
         case 1:
-          // if (to.path != '/emma/settings/bot_settings') {
-          //   next('/emma/settings/bot_settings')
-          // } else {
-          //   next()
-          // }
-          // break
           if (to.path != '/emma/settings/knowledge_base') {
             next('/emma/settings/knowledge_base')
           } else {
@@ -44,12 +38,6 @@ router.beforeEach((to, from, next) => {
           }
           break
         case 2:
-          // if (to.path != 'emma/settings/bot_settings') {
-          //   next('emma/settings/bot_settings')
-          // } else {
-          //   next()
-          // }
-          // break
           if (to.path != '/emma/settings/knowledge_base') {
             next('/emma/settings/knowledge_base')
           } else {
@@ -57,12 +45,6 @@ router.beforeEach((to, from, next) => {
           }
           break
         case 3:
-          // if (to.path != '/emma/settings/knowledge_base') {
-          //   next('/emma/settings/knowledge_base')
-          // } else {
-          //   next()
-          // }
-          // break
           if (to.path != '/emma/bot_events') {
             next('/emma/bot_events')
           } else {

@@ -75,7 +75,7 @@
 
     </div>
     <div class="bot-knowledge-input-div">
-        <p>На якій мові бот повинен спілкуватися?</p>
+        <p>На якій мові бот повинен спілкуватися? ТЕСТ ТЕСТ</p>
         <input v-model="knowledgeBase.language" placeholder="Введіть мову">
     </div>
     <button @click="saveKnowledgeBase" class="bot-knowledge-save">Зберегти</button>

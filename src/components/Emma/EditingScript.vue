@@ -291,7 +291,7 @@ import { BACKEND_URL } from '@/config.js'
         justify-content: space-between;
     }
     .create-script-phone img {
-        height: 44rem;
+        height: 40rem;
         margin-top: 10px;
     }
     .create-script-radiobutton p {

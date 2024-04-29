@@ -3,7 +3,7 @@
         methods: {
             saveKnowledgeBase() {
                 this.$store.dispatch('saveKnowledgeBase')
-                if (this.tutorial.currentStep == 3 && !this.tutorial.done) {
+                if (this.tutorial.currentStep == 1 && !this.tutorial.done) {
                     this.$store.dispatch('setNextStep')
                     this.$router.push('/emma/bot_events')
                 }
@@ -47,18 +47,18 @@
     </div>
 </div>
 <p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Наразі жодного розділу до бази знань не додано</p>
-<ul class="bot-knowledge-inputs" :class="{'tutorial': tutorial.currentStep == 3 && !tutorial.done}">
+<ul class="bot-knowledge-inputs" :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}">
     <div class="bot-knowledge-input-div">
         <p>У якій сфері бот повинен розбиратися?</p>
-        <input v-model="knowledgeBase.field" placeholder="Enter the answer">
+        <input v-model="knowledgeBase.field" placeholder="Введіть сферу">
     </div>
     <div class="bot-knowledge-input-div">
         <p>Яку роль бот повинен відігравати?</p>
-        <input v-model="knowledgeBase.role" placeholder="Enter the answer">
+        <input v-model="knowledgeBase.role" placeholder="Введіть роль">
     </div>
     <div class="bot-knowledge-input-div">
         <p>У якій манері бот повинен спілкуватися?</p>
-        <input v-model="knowledgeBase.manner" placeholder="Enter the answer">
+        <input v-model="knowledgeBase.manner" placeholder="Введіть манеру спілкування">
     </div>
     <div class="bot-knowledge-input-div-question">
         <p>Чи повинен бот відповідати на запитання, що не стосується теми або вашої компанії?</p>
@@ -76,7 +76,7 @@
     </div>
     <div class="bot-knowledge-input-div">
         <p>На якій мові бот повинен спілкуватися?</p>
-        <input v-model="knowledgeBase.language" placeholder="Enter the answer">
+        <input v-model="knowledgeBase.language" placeholder="Введіть мову">
     </div>
     <button @click="saveKnowledgeBase" class="bot-knowledge-save">Зберегти</button>
 </ul>

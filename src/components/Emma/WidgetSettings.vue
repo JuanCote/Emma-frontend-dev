@@ -4,7 +4,8 @@ import { BACKEND_URL } from '@/config.js'
 export default {
     data() {
         return {
-            tokenInput: ''
+            tokenInput: '',
+            tokenInputError: false,
         }
     },
     methods: {
@@ -20,10 +21,15 @@ export default {
                         token: this.tokenInput,
                         leased_token: false
                     })
-                });
-            if (this.tutorial.currentStep == 1 && !this.tutorial.done) {
-                this.$store.dispatch('setNextStep')
-            }
+                })
+                if (response.ok) {
+                    if (this.tutorial.currentStep == 7 && !this.tutorial.done) {
+                        this.$store.dispatch('setNextStep')
+                    }
+                }else {
+                    this.tokenInput = ''
+                    this.tokenInputError = true
+                }
             } catch (error) {
                 console.error('Error creating openai token:', error);
                 throw error;
@@ -31,15 +37,10 @@ export default {
         },
         copyText() {
             navigator.clipboard.writeText(this.scriptCode)
-            .then(() => {
-            console.log('Текст скопирован в буфер обмена');
-            // Дополнительные действия, если копирование успешно
-            })
             .catch(err => {
             console.error('Ошибка при копировании текста:', err);
-            // Дополнительные действия при ошибке копирования
             });
-            if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
+            if (this.tutorial.currentStep == 8 && !this.tutorial.done) {
                 this.$store.dispatch('finishTutorial')
             }
         }
@@ -103,13 +104,13 @@ export default {
 <template>
     <div class="widget-settings">
         <p class="widget-settings-instruction">Для вставки чату на ваш веб-сайт скопіюйте цей код і вставте його безпосередньо перед закриваючим тегом &lt;/body&gt; у вашому HTML-коді.</p>
-        <div :class="{'tutorial': tutorial.currentStep == 6 && !tutorial.done}" class="widget-settings-code">
+        <div :class="{'tutorial': tutorial.currentStep == 8 && !tutorial.done}" class="widget-settings-code">
             <p>{{ scriptCode }}</p>
             <img @click="copyText" src="@/assets/images/copybutton.svg">
         </div>
         <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>
-        <div class="widget-settings-openai-div" :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}">
-            <input v-model="tokenInput" placeholder="API">
+        <div class="widget-settings-openai-div" :class="{'tutorial': tutorial.currentStep == 7 && !tutorial.done}">
+            <input :class="{'error': tokenInputError}" v-model="tokenInput" :placeholder="tokenInputError ? 'Недійсний OpenAI ключ' : 'API key'">
             <button @click="createToken" class="colored"><p>Додати ключ</p></button>
             <button><p>Арендувати ключ</p></button>
         </div>
@@ -117,20 +118,17 @@ export default {
 </template>
 
 <style>
-    .widget-settings-openai-div button p {
-        
+    .widget-settings-openai-div button.colored {
+        background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+        color: white;
+        width: 120px;
+        transition: background 0.5s ease, transform 0.5s ease;
     }
-.widget-settings-openai-div button.colored {
-    background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
-    color: white;
-    width: 120px;
-    transition: background 0.5s ease, transform 0.5s ease;
-}
 
-.widget-settings-openai-div button.colored:hover {
-    background: linear-gradient(to top right, rgba(90, 85, 220, 1), rgba(150, 85, 220, 1)); /* Darker shades */
-    transform: scale(1.05);
-}
+    .widget-settings-openai-div button.colored:hover {
+        background: linear-gradient(to top right, rgba(90, 85, 220, 1), rgba(150, 85, 220, 1)); /* Darker shades */
+        transform: scale(1.05);
+    }
     .widget-settings-openai-div button.colored:active {
     transform: scale(0.95);
     transition: transform 0.2s;
@@ -146,6 +144,9 @@ export default {
         justify-content: center;
         min-width: 120px;
         cursor: pointer;
+    }
+    .widget-settings-openai-div input.error::placeholder {
+        color: red;
     }
     .widget-settings-openai-div input {
         font-size: 12px;

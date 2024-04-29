@@ -10,7 +10,7 @@ import algorithms from '@/store/modules/algorithms';
             this.$store.dispatch('copyAlgorithm', algorithm)
         },
         createScript() {
-            if (this.tutorial.currentStep == 4 && !this.tutorial.done) {
+            if (this.tutorial.currentStep == 3 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep')
             }
             this.$router.push('/emma/bot_events/create_script')
@@ -39,7 +39,7 @@ import algorithms from '@/store/modules/algorithms';
                 <p class="bot-settings-right-menu-header-botSettings">Всі події</p>
             </div>
             <div class="bot-events-header-buttons">
-                <button :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" @click="createScript" class="bot-events-header-button">
+                <button :class="{'tutorial': (tutorial.currentStep == 3 || tutorial.currentStep == 5) && !tutorial.done}" @click="createScript" class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати інструкцію</p>
                 </button>

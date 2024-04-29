@@ -6,7 +6,7 @@
         },
         data() {
             return {
-                chosenBot: 'Telegram'
+                chosenBot: 'Widget'
             }
         }
     }

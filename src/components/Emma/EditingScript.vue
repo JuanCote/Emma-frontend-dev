@@ -13,7 +13,8 @@ import { BACKEND_URL } from '@/config.js'
                 then: '',
                 keywords: []
             },
-            loadKeywords: false
+            loadKeywords: false,
+            keywordInput: ''
         }
     },
     methods: {
@@ -28,7 +29,7 @@ import { BACKEND_URL } from '@/config.js'
                     }else {
                         this.buttonBlock = true
                         this.$store.dispatch('createAlgorithm', this.newAlgorithm).then(() => {
-                            if (this.tutorial.currentStep == 5 && !this.tutorial.done) {
+                            if (this.tutorial.currentStep == 4 && !this.tutorial.done) {
                                 this.$router.push('/emma/settings/bot_settings')
                                 this.$store.dispatch('setNextStep')
                             }else {
@@ -60,6 +61,10 @@ import { BACKEND_URL } from '@/config.js'
                     console.error('Ошибка генерации ключевых слов:', error);
                 }
             }
+        },
+        addKeyword() {
+            this.newAlgorithm.keywords.push(this.keywordInput)
+            this.keywordInput = ''
         }
     },
     computed: {
@@ -128,7 +133,7 @@ import { BACKEND_URL } from '@/config.js'
                         <p>Клавіатура</p>
                     </div>
                 </div>
-                <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="create-script-form-content">
+                <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="create-script-form-content">
                     <p class="create-script-input-label-name">Назва</p>
                     <input v-model="newAlgorithm.name" placeholder="Введіть назву" class="create-script-input">
                     <div class="create-script-radiobuttons">
@@ -155,11 +160,12 @@ import { BACKEND_URL } from '@/config.js'
                     <p class="create-script-input-label">Ключові слова</p>
                     <div class="create-script-container-all">
                         <div class="create-script-container-keywords">
-                            <p v-if="newAlgorithm.keywords.length == 0">Не вказано ключових слів</p>
+                            <p class="empty-keywords-p" v-if="newAlgorithm.keywords.length == 0 && !keywordInput">Не вказано ключових слів</p>
                             <div class="create-script-keyword" v-for="keyword in newAlgorithm.keywords">
                                 <p>{{ keyword }}</p>
                                 <img @click="removeKeyword(keyword)" src="@/assets/images/keyword_cross.svg">
                             </div>
+                            <input :placeholder="newAlgorithm.keywords.length != 0 ? 'Введіть ключове слово' : ''" @keyup.enter="addKeyword" v-model="keywordInput" class="create-script-adding-keyword">
                         </div>
                         <button @click="generateKeywords">Згенерувати слова<img v-if="loadKeywords" src="@/assets/images/load.gif"></button>
                     </div>
@@ -177,6 +183,16 @@ import { BACKEND_URL } from '@/config.js'
 </template>
 
 <style>
+    .create-script-adding-keyword {
+        border: none;
+        z-index: 2;
+        background-color: transparent;
+        outline: none;
+    }
+    .empty-keywords-p {
+        position: absolute;
+        z-index: 1;
+    }
     .create-script-container-all button img {
         height: 10px;
     }

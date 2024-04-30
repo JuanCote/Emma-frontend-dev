@@ -5,7 +5,7 @@ import Auth from "@/views/Auth.vue"
 import store from "../store/index.js"
 
 const router = createRouter({
-  history: createWebHistory('/Emma-frontend/'),
+  history: createWebHistory('/Emma-frontend-dev/'),
   routes: [
     {
       path: `/`,

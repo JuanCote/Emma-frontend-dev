@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/Emma-frontend-dev/",
+  base: "/Emma-frontend/",
   plugins: [
     vue(),
   ],

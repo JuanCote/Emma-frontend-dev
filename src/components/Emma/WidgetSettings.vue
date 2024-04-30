@@ -6,10 +6,13 @@ export default {
         return {
             tokenInput: '',
             tokenInputError: false,
+            hasOpenaiToken: false,
+            tokenRented: false,
+            placeholderInputOpenai: 'API Key'
         }
     },
     methods: {
-        async createToken() {
+        async createToken(leased=false) {
             try {
                 const response = await fetch(`${BACKEND_URL}/create_openai_token`, {
                     method: 'POST',
@@ -19,16 +22,24 @@ export default {
                     credentials: 'include', // Включаем передачу кук с запросами
                     body: JSON.stringify({
                         token: this.tokenInput,
-                        leased_token: false
+                        leased_token: leased
                     })
                 })
                 if (response.ok) {
-                    if (this.tutorial.currentStep == 7 && !this.tutorial.done) {
+                    this.hasOpenaiToken = true
+                    const data = await response.json()
+                    if (data['message'] == 'token rented successfuly') {
+                        this.tokenRented = true
+                        this.placeholderInputOpenai = 'Токен орендовано'
+                        this.tokenInput = ''
+                    }
+                    if (this.tutorial.currentStep == 12 && !this.tutorial.done) {
                         this.$store.dispatch('setNextStep')
                     }
                 }else {
                     this.tokenInput = ''
                     this.tokenInputError = true
+                    this.placeholderInputOpenai = 'Невалідний OpenAI ключ'
                 }
             } catch (error) {
                 console.error('Error creating openai token:', error);
@@ -40,7 +51,7 @@ export default {
             .catch(err => {
             console.error('Ошибка при копировании текста:', err);
             });
-            if (this.tutorial.currentStep == 8 && !this.tutorial.done) {
+            if (this.tutorial.currentStep == 13 && !this.tutorial.done) {
                 this.$store.dispatch('finishTutorial')
             }
         }
@@ -61,8 +72,16 @@ export default {
             return response.json(); // Преобразуем тело ответа в JSON
         })
         .then(data => {
-            const token = data.token;
-            this.tokenInput = token
+            if (!('error' in data)) {
+                this.hasOpenaiToken = true
+                if (data.leased) {
+                    this.placeholderInputOpenai = 'Токен орендовано'
+                    this.tokenRented = true
+                }else {
+                    const token = data.token;
+                    this.tokenInput = token 
+                }
+            }
         })
         .catch(error => {
             console.error('Error getting openai token:', error);
@@ -103,21 +122,32 @@ export default {
 
 <template>
     <div class="widget-settings">
-        <p class="widget-settings-instruction">Для вставки чату на ваш веб-сайт скопіюйте цей код і вставте його безпосередньо перед закриваючим тегом &lt;/body&gt; у вашому HTML-коді.</p>
-        <div :class="{'tutorial': tutorial.currentStep == 8 && !tutorial.done}" class="widget-settings-code">
-            <p>{{ scriptCode }}</p>
-            <img @click="copyText" src="@/assets/images/copybutton.svg">
+        <div v-if="hasOpenaiToken">
+            <p class="widget-settings-instruction">Для вставки чату на ваш веб-сайт скопіюйте цей код і вставте його безпосередньо перед закриваючим тегом &lt;/body&gt; у вашому HTML-коді.</p>
+            <div :class="{'tutorial': tutorial.currentStep == 13 && !tutorial.done}" class="widget-settings-code">
+                <p>{{ scriptCode }}</p>
+                <img @click="copyText" src="@/assets/images/copybutton.svg">
+            </div>
         </div>
-        <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>
-        <div class="widget-settings-openai-div" :class="{'tutorial': tutorial.currentStep == 7 && !tutorial.done}">
-            <input :class="{'error': tokenInputError}" v-model="tokenInput" :placeholder="tokenInputError ? 'Недійсний OpenAI ключ' : 'API key'">
-            <button @click="createToken" class="colored"><p>Додати ключ</p></button>
-            <button><p>Арендувати ключ</p></button>
+        <div :class="{'tutorial': tutorial.currentStep == 12 && !tutorial.done}" class="widget-settings-adding-openai-key">
+            <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>
+            <p class="create-script-describe-creating-script">Ви хочете використовувати власний API-ключ OpenAI або орендувати наш? Використання власного ключа дає вам контроль над витратами, але вимагає самостійного управління балансом. Оренда ключа — це швидший та простіший спосіб</p>
+            <div class="widget-settings-openai-div">
+                <input :class="{'error': tokenInputError, 'rented': tokenRented}" v-model="tokenInput" :placeholder="placeholderInputOpenai">
+                <button @click="createToken()" class="colored"><p>Додати ключ</p></button>
+                <button @click="createToken(leased=true)" class="widget-settings-rent-button"><p>Орендувати ключ</p></button>
+            </div>
         </div>
     </div>
 </template>
 
 <style>
+    .widget-settings-rent-button {
+        transition: all 0.25s ease;
+    }
+    .widget-settings-rent-button:hover {
+        background: #e1e1e6;
+    }
     .widget-settings-openai-div button.colored {
         background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
         color: white;
@@ -145,6 +175,9 @@ export default {
         min-width: 120px;
         cursor: pointer;
     }
+    .widget-settings-openai-div input.rented::placeholder {
+        color: green;
+    }
     .widget-settings-openai-div input.error::placeholder {
         color: red;
     }
@@ -156,10 +189,15 @@ export default {
         border: 1px solid rgba(31, 31, 41, 0.16);
         border-radius: 8px;
     }
-    .widget-settings-openai-div.tutorial {
+    .bot-knowledge-inputs {
+        position: relative;
+    }
+    .widget-settings-adding-openai-key {
+        margin-top: 16px;
+    }
+    .widget-settings-adding-openai-key.tutorial {
         position: relative;
         background: white;
-        height: 48px;
         padding: 8px;
         margin-left: -8px;
         border-radius: 8px;
@@ -169,11 +207,11 @@ export default {
         gap: 8px;
         display: flex;
         height: 40px;
-        margin-top: 16px;
+        margin-top: 8px;
     }
     .widget-settings-openai {
         font-size: 16px;
-        margin-top: 24px;
+        margin-top: 8pxpx;
         font-weight: 500;
     }
     .widget-settings-code img {

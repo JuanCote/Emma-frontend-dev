@@ -82,6 +82,7 @@ import knowledgeBase from '@/store/modules/knowledgeBase';
     .bot-settings-right-menu {
         padding: 16px;
         width: 100%;
+        position: relative;
         background: #f0f3fa;
     }
     .bot-settings-left-menu ul li.tutorial {
@@ -106,6 +107,7 @@ import knowledgeBase from '@/store/modules/knowledgeBase';
     .bot-settings {
         display: flex;
         height: 100%;
+        width: 100%;
     }
     .bot-settings-left-menu {
         width: 30%;

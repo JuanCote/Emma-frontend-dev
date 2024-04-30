@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     botEvents() {
-        if (this.tutorial.currentStep == 2 && !this.tutorial.done) {
+        if (this.tutorial.currentStep == 7 && !this.tutorial.done) {
             this.$store.dispatch('setNextStep')
             this.$router.push('/emma/bot_events')
         }else {
@@ -20,7 +20,7 @@ export default {
         }
     },
     botSettings() {
-        if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
+        if (this.tutorial.currentStep == 11 && !this.tutorial.done) {
             this.$store.dispatch('setNextStep')
             this.$router.push('/emma/settings/bot_settings')
         }else {
@@ -39,7 +39,7 @@ export default {
                 <h1 v-if="menuExpanded" class="emma-left-menu-h1">EMMA</h1>
             </div>
             <ul class="emma-left-menu-ul">
-                <li @click="botSettings" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/settings'), 'tutorial': tutorial.currentStep == 6 && !tutorial.done }">
+                <li @click="botSettings" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/settings'), 'tutorial': tutorial.currentStep == 11 && !tutorial.done }">
                   <img v-if="$route.path.startsWith('/emma/settings')" src="@/assets/images/bot_settings_white.svg">
                   <img v-if="!($route.path.startsWith('/emma/settings'))" src="@/assets/images/bot_settings.svg">
                   <p v-if="menuExpanded">Налаштування бота</p>
@@ -54,7 +54,7 @@ export default {
                   <img v-if="$route.path == '/emma/chats'" src="@/assets/images/chats-white.svg">
                   <p v-if="menuExpanded">Чати</p>
                 </li>
-                <li @click="botEvents" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/bot_events'), 'tutorial': tutorial.currentStep == 2 && !tutorial.done }">
+                <li @click="botEvents" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/bot_events'), 'tutorial': tutorial.currentStep == 7 && !tutorial.done }">
                   <img v-if="!($route.path.startsWith('/emma/bot_events'))" src="@/assets/images/bot-events.svg">
                   <img v-if="$route.path.startsWith('/emma/bot_events')" src="@/assets/images/bot_events_white.svg">
                   <p v-if="menuExpanded">Події бота</p>
@@ -111,7 +111,7 @@ export default {
         white-space: nowrap
     }
     .emma-left-menu-li.tutorial {
-        position: absolute;
+        position: relative;
         background: white;
         z-index: 10000;
         width: 100%;

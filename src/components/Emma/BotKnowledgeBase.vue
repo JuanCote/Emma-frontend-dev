@@ -3,7 +3,7 @@
         methods: {
             saveKnowledgeBase() {
                 this.$store.dispatch('saveKnowledgeBase')
-                if (this.tutorial.currentStep == 1 && !this.tutorial.done) {
+                if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
                     this.$store.dispatch('setNextStep')
                     this.$router.push('/emma/bot_events')
                 }
@@ -37,7 +37,7 @@
         <p class="bot-settings-right-menu-header-botSettings">База знань бота</p>
     </div>
 <p class="bot-knowledge-name">База знань</p>
-<p class="bot-knowledge-describe">Опишіть боту, які завдання він має виконувати та як реагувати</p>
+<p class="bot-knowledge-describe">Опишіть боту, в якій сфері він повинен розбиратися, яку роль відігравати та в якій манері спілкуватися. Вкажіть чи повинен бот відповідати на запитання, що не відносяться до теми компанії та на якій мові він повинен спілкуватися</p>
 <div class="bot-knowledge-sections">
     <div class="bot-knowledge-section chosen">
         <p>Секція</p>
@@ -47,20 +47,20 @@
     </div>
 </div>
 <p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Наразі жодного розділу до бази знань не додано</p>
-<ul class="bot-knowledge-inputs" :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}">
-    <div class="bot-knowledge-input-div">
+<ul class="bot-knowledge-inputs">
+    <div :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}" class="bot-knowledge-input-div">
         <p>У якій сфері бот повинен розбиратися?</p>
         <input v-model="knowledgeBase.field" placeholder="Введіть сферу">
     </div>
-    <div class="bot-knowledge-input-div">
+    <div :class="{'tutorial': tutorial.currentStep == 2 && !tutorial.done}" class="bot-knowledge-input-div">
         <p>Яку роль бот повинен відігравати?</p>
         <input v-model="knowledgeBase.role" placeholder="Введіть роль">
     </div>
-    <div class="bot-knowledge-input-div">
+    <div :class="{'tutorial': tutorial.currentStep == 3 && !tutorial.done}" class="bot-knowledge-input-div">
         <p>У якій манері бот повинен спілкуватися?</p>
         <input v-model="knowledgeBase.manner" placeholder="Введіть манеру спілкування">
     </div>
-    <div class="bot-knowledge-input-div-question">
+    <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="bot-knowledge-input-div-question">
         <p>Чи повинен бот відповідати на запитання, що не стосується теми або вашої компанії?</p>
         <div class="bot-knowledge-input-div-question-checkboxes">
             <div>
@@ -74,11 +74,13 @@
         </div>
 
     </div>
-    <div class="bot-knowledge-input-div">
+    <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="bot-knowledge-input-div">
         <p>На якій мові бот повинен спілкуватися?</p>
         <input v-model="knowledgeBase.language" placeholder="Введіть мову">
     </div>
-    <button @click="saveKnowledgeBase" class="bot-knowledge-save">Зберегти</button>
+    <div class="bot-knowledge-save-div" :class="{'tutorial': tutorial.currentStep == 6 && !tutorial.done}">
+        <button @click="saveKnowledgeBase" class="bot-knowledge-save">Зберегти</button>
+    </div>
 </ul>
 </div>
 
@@ -95,6 +97,18 @@
         justify-content: center;
         align-items: center;
     }
+    .bot-knowledge-save-div.tutorial {
+        position: relative;
+        padding: 10px;
+        z-index: 10000;
+        width: 99px;
+        transform: translateX(-10px);
+        background: white;
+        border-radius: 8px;
+    }
+    .bot-knowledge-save-div {
+        width: 79px;
+    }
     .bot-knowledge-save {
         border-radius: 8px;
         background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
@@ -103,8 +117,8 @@
         justify-content: center;
         align-items: center;
         border: none;
+        width: 100%;
         height: 43px;
-        width: 79px;
         cursor: pointer;
         transition: background 0.5s ease, transform 0.5s ease;
     }
@@ -134,6 +148,13 @@
         font-size: 14px;
         font-weight: 500;
     }
+    .bot-knowledge-input-div-question.tutorial {
+        position: relative;
+        background: white;
+        padding: 10px;
+        z-index: 10000;
+        border-radius: 8px;
+    }
     .bot-knowledge-input-div-question {
         display: flex;
         flex-direction: column;
@@ -156,13 +177,12 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+        width: 100%;
     }
-    .bot-knowledge-inputs.tutorial {
-        position: absolute;
+    .bot-knowledge-input-div.tutorial {
+        position: relative;
         background: white;
-        padding-left: 5px;
-        padding-right: 5px;
-        transform: translateX(-5px);
+        padding: 10px;
         z-index: 10000;
         border-radius: 8px;
     }

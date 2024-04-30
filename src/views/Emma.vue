@@ -103,17 +103,22 @@ export default {
 <template>
     <div class="emma-background">
         <div class="emma-container">
-            <div v-if="tutorial.currentStep == 7 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до подій бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-knowledge"><p>Привіт! Щоб створити свого бота на базі штучного інтелекту спочатку заповніть форму і після цього натисніть кнопку "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-add-script"><p>Створіть свій перший скрипт</p><button class="skip-step" @click="$store.dispatch('setNextStep'), $store.dispatch('setNextStep'), $store.dispatch('setNextStep')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-form-script"><p>У цій формі потрібно описати скрипт, який реагуватиме на конкретні повідомлення. В полі "Назва" ви можете вказати будь-яку назву на ваш вибір. У поле "Запитання" вам потрібно ввести запитання, на яке скрипт буде реагувати. У поле "Відповідь" вкажіть, як бот має відповісти на це запитання. У поле "Ключові слова" ви можете вказати слова, на які скрипт буде реагувати у повідомленні від користувача</p><button class="skip-step" @click="$store.dispatch('setNextStep'), $store.dispatch('setNextStep'), $router.push('/emma/bot_events/')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 5 && !tutorial.done && $route.path != '/emma/bot_events/create_script'" class="tutorial-block-create-or-next"><p>Чудово! Можете ще додати інструкцію або продовжити налаштування, натиснувши "Пропустити крок"</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 8 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
+            <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-knowledge-1"><p>Привіт! Щоб створити свого бота на базі штучного інтелекту спочатку необхідно заповнити форму "База знань бота". Почнемо з поля "сфери бота". Тут ви маєте описати в якій сфері бот повинен розбиратися. Для того щоб піти далі - натисніть "Далі"</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge-2"><p>В цьому полі необхідно вказати роль, яку повинен відігравати бот</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-knowledge-3"><p>Опишіть манеру в якій бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-knowledge-4"><p>Вкажіть чи повинен бот відповідати на повідомлення, що не стосуються теми вашої компанії</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-knowledge-5"><p>Напишіть на якій мові бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-knowledge-6"><p>Щоб зберегти заповнену "базу знань бота" натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 12 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 7 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до подій бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 8 && !tutorial.done" class="tutorial-block-add-script"><p>Створіть свій перший скрипт</p><button class="skip-step" @click="$store.dispatch('setNextStep'), $store.dispatch('setNextStep'), $store.dispatch('setNextStep')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 9 && !tutorial.done" class="tutorial-block-form-script"><p>У цій формі потрібно описати скрипт, який реагуватиме на конкретні повідомлення. В полі "Назва" ви можете вказати будь-яку назву на ваш вибір. У поле "Запитання" вам потрібно ввести запитання, на яке скрипт буде реагувати. У поле "Відповідь" вкажіть, як бот має відповісти на це запитання. У поле "Ключові слова" ви можете вказати слова, на які скрипт буде реагувати у повідомленні від користувача</p><button class="skip-step" @click="$store.dispatch('setNextStep'), $store.dispatch('setNextStep'), $router.push('/emma/bot_events/')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 10 && !tutorial.done && $route.path != '/emma/bot_events/create_script'" class="tutorial-block-create-or-next"><p>Чудово! Можете ще додати інструкцію або продовжити налаштування, натиснувши "Пропустити крок"</p><button class="skip-step" @click="$store.dispatch('setNextStep')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 11 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 13 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
                 <button class="finish-button" @click="finishTutorial">Закінчити туторіал</button>
             </div>
-            <div v-if="!tutorial.done && (tutorial.currentStep != 5 || $route.path != '/emma/bot_events/create_script')" class="tutorial-background"></div>
+            <div v-if="!tutorial.done && (tutorial.currentStep != 10 || $route.path != '/emma/bot_events/create_script')" class="tutorial-background"></div>
             <EmmaLeftMenu/>
             <div class="right-container">
                 <div v-if="!socket" class="right-container-loading">
@@ -135,6 +140,7 @@ export default {
         background: #EAEAF3;
         border-radius: 20px;
         border: none;
+        min-width: 100px;
         padding: 10px 20px;
         cursor: pointer;
         transition: all 0.25s ease;
@@ -167,18 +173,99 @@ export default {
         z-index: 101;
         padding: 20px;
     }
-    .tutorial-block-knowledge-transition p {
+    .tutorial-block-knowledge-transition {
+        color: white;
+        position: absolute;
+        display: flex;
+        max-width: 330px;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 18em; /* Позиционируйте контент в нужное место */
+        left: -3%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-knowledge-6 p {
         text-align: center;
     }
-    .tutorial-block-knowledge-transition {
+    .tutorial-block-knowledge-6 {
+        color: white;
+        position: absolute;
+        display: flex;
+        max-width: 330px;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 40em; /* Позиционируйте контент в нужное место */
+        left: 15%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-knowledge-5 p {
+        text-align: center;
+    }
+    .tutorial-block-knowledge-5 {
+        color: white;
+        position: absolute;
+        display: flex;
+        max-width: 330px;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 36em; /* Позиционируйте контент в нужное место */
+        left: 15%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-knowledge-4 p {
+        text-align: center;
+    }
+    .tutorial-block-knowledge-4 {
+        color: white;
+        position: absolute;
+        display: flex;
+        max-width: 330px;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 32em; /* Позиционируйте контент в нужное место */
+        left: 15%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-knowledge-3 p {
+        text-align: center;
+    }
+    .tutorial-block-knowledge-3 {
         color: white;
         position: absolute;
         display: flex;
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 18em; /* Позиционируйте контент в нужное место */
-        left: -5%;
+        top: 25em; /* Позиционируйте контент в нужное место */
+        left: 12%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-knowledge-2 p {
+        text-align: center;
+    }
+    .tutorial-block-knowledge-2 {
+        color: white;
+        position: absolute;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 20em; /* Позиционируйте контент в нужное место */
+        left: 12%;
         width: 25em;
         z-index: 101;
         padding: 20px;
@@ -255,20 +342,20 @@ export default {
     .tutorial-block-add-script p {
         text-align: center; /* Center the text within the paragraph */
     }
-    .tutorial-block-knowledge {
+    .tutorial-block-knowledge-1 {
         color: white;
         position: absolute;
         display: flex;
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 50%; /* Позиционируйте контент в нужное место */
-        left: 17%;
+        top: 14em; /* Позиционируйте контент в нужное место */
+        left: 15%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;
     }
-    .tutorial-block-knowledge p {
+    .tutorial-block-knowledge-1 p {
         text-align: center; /* Center the text within the paragraph */
     }
     .tutorial-block-api {
@@ -278,8 +365,8 @@ export default {
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 31em; /* Позиционируйте контент в нужное место */
-        left: 67%;
+        top: 15em; /* Позиционируйте контент в нужное место */
+        left: 15%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;

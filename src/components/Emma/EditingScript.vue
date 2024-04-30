@@ -29,7 +29,7 @@ import { BACKEND_URL } from '@/config.js'
                     }else {
                         this.buttonBlock = true
                         this.$store.dispatch('createAlgorithm', this.newAlgorithm).then(() => {
-                            if (this.tutorial.currentStep == 4 && !this.tutorial.done) {
+                            if (this.tutorial.currentStep == 9 && !this.tutorial.done) {
                                 this.$router.push('/emma/settings/bot_settings')
                                 this.$store.dispatch('setNextStep')
                             }else {
@@ -133,8 +133,9 @@ import { BACKEND_URL } from '@/config.js'
                         <p>Клавіатура</p>
                     </div>
                 </div>
-                <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="create-script-form-content">
+                <div :class="{'tutorial': tutorial.currentStep == 9 && !tutorial.done}" class="create-script-form-content">
                     <p class="create-script-input-label-name">Назва</p>
+                    <p class="create-script-describe-creating-script">Будь-яка</p>
                     <input v-model="newAlgorithm.name" placeholder="Введіть назву" class="create-script-input">
                     <div class="create-script-radiobuttons">
                         <div class="create-script-radiobutton">
@@ -154,10 +155,13 @@ import { BACKEND_URL } from '@/config.js'
                         </div>
                     </div>
                     <p class="create-script-input-label">Запитання</p>
+                    <p class="create-script-describe-creating-script">Напишіть запитання користувача, на котре повинна реагувати подія</p>
                     <input v-model="newAlgorithm.if_the_user" placeholder="Введіть запитання" class="create-script-input">
                     <p class="create-script-input-label">Відповідь</p>
+                    <p class="create-script-describe-creating-script">Що повинен відповісти бот на запитання</p>
                     <input v-model="newAlgorithm.then" placeholder="Введіть відповідь" class="create-script-input">
                     <p class="create-script-input-label">Ключові слова</p>
+                    <p class="create-script-describe-creating-script">Вкажіть ключові слова, по котрим подія буде реагувати на повідомлення користувача, щоб додати слово вручну напишіть його в полі та натисніть Enter, щоб сгенерувати вибірку по вказаному запитанню - натисніть "Згенерувати слова"</p>
                     <div class="create-script-container-all">
                         <div class="create-script-container-keywords">
                             <p class="empty-keywords-p" v-if="newAlgorithm.keywords.length == 0 && !keywordInput">Не вказано ключових слів</p>
@@ -183,6 +187,11 @@ import { BACKEND_URL } from '@/config.js'
 </template>
 
 <style>
+    .create-script-describe-creating-script {
+        font-size: 12px;
+        color: rgba(31, 31, 41, 0.5); 
+        margin-top: 8px;
+    }
     .create-script-adding-keyword {
         border: none;
         z-index: 2;
@@ -212,6 +221,7 @@ import { BACKEND_URL } from '@/config.js'
     }
     .create-script-container-all {
         display: flex;
+        margin-top: 8px;
         gap: 8px;
     }
     .create-script-container-keywords p {

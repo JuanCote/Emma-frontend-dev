@@ -31,48 +31,35 @@ router.beforeEach((to, from, next) => {
     } else if (!tutorial.done && response) {
       switch (tutorial.currentStep) {
         case 1:
-          if (to.path != '/emma/settings/knowledge_base') {
-            next('/emma/settings/knowledge_base')
-          } else {
-            next()
-          }
-          break
         case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
           if (to.path != '/emma/settings/knowledge_base') {
             next('/emma/settings/knowledge_base')
           } else {
             next()
           }
           break
-        case 3:
-          if (to.path != '/emma/bot_events') {
-            next('/emma/bot_events')
-          } else {
-            next()
-          }
-          break
-        case 4:
+        case 9:
           if (to.path != '/emma/bot_events/create_script') {
             next('/emma/bot_events/create_script')
           } else {
             next()
           }
           break
-        case 5:
+        case 8:
+        case 10:
+        case 11:
           if (to.path != '/emma/bot_events' && to.path != '/emma/bot_events/create_script') {
             next('/emma/bot_events')
           } else {
             next()
           }
           break
-        case 6:
-          if (to.path != '/emma/bot_events') {
-            next('/emma/bot_events')
-          } else {
-            next()
-          }
-          break
-          case 7:
+          case 12:
             if (to.path != '/emma/settings/bot_settings') {
               next('/emma/settings/bot_settings')
             } else {

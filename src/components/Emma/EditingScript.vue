@@ -29,7 +29,7 @@ import { BACKEND_URL } from '@/config.js'
                     }else {
                         this.buttonBlock = true
                         this.$store.dispatch('createAlgorithm', this.newAlgorithm).then(() => {
-                            if (this.tutorial.currentStep == 9 && !this.tutorial.done) {
+                            if (this.tutorial.currentStep == 13 && !this.tutorial.done) {
                                 this.$router.push('/emma/settings/bot_settings')
                                 this.$store.dispatch('setNextStep')
                             }else {
@@ -133,10 +133,12 @@ import { BACKEND_URL } from '@/config.js'
                         <p>Клавіатура</p>
                     </div>
                 </div>
-                <div :class="{'tutorial': tutorial.currentStep == 9 && !tutorial.done}" class="create-script-form-content">
-                    <p class="create-script-input-label-name">Назва</p>
-                    <p class="create-script-describe-creating-script">Будь-яка</p>
-                    <input v-model="newAlgorithm.name" placeholder="Введіть назву" class="create-script-input">
+                <div class="create-script-form-content">
+                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 9 && !tutorial.done}">
+                        <p class="create-script-input-label-name">Назва</p>
+                        <p class="create-script-describe-creating-script">Будь-яка</p>
+                        <input v-model="newAlgorithm.name" placeholder="Введіть назву" class="create-script-input">
+                    </div>
                     <div class="create-script-radiobuttons">
                         <div class="create-script-radiobutton">
                             <input name="messageType" type="radio">
@@ -154,27 +156,35 @@ import { BACKEND_URL } from '@/config.js'
                             <img src="@/assets/images/question_creating_script.svg">
                         </div>
                     </div>
-                    <p class="create-script-input-label">Запитання</p>
-                    <p class="create-script-describe-creating-script">Напишіть запитання користувача, на котре повинна реагувати подія</p>
-                    <input v-model="newAlgorithm.if_the_user" placeholder="Введіть запитання" class="create-script-input">
-                    <p class="create-script-input-label">Відповідь</p>
-                    <p class="create-script-describe-creating-script">Що повинен відповісти бот на запитання</p>
-                    <input v-model="newAlgorithm.then" placeholder="Введіть відповідь" class="create-script-input">
-                    <p class="create-script-input-label">Ключові слова</p>
-                    <p class="create-script-describe-creating-script">Вкажіть ключові слова, по котрим подія буде реагувати на повідомлення користувача, щоб додати слово вручну напишіть його в полі та натисніть Enter, щоб сгенерувати вибірку по вказаному запитанню - натисніть "Згенерувати слова"</p>
-                    <div class="create-script-container-all">
-                        <div class="create-script-container-keywords">
-                            <p class="empty-keywords-p" v-if="newAlgorithm.keywords.length == 0 && !keywordInput">Не вказано ключових слів</p>
-                            <div class="create-script-keyword" v-for="keyword in newAlgorithm.keywords">
-                                <p>{{ keyword }}</p>
-                                <img @click="removeKeyword(keyword)" src="@/assets/images/keyword_cross.svg">
-                            </div>
-                            <input :placeholder="newAlgorithm.keywords.length != 0 ? 'Введіть ключове слово' : ''" @keyup.enter="addKeyword" v-model="keywordInput" class="create-script-adding-keyword">
-                        </div>
-                        <button @click="generateKeywords">Згенерувати слова<img v-if="loadKeywords" src="@/assets/images/load.gif"></button>
+                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 10 && !tutorial.done}">
+                        <p class="create-script-input-label">Запитання</p>
+                        <p class="create-script-describe-creating-script">Напишіть запитання користувача, на котре повинна реагувати подія</p>
+                        <input v-model="newAlgorithm.if_the_user" placeholder="Введіть запитання" class="create-script-input">
                     </div>
+                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 11 && !tutorial.done}">
+                        <p class="create-script-input-label">Відповідь</p>
+                        <p class="create-script-describe-creating-script">Що повинен відповісти бот на запитання</p>
+                        <input v-model="newAlgorithm.then" placeholder="Введіть відповідь" class="create-script-input">
+                    </div>
+                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 12 && !tutorial.done}">
+                        <p class="create-script-input-label">Ключові слова</p>
+                        <p class="create-script-describe-creating-script">Вкажіть ключові слова, по котрим подія буде реагувати на повідомлення користувача, щоб додати слово вручну напишіть його в полі та натисніть Enter, щоб сгенерувати вибірку по вказаному запитанню - натисніть "Згенерувати слова"</p>
+                        <div class="create-script-container-all">
+                            <div class="create-script-container-keywords">
+                                <p class="empty-keywords-p" v-if="newAlgorithm.keywords.length == 0 && !keywordInput">Не вказано ключових слів</p>
+                                <div class="create-script-keyword" v-for="keyword in newAlgorithm.keywords">
+                                    <p>{{ keyword }}</p>
+                                    <img @click="removeKeyword(keyword)" src="@/assets/images/keyword_cross.svg">
+                                </div>
+                                <input :placeholder="newAlgorithm.keywords.length != 0 ? 'Введіть ключове слово' : ''" @keyup.enter="addKeyword" v-model="keywordInput" class="create-script-adding-keyword">
+                            </div>
+                            <button @click="generateKeywords">Згенерувати слова<img v-if="loadKeywords" src="@/assets/images/load.gif"></button>
+                        </div>
+                    </div>    
                     <div class="create-script-buttons">
-                        <button @click="createAlgorithm" class="create-script-button chosen">Зберегти<img v-if="buttonBlock" src="@/assets/images/load.gif"></button>
+                        <div :class="{'tutorial': tutorial.currentStep == 13 && !tutorial.done}" class="create-script-save-button-div">
+                            <button @click="createAlgorithm" class="create-script-button chosen">Зберегти<img v-if="buttonBlock" src="@/assets/images/load.gif"></button>
+                        </div>
                         <button class="create-script-button"><p>Видалити</p></button>
                     </div>
                 </div>
@@ -187,6 +197,30 @@ import { BACKEND_URL } from '@/config.js'
 </template>
 
 <style>
+    .create-script-save-button-div.tutorial {
+        position: relative;
+        padding: 10px;
+        z-index: 10000;
+        width: 99px;
+        transform: translateX(-10px) translateY(-10px);
+        background: white;
+        border-radius: 8px;
+        width: 124px;
+    }
+    .create-script-save-button-div {
+        width: 104px;
+    }
+    .create-script-div.tutorial {
+        position: relative;
+        padding: 10px;
+        z-index: 10000;
+        transform: translateX(-10px);
+        background: white;
+        border-radius: 8px;
+    }
+    .create-script-div {
+        margin-top: 12px;
+    }
     .create-script-describe-creating-script {
         font-size: 12px;
         color: rgba(31, 31, 41, 0.5); 
@@ -334,7 +368,7 @@ import { BACKEND_URL } from '@/config.js'
         font-size: 14px;
     }
     .create-script-input-label {
-        margin-top: 24px;
+        margin-top: 12px;
         font-size: 14px;
     }
     .create-script-form-button.chosen {

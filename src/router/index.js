@@ -44,6 +44,11 @@ router.beforeEach((to, from, next) => {
           }
           break
         case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+          store.dispatch('setNextStep', {step: 0, currentStep: 9})
           if (to.path != '/emma/bot_events/create_script') {
             next('/emma/bot_events/create_script')
           } else {
@@ -51,15 +56,22 @@ router.beforeEach((to, from, next) => {
           }
           break
         case 8:
-        case 10:
-        case 11:
+          if (to.path != '/emma/bot_events') {
+            next('/emma/bot_events')
+          } else {
+            next()
+          }
+          break
+        case 14:
+        case 15:
           if (to.path != '/emma/bot_events' && to.path != '/emma/bot_events/create_script') {
             next('/emma/bot_events')
           } else {
             next()
           }
           break
-          case 12:
+          case 16:
+          case 17:
             if (to.path != '/emma/settings/bot_settings') {
               next('/emma/settings/bot_settings')
             } else {

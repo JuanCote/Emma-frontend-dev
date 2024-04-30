@@ -30,7 +30,7 @@ import knowledgeBase from '@/store/modules/knowledgeBase';
         <div class="bot-settings-left-menu">
             <ul>
                 <li @click="this.$router.push('/emma/settings/bot_settings')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings')}">Налаштування ботів</li>
-                <li @click="knowledgeBase" :class="{ 'chosen': $route.path.startsWith('/emma/settings/knowledge_base'), 'tutorial': tutorial.currentStep == 2 && !tutorial.done}">База знань бота</li>
+                <li @click="knowledgeBase" :class="{ 'chosen': $route.path.startsWith('/emma/settings/knowledge_base')}">База знань бота</li>
                 <li @click="this.$router.push('/emma/settings/templates')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/templates')}">Шаблони</li>
             </ul>
         </div>

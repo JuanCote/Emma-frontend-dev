@@ -4,7 +4,7 @@
             saveKnowledgeBase() {
                 this.$store.dispatch('saveKnowledgeBase')
                 if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
-                    this.$store.dispatch('setNextStep')
+                    this.$store.dispatch('setNextStep', {})
                     this.$router.push('/emma/bot_events')
                 }
             }

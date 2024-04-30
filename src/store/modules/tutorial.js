@@ -17,6 +17,10 @@ const state = {
         state.tutorial = JSON.parse(localStorage.getItem('tutorialState'));
       }
     },
+    setCurrentStep(state, n) {
+      state.tutorial.currentStep = n
+      localStorage.setItem('tutorialState', JSON.stringify(state.tutorial));
+    },
     setNextStep(state) {
       state.tutorial.currentStep += 1;
       localStorage.setItem('tutorialState', JSON.stringify(state.tutorial));
@@ -32,8 +36,16 @@ const state = {
     initializeState({ commit }) {
       commit("initializeState");
     },
-    setNextStep({ commit }) {
-      commit("setNextStep")
+    setNextStep({ commit }, {step=1, currentStep=0}) {
+      if (!currentStep == 0) {
+        commit('setCurrentStep', currentStep)
+      }else {
+        let n = 0
+        while (n != step) {
+          commit("setNextStep")
+          n++
+        }
+      }
     },
     finishTutorial({commit}) {
       commit("finishTutorial")

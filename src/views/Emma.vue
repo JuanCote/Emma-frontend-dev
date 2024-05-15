@@ -18,61 +18,64 @@ export default {
         EmmaRightContainer
     },
     created() {
-        this.socket = new WebSocket(`${BACKEND_URL_WS}/ws`);
-        this.socket.onopen = () => {
-          const data = {
-              type: 'manager',
-              user_id: this.user.id
-          };
-          this.socket.send(JSON.stringify(data));
-      };
-      this.socket.onmessage = (event) => {
-          const eventData = JSON.parse(event.data);
-          const chats = this.chats.slice()
-          let chatFound = false; 
-          chats.forEach((chat) => {
-              if (chat.name == eventData.chat_id) {
-                  if ("message" in eventData){
-                      chat.messages.push({sender: 'user', message: eventData.message});
-                  }
-                  else if ("proposal" in eventData) {
-                      chat.displayProposal = true
-                      chat.emmaProposal = eventData.proposal['answer']
-                  }
-                  chatFound = true; 
-              }
-          });
-          const archive = this.archive.slice()
-          let archiveFound = false; 
-          archive.forEach((chat) => {
-              if (chat.name == eventData.chat_id) {
-                  if ("message" in eventData){
-                      chat.messages.push({sender: 'user', message: eventData.message});
-                  }
-                  else if ("proposal" in eventData) {
-                      chat.displayProposal = true
-                      chat.emmaProposal = eventData.proposal['answer']
-                  }
-                  archiveFound = true; 
-              }
-          });
-          if (!chatFound && !archiveFound) {
-              this.$store.dispatch('fetchChats')
-          }
-          this.$nextTick(() => {
-              let container = document.querySelector('.emma-chat-messages');
-              container.scrollTop = container.scrollHeight;
-          });
-      };
-      this.socket.onclose = () => {
-      console.log('Соединение закрыто');
-      };
-      this.socket.onerror = (error) => {
-      console.error('Произошла ошибка:', error);
-      };
-      this.$store.dispatch('fetchChats').then(() => {
-          this.chatsLoaded = true
-      })
+        this.$store.dispatch('fetchBots').then(() => {
+            this.socket = new WebSocket(`${BACKEND_URL_WS}/ws`);
+                this.socket.onopen = () => {
+                const data = {
+                    type: 'manager',
+                    user_id: this.user.id
+                };
+                this.socket.send(JSON.stringify(data));
+            };
+            this.socket.onmessage = (event) => {
+                const eventData = JSON.parse(event.data);
+                const chats = this.chats.slice()
+                let chatFound = false; 
+                chats.forEach((chat) => {
+                    if (chat.name == eventData.chat_id) {
+                        if ("message" in eventData){
+                            chat.messages.push({sender: 'user', message: eventData.message});
+                        }
+                        else if ("proposal" in eventData) {
+                            chat.displayProposal = true
+                            chat.emmaProposal = eventData.proposal['answer']
+                        }
+                        chatFound = true; 
+                    }
+                });
+                const archive = this.archive.slice()
+                let archiveFound = false; 
+                archive.forEach((chat) => {
+                    if (chat.name == eventData.chat_id) {
+                        if ("message" in eventData){
+                            chat.messages.push({sender: 'user', message: eventData.message});
+                        }
+                        else if ("proposal" in eventData) {
+                            chat.displayProposal = true
+                            chat.emmaProposal = eventData.proposal['answer']
+                        }
+                        archiveFound = true; 
+                    }
+                });
+                if (!chatFound && !archiveFound) {
+                    this.$store.dispatch('fetchChats')
+                }
+                this.$nextTick(() => {
+                    let container = document.querySelector('.emma-chat-messages');
+                    container.scrollTop = container.scrollHeight;
+                });
+            };
+            this.socket.onclose = () => {
+            console.log('Соединение закрыто');
+            };
+            this.socket.onerror = (error) => {
+            console.error('Произошла ошибка:', error);
+            };
+            this.$store.dispatch('fetchChats').then(() => {
+                this.chatsLoaded = true
+            })
+        })
+        
     },
     methods: {
         finishTutorial() {

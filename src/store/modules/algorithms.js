@@ -12,45 +12,48 @@ const state = {
   };
   
   const actions = {
-    async fetchAlgorithms({ commit }) {
+    async fetchAlgorithms({ commit }, payload) {
       try {
-        const response = await fetch(`${BACKEND_URL}/get_algorithms`, {
+        const response = await fetch(`${BACKEND_URL}/get_algorithms?bot_id=${payload.botId}`, {
           method: 'GET',
           credentials: 'include'
       });
         const data = await response.json();
+        console.log(data)
         commit('updateAlgorithms', data);
       } catch (error) {
         console.error('Ошибка загрузки алгоритмов:', error);
       }
     },
-    async deleteAlgorithm({ commit }, id) {
+    async deleteAlgorithm({ dispatch, commit }, payload) {
       try {
-        const response = await fetch(`${BACKEND_URL}/delete_algorithm?algorithm_id=${id}`, {
+        const response = await fetch(`${BACKEND_URL}/delete_algorithm?algorithm_id=${payload.id}&bot_id=${payload.botId}`, {
           method: 'DELETE',
           credentials: 'include'
+      }).then(() => {
+        dispatch('fetchAlgorithms', {botId: payload.botId})
       });
-        const data = await response.json();
-        commit('updateAlgorithms', data);
       } catch (error) {
         console.error('Ошибка удаления алгоритма:', error);
       }
     },
-    async copyAlgorithm({commit, dispatch}, algorithm) {
+    async copyAlgorithm({ commit, dispatch }, payload) {
       try {
-        const response = await fetch(`${BACKEND_URL}/copy_algorithm?algorithm_id=${algorithm.id}`, {
+        const response = await fetch(`${BACKEND_URL}/copy_algorithm?algorithm_id=${payload.id}`, {
           method: 'GET',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
-      }).then(() => {
-        dispatch('fetchAlgorithms')
-      })
+        }).then(() => {
+          dispatch('fetchAlgorithms', {botId: payload.botId})
+        });
+        
       } catch (error) {
         console.error('Ошибка копирования алгоритма:', error);
       }
     },
+    
     async createAlgorithm({commit, dispatch}, algorithm) {
       try {
         const response = await fetch(`${BACKEND_URL}/create_algorithm`, {
@@ -61,23 +64,23 @@ const state = {
           },
           body: JSON.stringify(algorithm)
       }).then(() => {
-        dispatch('fetchAlgorithms')
+        dispatch('fetchAlgorithms', {botId: algorithm.bot_id})
       })
       } catch (error) {
         console.error('Ошибка создания алгоритма:', error);
       }
     },
-    async editAlgorithm({commit, dispatch}, {algorithm, id}) {
+    async editAlgorithm({commit, dispatch}, payload) {
       try {
-        const response = await fetch(`${BACKEND_URL}/edit_algorithm?algorithm_id=${id}`, {
+        const response = await fetch(`${BACKEND_URL}/edit_algorithm?algorithm_id=${payload.id}`, {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(algorithm)
+          body: JSON.stringify(payload.algorithm)
       }).then(() => {
-        dispatch('fetchAlgorithms')
+        dispatch('fetchAlgorithms', {botId: payload.botId})
       })
       } catch (error) {
         console.error('Ошибка создания алгоритма:', error);

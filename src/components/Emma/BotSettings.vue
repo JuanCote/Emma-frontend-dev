@@ -1,12 +1,24 @@
 <script>
     import WidgetSettings from '@/components/Emma/WidgetSettings.vue'
+    import TelegramSettings from './TelegramSettings.vue';
     export default {
         components: {
-            WidgetSettings
+            WidgetSettings,
+            TelegramSettings
         },
         data() {
             return {
-                chosenBot: 'Widget'
+                chosenMenu: 'Widget'
+            }
+        },
+        methods: {
+            choseTelegram() {
+                this.chosenMenu = 'Telegram'
+                this.$router.push('/emma/settings/bot_settings/telegram')
+            },
+            choseWidget() {
+                this.chosenMenu = 'Widget'
+                this.$router.push('/emma/settings/bot_settings/widget')
             }
         }
     }
@@ -19,18 +31,18 @@
     <p class="bot-settings-right-menu-header-botSettings">Налаштування бота</p>
 </div>
 <div class="bot-settings-right-menu-bots">
-    <div @click="chosenBot = 'Telegram'" :class="{ 'chosen': chosenBot === 'Telegram'}">
-        <img v-if="chosenBot != 'Telegram'" src="@/assets/images/telegram-icon.svg">
-        <img v-if="chosenBot == 'Telegram'" src="@/assets/images/telegram-icon-white.svg">
+    <div @click="choseTelegram" :class="{ 'chosen': chosenMenu === 'Telegram'}">
+        <img v-if="chosenMenu != 'Telegram'" src="@/assets/images/telegram-icon.svg">
+        <img v-if="chosenMenu == 'Telegram'" src="@/assets/images/telegram-icon-white.svg">
         <p>Telegram</p>
     </div>
     <div>
         <img src="@/assets/images/viber.svg">
         <p>Viber</p>
     </div>
-    <div @click="chosenBot = 'Widget'" :class="{ 'chosen': chosenBot === 'Widget'}">
-        <img v-if="chosenBot != 'Widget'" src="@/assets/images/widget-black.svg">
-        <img v-if="chosenBot == 'Widget'" src="@/assets/images/widget.svg">
+    <div @click="choseWidget" :class="{ 'chosen': chosenMenu === 'Widget'}">
+        <img v-if="chosenMenu != 'Widget'" src="@/assets/images/widget-black.svg">
+        <img v-if="chosenMenu == 'Widget'" src="@/assets/images/widget.svg">
         <p>Widget</p>
     </div>
     <div>
@@ -42,8 +54,8 @@
         <p>Instagram</p>
     </div>
 </div>
-<WidgetSettings></WidgetSettings>
-
+<WidgetSettings v-if="$route.path == '/emma/settings/bot_settings/widget'"></WidgetSettings>
+<TelegramSettings v-if="$route.path == '/emma/settings/bot_settings/telegram'"></TelegramSettings>
 </template>
 
 <style>

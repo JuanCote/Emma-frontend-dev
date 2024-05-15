@@ -10,9 +10,9 @@ const mutations = {
 };
 
 const actions = {
-  async getKnowledgeBase({ state }) {
+  async getKnowledgeBase({ state }, payload) {
     try {
-      const response = await fetch(`${BACKEND_URL}/get_knowledge_base`, {
+      const response = await fetch(`${BACKEND_URL}/get_knowledge_base?bot_id=${payload.bot_id}`, {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json'
@@ -43,13 +43,14 @@ const actions = {
         throw error;
     }
   },
-  async saveKnowledgeBase({ state }) {
+  async saveKnowledgeBase({ state }, payload) {
     if (state.knowledgeBase.reply_to_non_company_topics == 'true') {
       state.knowledgeBase.reply_to_non_company_topics = true
     }else {
       state.knowledgeBase.reply_to_non_company_topics = false
     }
     try {
+      state.knowledgeBase.bot_id = payload.bot_id
       const response = await fetch(`${BACKEND_URL}/add_knowledge_base`, {
           method: 'POST',
           headers: {

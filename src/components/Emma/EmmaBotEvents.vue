@@ -4,10 +4,10 @@ import algorithms from '@/store/modules/algorithms';
  export default {
     methods: {
         deleteAlgorithm(id) {
-            this.$store.dispatch('deleteAlgorithm', id)
+            this.$store.dispatch('deleteAlgorithm', {id: id, botId: this.chosenBot.id})
         },
         copyAlgorithm(algorithm) {
-            this.$store.dispatch('copyAlgorithm', algorithm)
+            this.$store.dispatch('copyAlgorithm', {id: algorithm.id, botId: this.chosenBot.id})
         },
         createScript() {
             if (this.tutorial.currentStep == 8 && !this.tutorial.done) {
@@ -22,10 +22,13 @@ import algorithms from '@/store/modules/algorithms';
         },
         tutorial() {
             return this.$store.getters.getTutorial
+        },
+        chosenBot() {
+            return this.$store.state.bots.chosenBot
         }
     },
     mounted() {
-        this.$store.dispatch('fetchAlgorithms')
+        this.$store.dispatch('fetchAlgorithms', {botId: this.chosenBot.id})
     }
  }
 </script>

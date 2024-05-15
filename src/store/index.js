@@ -6,6 +6,7 @@ import chatModule from "./modules/chat"
 import User from './modules/user'
 import knowledgeBase from './modules/knowledgeBase'
 import tutorial from "./modules/tutorial";
+import bots from "./modules/bots"
 
 export default createStore({
   modules: {
@@ -13,7 +14,8 @@ export default createStore({
     chat: chatModule,
     user: User,
     knowledgeBase: knowledgeBase,
-    tutorial: tutorial
+    tutorial: tutorial,
+    bots: bots
   }
   
 });

@@ -2,7 +2,7 @@
     export default{
         methods: {
             saveKnowledgeBase() {
-                this.$store.dispatch('saveKnowledgeBase')
+                this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id})
                 if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
                     this.$store.dispatch('setNextStep', {})
                     this.$router.push('/emma/bot_events')
@@ -18,10 +18,13 @@
             },
             tutorial() {
                 return this.$store.getters.getTutorial
+            },
+            chosenBot() {
+                return this.$store.state.bots.chosenBot
             }
         },
         mounted() {
-            this.$store.dispatch('getKnowledgeBase')
+            this.$store.dispatch('getKnowledgeBase', {bot_id: this.chosenBot.id})
         }
     }
 </script>

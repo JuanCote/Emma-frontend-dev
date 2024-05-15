@@ -11,19 +11,17 @@ import { BACKEND_URL } from '@/config.js'
                 name: '',
                 if_the_user: '',
                 then: '',
-                keywords: []
             },
-            loadKeywords: false,
-            keywordInput: ''
         }
     },
     methods: {
         createAlgorithm() {
             if (!this.buttonBlock) {
-                if (this.newAlgorithm.name && this.newAlgorithm.if_the_user && this.newAlgorithm.then && this.newAlgorithm.keywords.length != 0){
+                if (this.newAlgorithm.name && this.newAlgorithm.if_the_user && this.newAlgorithm.then){
+                    this.newAlgorithm.bot_id = this.chosenBot.id
                     if (this.editing) {
                         this.buttonBlock = true
-                        this.$store.dispatch('editAlgorithm', {algorithm: this.newAlgorithm, id: this.$route.query.algorithm_id}).then(() => {
+                        this.$store.dispatch('editAlgorithm', {algorithm: this.newAlgorithm, id: this.$route.query.algorithm_id, botId: this.chosenBot.id}).then(() => {
                             this.$router.push('/emma/bot_events')
                         })
                     }else {
@@ -39,32 +37,6 @@ import { BACKEND_URL } from '@/config.js'
                     }
                 }
             }
-        },
-        removeKeyword(keyword) {
-            const index = this.newAlgorithm.keywords.indexOf(keyword)
-            if (index !== -1) {
-                this.newAlgorithm.keywords.splice(index, 1)
-            }
-        },
-        async generateKeywords() {
-            if (this.newAlgorithm.if_the_user) {
-                try {
-                this.loadKeywords = true
-                const response = await fetch(`${BACKEND_URL}/get_keywords?question=${this.newAlgorithm.if_the_user}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                });
-                this.loadKeywords = false
-                const data = await response.json();
-                this.newAlgorithm.keywords = data
-                } catch (error) {
-                    console.error('Ошибка генерации ключевых слов:', error);
-                }
-            }
-        },
-        addKeyword() {
-            this.newAlgorithm.keywords.push(this.keywordInput)
-            this.keywordInput = ''
         }
     },
     computed: {
@@ -74,9 +46,12 @@ import { BACKEND_URL } from '@/config.js'
         algorithms() {
             return this.$store.state.algorithms.algorithms
         },
+        chosenBot() {
+            return this.$store.state.bots.chosenBot
+        }
     },
     created() {
-        this.$store.dispatch('fetchAlgorithms').then(() => {
+        this.$store.dispatch('fetchAlgorithms', {botId: this.chosenBot.id}).then(() => {
             if (this.$route.query.algorithm_id) {
                 const id = this.$route.query.algorithm_id
                 this.editing = true
@@ -86,7 +61,6 @@ import { BACKEND_URL } from '@/config.js'
                         this.newAlgorithm.name = element.name
                         this.newAlgorithm.if_the_user = element.if_the_user
                         this.newAlgorithm.then = element.then
-                        this.newAlgorithm.keywords = element.keywords_to_show
                     }
                 });
             }
@@ -165,22 +139,7 @@ import { BACKEND_URL } from '@/config.js'
                         <p class="create-script-input-label">Відповідь</p>
                         <p class="create-script-describe-creating-script">Що повинен відповісти бот на запитання</p>
                         <input v-model="newAlgorithm.then" placeholder="Введіть відповідь" class="create-script-input">
-                    </div>
-                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 12 && !tutorial.done}">
-                        <p class="create-script-input-label">Ключові слова</p>
-                        <p class="create-script-describe-creating-script">Вкажіть ключові слова, по котрим подія буде реагувати на повідомлення користувача, щоб додати слово вручну напишіть його в полі та натисніть Enter, щоб сгенерувати вибірку по вказаному запитанню - натисніть "Згенерувати слова"</p>
-                        <div class="create-script-container-all">
-                            <div class="create-script-container-keywords">
-                                <p class="empty-keywords-p" v-if="newAlgorithm.keywords.length == 0 && !keywordInput">Не вказано ключових слів</p>
-                                <div class="create-script-keyword" v-for="keyword in newAlgorithm.keywords">
-                                    <p>{{ keyword }}</p>
-                                    <img @click="removeKeyword(keyword)" src="@/assets/images/keyword_cross.svg">
-                                </div>
-                                <input :placeholder="newAlgorithm.keywords.length != 0 ? 'Введіть ключове слово' : ''" @keyup.enter="addKeyword" v-model="keywordInput" class="create-script-adding-keyword">
-                            </div>
-                            <button @click="generateKeywords">Згенерувати слова<img v-if="loadKeywords" src="@/assets/images/load.gif"></button>
-                        </div>
-                    </div>    
+                    </div>   
                     <div class="create-script-buttons">
                         <div :class="{'tutorial': tutorial.currentStep == 13 && !tutorial.done}" class="create-script-save-button-div">
                             <button @click="createAlgorithm" class="create-script-button chosen">Зберегти<img v-if="buttonBlock" src="@/assets/images/load.gif"></button>

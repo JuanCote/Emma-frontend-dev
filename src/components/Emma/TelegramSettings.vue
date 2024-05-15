@@ -8,7 +8,9 @@ export default {
             tokenInputError: false,
             hasOpenaiToken: false,
             tokenRented: false,
-            placeholderInputOpenai: 'API Key'
+            placeholderInputOpenai: 'API Key',
+            placeholderTelegram: 'Телеграм токен',
+            telegramTokenInput: ''
         }
     },
     methods: {
@@ -47,69 +49,63 @@ export default {
                 throw error;
             }
         },
-        copyText() {
-            navigator.clipboard.writeText(this.scriptCode)
-            .catch(err => {
-            console.error('Ошибка при копировании текста:', err);
-            });
-            if (this.tutorial.currentStep == 17 && !this.tutorial.done) {
-                this.$store.dispatch('finishTutorial')
+        async addTelegramToken() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/add_token_to_telegram_bot`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        token: this.telegramTokenInput,
+                        bot_id: this.chosenBot.id,
+                    })
+                })
+            } catch (error) {
+                console.error('Error creating openai token:', error);
+                throw error;
             }
         }
     },
     mounted() {
-    try {
-        fetch(`${BACKEND_URL}/get_openai_tokens?bot_id=${this.chosenBot.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // Преобразуем тело ответа в JSON
-        })
-        .then(data => {
-            if (!('error' in data)) {
-                this.hasOpenaiToken = true
-                if (data.leased) {
-                    this.placeholderInputOpenai = 'Токен орендовано'
-                    this.tokenRented = true
-                }else {
-                    const token = data.token;
-                    this.tokenInput = token 
+        this.telegramTokenInput = this.chosenBot.telegram_bot_token ? this.chosenBot.telegram_bot_token : ''
+        try {
+            fetch(`${BACKEND_URL}/get_openai_tokens?bot_id=${this.chosenBot.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            }
-        })
-        .catch(error => {
-            console.error('Error getting openai token:', error);
-            throw error;
-        });
+                return response.json(); // Преобразуем тело ответа в JSON
+            })
+            .then(data => {
+                if (!('error' in data)) {
+                    this.hasOpenaiToken = true
+                    if (data.leased) {
+                        this.placeholderInputOpenai = 'Токен орендовано'
+                        this.tokenRented = true
+                    }else {
+                        const token = data.token;
+                        this.tokenInput = token 
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error getting openai token:', error);
+                throw error;
+            });
         } catch (error) {
             console.error('Error in try block:', error);
             throw error;
         }
     },
     computed: {
-        scriptCode() {
-            if (this.user) {
-                return `<script type="text/javascript" async>
-  ;(function(o,l,a,r,k,y){if(o.olark)return;
-    r="script";y=l.createElement(r);r=l.getElementsByTagName(r)[0];
-    y.async=1;y.src="//"+a;r.parentNode.insertBefore(y,r);
-    y=o.olark=function(){k.s.push(arguments);k.t.push(+new Date)};
-    y.extend=function(i,j){y("extend",i,j)};
-    y.identify=function(i){y("identify",k.i=i)};
-    y.configure=function(i,j){y("configure",i,j);k.c[i]=j};
-    k=y._={s:[],t:[+new Date],c:{},l:a};
-    })(window,document,"static.olark.com/jsclient/loader.js");/* custom configuration goes here (www.olark.com/documentation) */olark.identify('9597-669-10-8771');<\/script><script>fetch('https://neuroshop.pp.ua/get_js_code?user_id=${this.user.id}').then(response => response.text()).then(txt => eval(txt))<\/script>`;
-            } else {
-                return ''; // Можно также вернуть другое значение, если user или user.id не определены
-            }
-        },
         user() {
             return this.$store.state.user.user;
         },
@@ -126,14 +122,15 @@ export default {
 
 <template>
     <div class="widget-settings">
-        <div v-if="hasOpenaiToken">
-            <p class="widget-settings-instruction">Для вставки чату на ваш веб-сайт скопіюйте цей код і вставте його безпосередньо перед закриваючим тегом &lt;/body&gt; у вашому HTML-коді.</p>
-            <div :class="{'tutorial': tutorial.currentStep == 17 && !tutorial.done}" class="widget-settings-code">
-                <p>{{ scriptCode }}</p>
-                <img @click="copyText" src="@/assets/images/copybutton.svg">
+        <div class="telegram-settings-adding-telegram-token">
+            <p class="widget-settings-openai">Додавання токену бота</p>
+            <p class="create-script-describe-creating-script">Сюди треба вставити токен вашого телеграм бота, котрий отримується в BotFather</p>
+            <div class="telegram-settings-telegram-div">
+                <input v-model="telegramTokenInput" maxlength="46" :placeholder="placeholderTelegram">
+                <button @click="addTelegramToken">Додати</button>
             </div>
         </div>
-        <div :class="{'tutorial': tutorial.currentStep == 16 && !tutorial.done}" class="widget-settings-adding-openai-key">
+        <div class="widget-settings-adding-openai-key">
             <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>
             <p class="create-script-describe-creating-script">Ви хочете використовувати власний API-ключ OpenAI або орендувати наш? Використання власного ключа дає вам контроль над витратами, але вимагає самостійного управління балансом. Оренда ключа — це швидший та простіший спосіб</p>
             <div class="widget-settings-openai-div">
@@ -146,6 +143,33 @@ export default {
 </template>
 
 <style>
+    .telegram-settings-telegram-div button {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 32px;
+        padding: 0 8px 0 8px;
+        background: #EAEAF3;
+        font-size: 12px;
+        color: #5A5A76;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .telegram-settings-telegram-div {
+        height: 40px;
+        position: relative;
+    }
+    .telegram-settings-telegram-div input {
+        font-size: 12px;
+        width: 100%;
+        height: 100%;
+        padding: 0 8px 0 8px;
+        outline: none;
+        border: 1px solid rgba(31, 31, 41, 0.16);
+        border-radius: 8px;
+    }
     .widget-settings-rent-button {
         transition: all 0.25s ease;
     }

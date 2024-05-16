@@ -49,6 +49,9 @@ const actions = {
     }else {
       state.knowledgeBase.reply_to_non_company_topics = false
     }
+    if (payload.tutorial) {
+      state.knowledgeBase.while_tutorial = true
+    }
     try {
       state.knowledgeBase.bot_id = payload.bot_id
       const response = await fetch(`${BACKEND_URL}/add_knowledge_base`, {

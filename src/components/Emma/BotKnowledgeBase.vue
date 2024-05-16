@@ -2,10 +2,12 @@
     export default{
         methods: {
             saveKnowledgeBase() {
-                this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id})
                 if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
+                    this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id, tutorial: true})
                     this.$store.dispatch('setNextStep', {})
                     this.$router.push('/emma/bot_events')
+                }else {
+                    this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id, tutorial: false})
                 }
             }
         },

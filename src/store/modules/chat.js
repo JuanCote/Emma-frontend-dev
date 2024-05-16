@@ -21,9 +21,9 @@ const state = {
   };
   
   const actions = {
-    async fetchChats({ commit }) {
+    async fetchChats({ commit }, payload) {
       try {
-        const response = await fetch(`${BACKEND_URL}/get_chats`, {
+        const response = await fetch(`${BACKEND_URL}/get_chats?bot_id=${payload.botId}`, {
           credentials: 'include'
         });
         const data = await response.json();

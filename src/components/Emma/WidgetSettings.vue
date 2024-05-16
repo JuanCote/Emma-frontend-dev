@@ -35,7 +35,7 @@ export default {
                         this.tokenInput = ''
                     }
                     if (this.tutorial.currentStep == 16 && !this.tutorial.done) {
-                        this.$store.dispatch('setNextStep')
+                        this.$store.dispatch('setNextStep', {})
                     }
                 }else {
                     this.tokenInput = ''
@@ -105,7 +105,7 @@ export default {
     y.identify=function(i){y("identify",k.i=i)};
     y.configure=function(i,j){y("configure",i,j);k.c[i]=j};
     k=y._={s:[],t:[+new Date],c:{},l:a};
-    })(window,document,"static.olark.com/jsclient/loader.js");/* custom configuration goes here (www.olark.com/documentation) */olark.identify('9597-669-10-8771');<\/script><script>fetch('https://neuroshop.pp.ua/get_js_code?user_id=${this.user.id}').then(response => response.text()).then(txt => eval(txt))<\/script>`;
+    })(window,document,"static.olark.com/jsclient/loader.js");/* custom configuration goes here (www.olark.com/documentation) */olark.identify('9597-669-10-8771');<\/script><script>fetch('https://neuroshop.pp.ua/get_js_code?bot_id=${this.chosenBot.id}').then(response => response.text()).then(txt => eval(txt))<\/script>`;
             } else {
                 return ''; // Можно также вернуть другое значение, если user или user.id не определены
             }
@@ -128,7 +128,7 @@ export default {
     <div class="widget-settings">
         <div v-if="hasOpenaiToken">
             <p class="widget-settings-instruction">Для вставки чату на ваш веб-сайт скопіюйте цей код і вставте його безпосередньо перед закриваючим тегом &lt;/body&gt; у вашому HTML-коді.</p>
-            <div :class="{'tutorial': tutorial.currentStep == 17 && !tutorial.done}" class="widget-settings-code">
+            <div :class="{'tutorial': tutorial.currentStep == 18 && !tutorial.done}" class="widget-settings-code">
                 <p>{{ scriptCode }}</p>
                 <img @click="copyText" src="@/assets/images/copybutton.svg">
             </div>
@@ -143,6 +143,7 @@ export default {
             </div>
         </div>
     </div>
+    
 </template>
 
 <style>
@@ -244,7 +245,6 @@ export default {
     }
     .widget-settings-instruction {
         font-size: 12px;
-        width: 740px;
         color: rgba(31, 31, 41, 0.5)
     }
     .widget-settings {

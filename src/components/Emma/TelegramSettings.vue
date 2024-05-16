@@ -10,10 +10,31 @@ export default {
             tokenRented: false,
             placeholderInputOpenai: 'API Key',
             placeholderTelegram: 'Телеграм токен',
-            telegramTokenInput: ''
+            telegramTokenInput: '',
+            botRunning: Boolean
         }
     },
     methods: {
+        async startBot() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/start_telegram_bot?bot_id=${this.chosenBot.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                })
+                if (response.ok) {
+                    const data = await response.json()
+                    if (data['message'] == 'Bot started successfully') {
+                        this.botRunning = true
+                    }
+                }
+            } catch (error) {
+                console.error('Error starting telegram bot:', error);
+                throw error;
+            }
+        },
         async createToken(leased=false) {
             try {
                 const response = await fetch(`${BACKEND_URL}/create_openai_token`, {
@@ -66,9 +87,33 @@ export default {
                 console.error('Error creating openai token:', error);
                 throw error;
             }
+            if (this.tutorial.currentStep == 20 && !this.tutorial.done) {
+                this.$store.dispatch('setNextStep', {})
+                this.$router.push('/emma/all_bots')
+            }
         }
     },
-    mounted() {
+    mounted() {        
+        fetch(`${BACKEND_URL}/check_telegram_bot_status?bot_id=${this.chosenBot.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(responseData => {
+            this.botRunning = responseData
+        })
+        .catch(error => {
+            console.error('Error getting openai token:', error);
+            throw error;
+        });
+
+
+
         this.telegramTokenInput = this.chosenBot.telegram_bot_token ? this.chosenBot.telegram_bot_token : ''
         try {
             fetch(`${BACKEND_URL}/get_openai_tokens?bot_id=${this.chosenBot.id}`, {
@@ -122,13 +167,15 @@ export default {
 
 <template>
     <div class="widget-settings">
-        <div class="telegram-settings-adding-telegram-token">
+        <div class="telegram-settings-adding-telegram-token" :class="{'tutorial': this.tutorial.currentStep == 20}">
             <p class="widget-settings-openai">Додавання токену бота</p>
             <p class="create-script-describe-creating-script">Сюди треба вставити токен вашого телеграм бота, котрий отримується в BotFather</p>
             <div class="telegram-settings-telegram-div">
                 <input v-model="telegramTokenInput" maxlength="46" :placeholder="placeholderTelegram">
                 <button @click="addTelegramToken">Додати</button>
             </div>
+            <button @click="startBot" v-if="!botRunning" class="telegram-bot-start">Запустити</button>
+            <button v-if="botRunning" class="telegram-bot-stop">Зупинити</button>
         </div>
         <div class="widget-settings-adding-openai-key">
             <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>
@@ -143,6 +190,34 @@ export default {
 </template>
 
 <style>
+    .telegram-bot-stop {
+        background: red;
+        border-radius: 8px;
+        height: 40px;
+        padding: 0 8px 0 8px;
+        border: none;
+        color: white;
+        margin-top: 12px;
+        cursor: pointer;
+    }
+    .telegram-bot-start {
+        background: green;
+        border-radius: 8px;
+        height: 40px;
+        padding: 0 8px 0 8px;
+        border: none;
+        color: white;
+        margin-top: 12px;
+        cursor: pointer;
+    }
+    .telegram-settings-adding-telegram-token.tutorial {
+        position: relative;
+        background: white;
+        padding: 8px;
+        margin-left: -8px;
+        border-radius: 8px;
+        z-index: 10000;
+    }
     .telegram-settings-telegram-div button {
         position: absolute;
         right: 8px;
@@ -268,7 +343,6 @@ export default {
     }
     .widget-settings-instruction {
         font-size: 12px;
-        width: 740px;
         color: rgba(31, 31, 41, 0.5)
     }
     .widget-settings {

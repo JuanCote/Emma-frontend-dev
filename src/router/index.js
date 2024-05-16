@@ -72,13 +72,28 @@ router.beforeEach((to, from, next) => {
           break
           case 16:
           case 17:
-            if (to.path != '/emma/settings/bot_settings') {
-              next('/emma/settings/bot_settings')
+          case 18:
+          case 19:
+            if (to.path != '/emma/settings/bot_settings/widget') {
+              next('/emma/settings/bot_settings/widget')
             } else {
               next()
             }
             break
-      }
+          case 20:
+          case 21:
+            if (to.path != '/emma/settings/bot_settings/telegram') {
+              next('/emma/settings/bot_settings/telegram')
+            } else {
+              next()
+            }
+          case 22:
+            if (to.path != '/emma/all_bots') {
+              next('/emma/all_bots')
+            } else {
+              next()
+            }
+      } 
     } else  if (['/emma', '/emma/', '/'].includes(to.path)) {
       next('/emma/analytic')
     }else (

@@ -28,7 +28,12 @@ export default {
         }
     },
     botList() {
-        this.$router.push('/emma/all_bots')
+        if (this.tutorial.currentStep == 21 && !this.tutorial.done) {
+            this.$store.dispatch('setNextStep', {})
+            this.$router.push('/emma/all_bots')
+        }else {
+            this.$router.push('/emma/all_bots')
+        }
     }
   }
 };
@@ -42,7 +47,7 @@ export default {
                 <h1 v-if="menuExpanded" class="emma-left-menu-h1">EMMA</h1>
             </div>
             <ul class="emma-left-menu-ul">
-                <li @click="botList" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/all_bots') }">
+                <li @click="botList" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/all_bots'), 'tutorial': tutorial.currentStep == 21 && !tutorial.done }">
                   <img v-if="$route.path.startsWith('/emma/settings')" src="@/assets/images/bot_settings_white.svg">
                   <img v-if="!($route.path.startsWith('/emma/settings'))" src="@/assets/images/bot_settings.svg">
                   <p v-if="menuExpanded">Всі боти</p>

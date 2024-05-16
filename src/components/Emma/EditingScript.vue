@@ -26,10 +26,10 @@ import { BACKEND_URL } from '@/config.js'
                         })
                     }else {
                         this.buttonBlock = true
-                        this.$store.dispatch('createAlgorithm', this.newAlgorithm).then(() => {
+                        this.$store.dispatch('createAlgorithm', {algorithm: this.newAlgorithm, tutorial: true}).then(() => {
                             if (this.tutorial.currentStep == 13 && !this.tutorial.done) {
                                 this.$router.push('/emma/settings/bot_settings')
-                                this.$store.dispatch('setNextStep')
+                                this.$store.dispatch('setNextStep', {})
                             }else {
                                 this.$router.push('/emma/bot_events')
                             }

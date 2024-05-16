@@ -54,17 +54,21 @@ const state = {
       }
     },
     
-    async createAlgorithm({commit, dispatch}, algorithm) {
+    async createAlgorithm({commit, dispatch}, payload) {
       try {
+        const algorithmToSend = payload.algorithm
+        if (payload.tutorial) {
+          algorithmToSend.while_tutorial = true
+        }
         const response = await fetch(`${BACKEND_URL}/create_algorithm`, {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(algorithm)
+          body: JSON.stringify(algorithmToSend)
       }).then(() => {
-        dispatch('fetchAlgorithms', {botId: algorithm.bot_id})
+        dispatch('fetchAlgorithms', {botId: payload.algorithm.bot_id})
       })
       } catch (error) {
         console.error('Ошибка создания алгоритма:', error);

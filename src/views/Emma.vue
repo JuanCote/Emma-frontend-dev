@@ -4,12 +4,14 @@ import EmmaAnalytic from "@/components/Emma/EmmaAnalytic.vue"
 import EmmaRightContainer from "@/components/Emma/EmmaRightContainer.vue"
 
 import { BACKEND_URL_WS } from '@/config.js'
+import { BACKEND_URL } from '@/config.js'
 
 export default {
     data() {
         return {
             socket: null,
             chatsLoaded: false,
+            paymentLink: String
         }
     },
     components: {
@@ -18,6 +20,26 @@ export default {
         EmmaRightContainer
     },
     created() {
+        if (this.tutorial.currentStep == 17) {
+            try {
+                const response = fetch(`${BACKEND_URL}/stipe_generate_link_monthly`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                }).then(response => {
+                    return response.json();
+                })
+                .then(responseData => {
+                    this.paymentLink = responseData
+                })
+            } catch (error) {
+                console.error('Get payment link error', error);
+            }
+        }
+
+
         this.$store.dispatch('fetchBots').then(() => {
             this.socket = new WebSocket(`${BACKEND_URL_WS}/ws`);
                 this.socket.onopen = () => {
@@ -38,7 +60,7 @@ export default {
                         }
                         else if ("proposal" in eventData) {
                             chat.displayProposal = true
-                            chat.emmaProposal = eventData.proposal['answer']
+                            chat.emmaProposal = eventData.proposal
                         }
                         chatFound = true; 
                     }
@@ -58,7 +80,7 @@ export default {
                     }
                 });
                 if (!chatFound && !archiveFound) {
-                    this.$store.dispatch('fetchChats')
+                    this.$store.dispatch('fetchChats', {botId: this.chosenBot.id})
                 }
                 this.$nextTick(() => {
                     let container = document.querySelector('.emma-chat-messages');
@@ -71,7 +93,7 @@ export default {
             this.socket.onerror = (error) => {
             console.error('Произошла ошибка:', error);
             };
-            this.$store.dispatch('fetchChats').then(() => {
+            this.$store.dispatch('fetchChats', {botId: this.chosenBot.id}).then(() => {
                 this.chatsLoaded = true
             })
         })
@@ -80,8 +102,26 @@ export default {
     methods: {
         finishTutorial() {
             this.$store.dispatch('finishTutorial')
-            this.$router.push('/emma/settings/bot_settings')
         },
+        async checkPayment() {
+            this.$store.dispatch('setNextStep', {})
+            try {
+                const response = await fetch(`${BACKEND_URL}/check_telegram_bot_status`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                const responseData = await response.json()
+                if (responseData) { 
+                    this.$store.dispatch('setNextStep', {});
+                }
+            } catch (error) {
+                console.error('Get payment link error', error);
+            }
+
+        }
     },
     computed: {
         selectedChat() {
@@ -98,6 +138,9 @@ export default {
         },
         tutorial() {
             return this.$store.getters.getTutorial
+        },
+        chosenBot() {
+            return this.$store.state.bots.chosenBot
         }
     },
 }
@@ -112,20 +155,24 @@ export default {
             <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-knowledge-4"><p>Вкажіть чи повинен бот відповідати на повідомлення, що не стосуються теми вашої компанії</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-knowledge-5"><p>Напишіть на якій мові бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-knowledge-6"><p>Щоб зберегти заповнену "базу знань бота" натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 16 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 16 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 7 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до подій бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 8 && !tutorial.done" class="tutorial-block-add-script"><p>Створіть свій перший скрипт</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 7})">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 9 && !tutorial.done" class="tutorial-block-form-script-1"><p>Тут ви можете описати подію, котра буде відпрацьовувати при певних повідомленнях від користувача. Спочатку напишіть назву, вона може бути будь-яка</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 10 && !tutorial.done" class="tutorial-block-form-script-2"><p>Тепер напишіть "Запитання" на яке подія буде реагувати, наприклад: "Як називається ваша компанія?"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 11 && !tutorial.done" class="tutorial-block-form-script-3"><p>Зараз напишіть як бот повинен відповідати на введене запитання, наприклад якщо запитання "Як називається ваша компанія", відповідь може бути "Neuroshop"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 12 && !tutorial.done" class="tutorial-block-form-script-4"><p>По ключовим словам подія відправцьовує на повідомлення користувача. Якщо в повідомленні буде хоч одне слово з вибірки ключових слів - бот відповість тим, що ви написали в "Відповідь" (якщо запитання користувача співпадає з текстом в "Запитання") </p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 11 && !tutorial.done" class="tutorial-block-form-script-3"><p>Зараз напишіть як бот повинен відповідати на введене запитання, наприклад якщо запитання "Як називається ваша компанія", відповідь може бути "Neuroshop"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 13 && !tutorial.done" class="tutorial-block-form-script-5"><p>Щоб зберегти подію натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {}), $router.push('/emma/bot_events')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 14 && !tutorial.done && $route.path != '/emma/bot_events/create_script'" class="tutorial-block-create-or-next"><p>Чудово! Можете ще додати інструкцію або продовжити налаштування, натиснувши "Пропустити крок"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <div v-if="tutorial.currentStep == 15 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 17 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
+            <div v-if="tutorial.currentStep == 18 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
+                <button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button>
                 <button class="finish-button" @click="finishTutorial">Закінчити туторіал</button>
             </div>
             <div v-if="!tutorial.done && (tutorial.currentStep != 14 || $route.path != '/emma/bot_events/create_script')" class="tutorial-background"></div>
+            <div v-if="tutorial.currentStep == 19 && !tutorial.done" class="tutorial-block-to-telegram"><p>Перейдіть до налаштувань телеграма</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 20 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм боту з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 21 && !tutorial.done" class="tutorial-block-to-bots"><p>Перейдіть до ботів</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 22 && !tutorial.done" class="tutorial-block-bots"><p>Тут ви можете побачити всіх своїх ботів та обрати поточного бота, якого ви хочете налаштувати. Також за необхідності ви можете додати нового бота натиснувши кнопку "Create bot"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <EmmaLeftMenu/>
             <div class="right-container">
                 <div v-if="!socket" class="right-container-loading">
@@ -134,10 +181,110 @@ export default {
                 <EmmaRightContainer v-if="socket" :socket="socket" :chatsLoaded="chatsLoaded"></EmmaRightContainer>
             </div>
         </div>
+        <div v-if="tutorial.currentStep == 17" class="payment-form" :class="{'tutorial': tutorial.currentStep == 17}">
+            <h1>Нажаль, Emma не є безкоштовною, щоб оплатити місячну підписку перейдіть за посиланням нижче</h1>
+            <a v-if="paymentLink" :href="paymentLink"><p>Посилання для оплати</p></a>
+            <button @click="checkPayment">Перевірити оплату</button>
+        </div>
     </div>
 </template>
 
 <style scoped>
+    .tutorial-block-bots {
+        color: white;
+        position: absolute;
+        text-align: center;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 15em; /* Позиционируйте контент в нужное место */
+        left: 40%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-to-bots {
+        color: white;
+        position: absolute;
+        text-align: center;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 8em; /* Позиционируйте контент в нужное место */
+        left: 5%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-to-telegram-input {
+        color: white;
+        position: absolute;
+        text-align: center;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 12em; /* Позиционируйте контент в нужное место */
+        left: 10%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-to-telegram {
+        color: white;
+        position: absolute;
+        text-align: center;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 12em; /* Позиционируйте контент в нужное место */
+        left: 13%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .payment-form button {
+        margin-top: 24px;
+        border: none;
+        border-radius: 8px;
+        height: 40px;
+        padding: 0 8px 0 8px;
+        cursor: pointer;
+    }
+    .payment-form p {
+        margin-top: 12px;
+        font-size: 14px;
+        width: 100%;
+        overflow-wrap: break-word
+    }
+    .payment-form h1 {
+        font-size: 16px;
+        font-weight: 500;
+        text-align: center;
+        margin-top: 24px;
+    }
+    .payment-form.tutorial {
+        background: white;
+        padding: 8px;
+        margin-left: -8px;
+        border-radius: 8px;
+        z-index: 10000;
+    }
+    .payment-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 25%;
+        height: 40%;
+        background: white;
+        left: 50%;
+    }
     .skip-step:hover {
         transform: translateY(-5px); /* Slight upward movement on hover */
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */

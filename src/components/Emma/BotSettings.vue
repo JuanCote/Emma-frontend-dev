@@ -1,6 +1,7 @@
 <script>
     import WidgetSettings from '@/components/Emma/WidgetSettings.vue'
     import TelegramSettings from './TelegramSettings.vue';
+import tutorial from '@/store/modules/tutorial';
     export default {
         components: {
             WidgetSettings,
@@ -8,18 +9,23 @@
         },
         data() {
             return {
-                chosenMenu: 'Widget'
             }
         },
         methods: {
             choseTelegram() {
-                this.chosenMenu = 'Telegram'
+                if (this.tutorial.currentStep == 19 && !this.tutorial.done) {
+                    this.$store.dispatch('setNextStep', {})
+                }
                 this.$router.push('/emma/settings/bot_settings/telegram')
             },
             choseWidget() {
-                this.chosenMenu = 'Widget'
                 this.$router.push('/emma/settings/bot_settings/widget')
             }
+        },
+        computed: {
+            tutorial() {
+                return this.$store.getters.getTutorial
+            },
         }
     }
 </script>
@@ -31,18 +37,18 @@
     <p class="bot-settings-right-menu-header-botSettings">Налаштування бота</p>
 </div>
 <div class="bot-settings-right-menu-bots">
-    <div @click="choseTelegram" :class="{ 'chosen': chosenMenu === 'Telegram'}">
-        <img v-if="chosenMenu != 'Telegram'" src="@/assets/images/telegram-icon.svg">
-        <img v-if="chosenMenu == 'Telegram'" src="@/assets/images/telegram-icon-white.svg">
+    <div class="bot-settings-right-menu-bots-telegram" @click="choseTelegram" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings/telegram'), 'tutorial': this.tutorial.currentStep == 19 }">
+        <img v-if="!$route.path.startsWith('/emma/settings/bot_settings/telegram')" src="@/assets/images/telegram-icon.svg">
+        <img v-if="$route.path.startsWith('/emma/settings/bot_settings/telegram')" src="@/assets/images/telegram-icon-white.svg">
         <p>Telegram</p>
     </div>
     <div>
         <img src="@/assets/images/viber.svg">
         <p>Viber</p>
     </div>
-    <div @click="choseWidget" :class="{ 'chosen': chosenMenu === 'Widget'}">
-        <img v-if="chosenMenu != 'Widget'" src="@/assets/images/widget-black.svg">
-        <img v-if="chosenMenu == 'Widget'" src="@/assets/images/widget.svg">
+    <div @click="choseWidget" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings/widget') }">
+        <img v-if="!$route.path.startsWith('/emma/settings/bot_settings/widget')" src="@/assets/images/widget-black.svg">
+        <img v-if="$route.path.startsWith('/emma/settings/bot_settings/widget')" src="@/assets/images/widget.svg">
         <p>Widget</p>
     </div>
     <div>
@@ -59,4 +65,8 @@
 </template>
 
 <style>
+.bot-settings-right-menu-bots-telegram.tutorial {
+    position: relative;
+    z-index: 10000;
+}
 </style>

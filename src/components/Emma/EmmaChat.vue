@@ -91,6 +91,7 @@ export default {
                     const data = {
                         type: 'message',
                         from: 'manager',
+                        bot_id: this.chosenBot.id,
                         user_id: this.user.id,
                         to: this.selectedChat.name,
                         text: this.selectedChat.input
@@ -150,6 +151,9 @@ export default {
         },
         user() {
             return this.$store.state.user.user
+        },
+        chosenBot() {
+            return this.$store.state.bots.chosenBot
         }
     },
     mounted() {
@@ -195,6 +199,10 @@ export default {
                     <div class="bot-events-script-header-search-and-bots">
                         <div class="bot-events-script-bots">
                             <p>Всі боти</p>
+                            <!-- <ul class="bot-events-script-bots-ul">
+                                <li>123</li>
+                                <li>212</li>
+                            </ul> -->
                             <img src="@/assets/images/bot-down-arrow.svg">
                         </div>
                         <input placeholder="Знайти чат"><img class="bot-events-script-bot-lupa" src="@/assets/images/search-script.svg"></input>
@@ -263,6 +271,17 @@ export default {
 </template>
 
 <style>
+    .bot-events-script-bots {
+        position: relative;
+    }
+    .bot-events-script-bots-ul li {
+
+    }
+    .bot-events-script-bots-ul {
+        position: absolute;
+        top: 100%;
+        list-style-type: none;
+    }
     .emma-chat-message-for {
         
     }

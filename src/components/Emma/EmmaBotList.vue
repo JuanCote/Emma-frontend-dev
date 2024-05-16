@@ -28,15 +28,22 @@ export default {
 </script>
 
 <template>
-    <div class="emma-bot-list">
+    <div class="emma-bot-list" :class="{'tutorial': this.tutorial.currentStep == 22}">
         <ul>
-            <li v-for="bot in bots" @click="choseBot(bot)" :class="{'chosen': chosenBot.id == bot.id}">{{ bot.id }}</li>
+            <li v-for="bot in bots" @click="choseBot(bot)" :class="{'chosen': chosenBot.id == bot.id}">Бот - {{ bot.id }}</li>
         </ul>
         <button @click="createBot" class="emma-bot-list-create-bot">Create bot</button>
     </div>
 </template>
 
 <style>
+.emma-bot-list.tutorial {
+    position: relative;
+    background: white;
+    z-index: 10000;
+    width: 100%;
+    border-radius: 8px;
+}
 .emma-bot-list-create-bot {
     margin-top: 10px;
     width: 120px;

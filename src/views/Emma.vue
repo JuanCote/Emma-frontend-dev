@@ -104,9 +104,8 @@ export default {
             this.$store.dispatch('finishTutorial')
         },
         async checkPayment() {
-            this.$store.dispatch('setNextStep', {})
             try {
-                const response = await fetch(`${BACKEND_URL}/check_telegram_bot_status`, {
+                const response = await fetch(`${BACKEND_URL}/check_payment`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
@@ -114,9 +113,21 @@ export default {
                     },
                 })
                 const responseData = await response.json()
-                if (responseData) { 
+                if (responseData) {
                     this.$store.dispatch('setNextStep', {});
-                }
+                    const response = await fetch(`${BACKEND_URL}/add_bonus_tokens`, {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            bot_id: this.chosenBot.id,
+                            new_tokens: 333000
+                        })
+                    })
+                    const responseData = await response.json()
+                    }
             } catch (error) {
                 console.error('Get payment link error', error);
             }
@@ -149,29 +160,29 @@ export default {
 <template>
     <div class="emma-background">
         <div class="emma-container">
-            <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-knowledge-1"><p>Привіт! Щоб створити свого бота на базі штучного інтелекту спочатку необхідно заповнити форму "База знань бота". Почнемо з поля "сфери бота". Тут ви маєте описати в якій сфері бот повинен розбиратися. Для того щоб піти далі - натисніть "Далі"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge-2"><p>В цьому полі необхідно вказати роль, яку повинен відігравати бот</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-knowledge-3"><p>Опишіть манеру в якій бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-knowledge-4"><p>Вкажіть чи повинен бот відповідати на повідомлення, що не стосуються теми вашої компанії</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-knowledge-5"><p>Напишіть на якій мові бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-knowledge-6"><p>Щоб зберегти заповнену "базу знань бота" натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 16 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 7 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до подій бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 8 && !tutorial.done" class="tutorial-block-add-script"><p>Створіть свій перший скрипт</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 7})">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 9 && !tutorial.done" class="tutorial-block-form-script-1"><p>Тут ви можете описати подію, котра буде відпрацьовувати при певних повідомленнях від користувача. Спочатку напишіть назву, вона може бути будь-яка</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 10 && !tutorial.done" class="tutorial-block-form-script-2"><p>Тепер напишіть "Запитання" на яке подія буде реагувати, наприклад: "Як називається ваша компанія?"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 11 && !tutorial.done" class="tutorial-block-form-script-3"><p>Зараз напишіть як бот повинен відповідати на введене запитання, наприклад якщо запитання "Як називається ваша компанія", відповідь може бути "Neuroshop"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 13 && !tutorial.done" class="tutorial-block-form-script-5"><p>Щоб зберегти подію натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {}), $router.push('/emma/bot_events')">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 14 && !tutorial.done && $route.path != '/emma/bot_events/create_script'" class="tutorial-block-create-or-next"><p>Чудово! Можете ще додати інструкцію або продовжити налаштування, натиснувши "Пропустити крок"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Пропустити крок</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 15 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань бота</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <!-- <button class="finish-button" @click="finishTutorial">Закінчити туторіал</button> -->
+            <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-knowledge-1"><p>Привіт! Щоб створити свого бота на базі штучного інтелекту спочатку необхідно заповнити форму "База знань бота". Почнемо з поля "сфери бота". Тут ви маєте описати в якій сфері бот повинен розбиратися. Для того щоб піти далі - натисніть "Далі"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge-2"><p>В цьому полі необхідно вказати роль, яку повинен відігравати бот</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-knowledge-3"><p>Опишіть манеру в якій бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-knowledge-4"><p>Вкажіть чи повинен бот відповідати на повідомлення, що не стосуються теми вашої компанії</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-knowledge-5"><p>Напишіть на якій мові бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-knowledge-6"><p>Щоб зберегти заповнену "базу знань бота" натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 16 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p></div>
+            <div v-if="tutorial.currentStep == 7 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до подій бота</p></div>
+            <div v-if="tutorial.currentStep == 8 && !tutorial.done" class="tutorial-block-add-script"><p>Створіть свій перший скрипт</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 7})">Пропустити крок</button></div>
+            <div v-if="tutorial.currentStep == 9 && !tutorial.done" class="tutorial-block-form-script-1"><p>Тут ви можете описати подію, котра буде відпрацьовувати при певних повідомленнях від користувача. Спочатку напишіть назву, вона може бути будь-яка</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 10 && !tutorial.done" class="tutorial-block-form-script-2"><p>Тепер напишіть "Запитання" на яке подія буде реагувати, наприклад: "Як називається ваша компанія?"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 11 && !tutorial.done" class="tutorial-block-form-script-3"><p>Зараз напишіть як бот повинен відповідати на введене запитання, наприклад якщо запитання "Як називається ваша компанія", відповідь може бути "Neuroshop"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 13 && !tutorial.done" class="tutorial-block-form-script-5"><p>Щоб зберегти подію натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {}), $router.push('/emma/bot_events')">Пропустити крок</button></div>
+            <div v-if="tutorial.currentStep == 14 && !tutorial.done && $route.path != '/emma/bot_events/create_script'" class="tutorial-block-create-or-next"><p>Чудово! Можете ще додати інструкцію або продовжити налаштування, натиснувши "Пропустити крок"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Пропустити крок</button></div>
+            <div v-if="tutorial.currentStep == 15 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань бота</p></div>
             <div v-if="tutorial.currentStep == 18 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
                 <button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button>
-                <button class="finish-button" @click="finishTutorial">Закінчити туторіал</button>
             </div>
             <div v-if="!tutorial.done && (tutorial.currentStep != 14 || $route.path != '/emma/bot_events/create_script')" class="tutorial-background"></div>
-            <div v-if="tutorial.currentStep == 19 && !tutorial.done" class="tutorial-block-to-telegram"><p>Перейдіть до налаштувань телеграма</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 20 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм боту з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
-            <div v-if="tutorial.currentStep == 21 && !tutorial.done" class="tutorial-block-to-bots"><p>Перейдіть до ботів</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 19 && !tutorial.done" class="tutorial-block-to-telegram"><p>Перейдіть до налаштувань телеграма</p></div>
+            <div v-if="tutorial.currentStep == 20 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм боту з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 21 && !tutorial.done" class="tutorial-block-to-bots"><p>Перейдіть до ботів</p></div>
             <div v-if="tutorial.currentStep == 22 && !tutorial.done" class="tutorial-block-bots"><p>Тут ви можете побачити всіх своїх ботів та обрати поточного бота, якого ви хочете налаштувати. Також за необхідності ви можете додати нового бота натиснувши кнопку "Create bot"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <EmmaLeftMenu/>
             <div class="right-container">
@@ -181,7 +192,7 @@ export default {
                 <EmmaRightContainer v-if="socket" :socket="socket" :chatsLoaded="chatsLoaded"></EmmaRightContainer>
             </div>
         </div>
-        <div v-if="tutorial.currentStep == 17" class="payment-form" :class="{'tutorial': tutorial.currentStep == 17}">
+        <div v-if="tutorial.currentStep == 17 && !tutorial.done" class="payment-form" :class="{'tutorial': tutorial.currentStep == 17}">
             <h1>Нажаль, Emma не є безкоштовною, щоб оплатити місячну підписку перейдіть за посиланням нижче</h1>
             <a v-if="paymentLink" :href="paymentLink"><p>Посилання для оплати</p></a>
             <button @click="checkPayment">Перевірити оплату</button>

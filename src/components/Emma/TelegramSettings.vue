@@ -35,6 +35,26 @@ export default {
                 throw error;
             }
         },
+        async stopBot() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/stop_telegram_bot?bot_id=${this.chosenBot.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                })
+                if (response.ok) {
+                    const data = await response.json()
+                    if (data['message'] == 'Bot stopped successfully') {
+                        this.botRunning = false
+                    }
+                }
+            } catch (error) {
+                console.error('Error starting telegram bot:', error);
+                throw error;
+            } 
+        },
         async createToken(leased=false) {
             try {
                 const response = await fetch(`${BACKEND_URL}/create_openai_token`, {
@@ -167,7 +187,7 @@ export default {
 
 <template>
     <div class="widget-settings">
-        <div class="telegram-settings-adding-telegram-token" :class="{'tutorial': this.tutorial.currentStep == 20}">
+        <div class="telegram-settings-adding-telegram-token" :class="{'tutorial': this.tutorial.currentStep == 20 && !this.tutorial.done}">
             <p class="widget-settings-openai">Додавання токену бота</p>
             <p class="create-script-describe-creating-script">Сюди треба вставити токен вашого телеграм бота, котрий отримується в BotFather</p>
             <div class="telegram-settings-telegram-div">
@@ -175,7 +195,7 @@ export default {
                 <button @click="addTelegramToken">Додати</button>
             </div>
             <button @click="startBot" v-if="!botRunning" class="telegram-bot-start">Запустити</button>
-            <button v-if="botRunning" class="telegram-bot-stop">Зупинити</button>
+            <button @click="stopBot" v-if="botRunning" class="telegram-bot-stop">Зупинити</button>
         </div>
         <div class="widget-settings-adding-openai-key">
             <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>

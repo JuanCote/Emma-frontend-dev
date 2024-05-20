@@ -8,7 +8,11 @@ export default {
             tokenInputError: false,
             hasOpenaiToken: false,
             tokenRented: false,
-            placeholderInputOpenai: 'API Key'
+            placeholderInputOpenai: 'API Key',
+            tokenBalance: {
+                bonus_tokens: 0,
+                tokens: 0
+            }
         }
     },
     methods: {
@@ -58,36 +62,61 @@ export default {
         }
     },
     mounted() {
-    try {
-        fetch(`${BACKEND_URL}/get_openai_tokens?bot_id=${this.chosenBot.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // Преобразуем тело ответа в JSON
-        })
-        .then(data => {
-            if (!('error' in data)) {
-                this.hasOpenaiToken = true
-                if (data.leased) {
-                    this.placeholderInputOpenai = 'Токен орендовано'
-                    this.tokenRented = true
-                }else {
-                    const token = data.token;
-                    this.tokenInput = token 
+        try {
+            fetch(`${BACKEND_URL}/get_openai_tokens?bot_id=${this.chosenBot.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            }
-        })
-        .catch(error => {
-            console.error('Error getting openai token:', error);
+                return response.json(); // Преобразуем тело ответа в JSON
+            })
+            .then(data => {
+                if (!('error' in data)) {
+                    this.hasOpenaiToken = true
+                    if (data.leased) {
+                        this.placeholderInputOpenai = 'Токен орендовано'
+                        this.tokenRented = true
+                    }else {
+                        const token = data.token;
+                        this.tokenInput = token 
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error getting openai token:', error);
+                throw error;
+            });
+        } catch (error) {
+            console.error('Error in try block:', error);
             throw error;
-        });
+        }
+        try {
+            fetch(`${BACKEND_URL}/get_token_balance`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json()
+            })
+            .then(data => {
+                this.tokenBalance = data
+            })
+            .catch(error => {
+                console.error('Error getting token balance:', error);
+                throw error;
+            });
         } catch (error) {
             console.error('Error in try block:', error);
             throw error;
@@ -141,12 +170,25 @@ export default {
                 <button @click="createToken()" class="colored"><p>Додати ключ</p></button>
                 <button @click="createToken(leased=true)" class="widget-settings-rent-button"><p>Орендувати ключ</p></button>
             </div>
+            <div class="widget-settings-token-balance">
+                <ul>
+                    <li>Бонусні токени: {{ tokenBalance.bonus_tokens }}</li>
+                    <li>Токени: {{ tokenBalance.tokens }}</li>
+                </ul>
+            </div>
         </div>
     </div>
     
 </template>
 
 <style>
+    .widget-settings-token-balance ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        margin-top: 24px;
+        gap: 8px
+    }
     .widget-settings-rent-button {
         transition: all 0.25s ease;
     }

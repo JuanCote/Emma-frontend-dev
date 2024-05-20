@@ -20,7 +20,7 @@ export default {
         }
     },
     botSettings() {
-        if (this.tutorial.currentStep == 15 && !this.tutorial.done) {
+        if (this.tutorial.currentStep == 17 && !this.tutorial.done) {
             this.$store.dispatch('setNextStep', {})
             this.$router.push('/emma/settings/bot_settings/widget')
         }else {
@@ -28,7 +28,7 @@ export default {
         }
     },
     botList() {
-        if (this.tutorial.currentStep == 21 && !this.tutorial.done) {
+        if (this.tutorial.currentStep == 23 && !this.tutorial.done) {
             this.$store.dispatch('setNextStep', {})
             this.$router.push('/emma/all_bots')
         }else {
@@ -47,12 +47,12 @@ export default {
                 <h1 v-if="menuExpanded" class="emma-left-menu-h1">EMMA</h1>
             </div>
             <ul class="emma-left-menu-ul">
-                <li @click="botList" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/all_bots'), 'tutorial': tutorial.currentStep == 21 && !tutorial.done }">
+                <li @click="botList" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/all_bots'), 'tutorial': tutorial.currentStep == 23 && !tutorial.done }">
                   <img v-if="$route.path.startsWith('/emma/settings')" src="@/assets/images/bot_settings_white.svg">
                   <img v-if="!($route.path.startsWith('/emma/settings'))" src="@/assets/images/bot_settings.svg">
                   <p v-if="menuExpanded">Всі боти</p>
                 </li>
-                <li @click="botSettings" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/settings'), 'tutorial': tutorial.currentStep == 15 && !tutorial.done }">
+                <li @click="botSettings" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/settings'), 'tutorial': tutorial.currentStep == 17 && !tutorial.done }">
                   <img v-if="$route.path.startsWith('/emma/settings')" src="@/assets/images/bot_settings_white.svg">
                   <img v-if="!($route.path.startsWith('/emma/settings'))" src="@/assets/images/bot_settings.svg">
                   <p v-if="menuExpanded">Налаштування бота</p>

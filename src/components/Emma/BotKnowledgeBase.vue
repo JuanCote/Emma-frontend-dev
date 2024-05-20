@@ -3,11 +3,11 @@
         methods: {
             saveKnowledgeBase() {
                 if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
-                    this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id, tutorial: true})
+                    this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id})
                     this.$store.dispatch('setNextStep', {})
                     this.$router.push('/emma/bot_events')
                 }else {
-                    this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id, tutorial: false})
+                    this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id})
                 }
             }
         },

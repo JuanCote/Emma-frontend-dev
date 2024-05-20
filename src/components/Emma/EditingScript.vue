@@ -26,9 +26,9 @@ import { BACKEND_URL } from '@/config.js'
                         })
                     }else {
                         this.buttonBlock = true
-                        this.$store.dispatch('createAlgorithm', {algorithm: this.newAlgorithm, tutorial: true}).then(() => {
+                        this.$store.dispatch('createAlgorithm', {algorithm: this.newAlgorithm}).then(() => {
                             if (this.tutorial.currentStep == 13 && !this.tutorial.done) {
-                                this.$router.push('/emma/settings/bot_settings')
+                                this.$router.push('/emma/bot_events')
                                 this.$store.dispatch('setNextStep', {})
                             }else {
                                 this.$router.push('/emma/bot_events')
@@ -491,35 +491,6 @@ import { BACKEND_URL } from '@/config.js'
         display: flex;
         align-items: center;
         justify-content: space-between;
-    }
-    .bot-events-header-button {
-        width: 171px;
-        height: 43px;
-        cursor: pointer;
-        border: none;
-        display: flex;
-        display: flex;
-        gap: 8px;
-        color: white;
-        font-size: 14px;
-        justify-content: center;
-        align-items: center;
-        border-radius: 8px;
-        background: linear-gradient(to bottom left, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
-        transition: background 0.5s ease, transform 0.5s ease; /* Ensure transitions are applied smoothly */
-    }
-
-    .bot-events-header-button:hover {
-        background: linear-gradient(to top right, rgba(90, 85, 220, 1), rgba(150, 85, 220, 1)); /* Darker shades */
-        transform: scale(1.05);
-    }
-    .bot-events-header-button:active {
-        transform: scale(0.95);
-        transition: transform 0.2s;
-    }
-    .bot-events-header-buttons {
-        display: flex;
-        gap: 8px;
     }
     .bot-events-header {
         display: flex;

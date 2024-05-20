@@ -107,7 +107,7 @@ export default {
                 console.error('Error creating openai token:', error);
                 throw error;
             }
-            if (this.tutorial.currentStep == 20 && !this.tutorial.done) {
+            if (this.tutorial.currentStep == 22 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep', {})
                 this.$router.push('/emma/all_bots')
             }
@@ -187,7 +187,7 @@ export default {
 
 <template>
     <div class="widget-settings">
-        <div class="telegram-settings-adding-telegram-token" :class="{'tutorial': this.tutorial.currentStep == 20 && !this.tutorial.done}">
+        <div class="telegram-settings-adding-telegram-token" :class="{'tutorial': this.tutorial.currentStep == 22 && !this.tutorial.done}">
             <p class="widget-settings-openai">Додавання токену бота</p>
             <p class="create-script-describe-creating-script">Сюди треба вставити токен вашого телеграм бота, котрий отримується в BotFather</p>
             <div class="telegram-settings-telegram-div">

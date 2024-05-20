@@ -34,7 +34,7 @@ export default {
                         this.placeholderInputOpenai = 'Токен орендовано'
                         this.tokenInput = ''
                     }
-                    if (this.tutorial.currentStep == 16 && !this.tutorial.done) {
+                    if (this.tutorial.currentStep == 19 && !this.tutorial.done) {
                         this.$store.dispatch('setNextStep', {})
                     }
                 }else {
@@ -128,12 +128,12 @@ export default {
     <div class="widget-settings">
         <div v-if="hasOpenaiToken">
             <p class="widget-settings-instruction">Для вставки чату на ваш веб-сайт скопіюйте цей код і вставте його безпосередньо перед закриваючим тегом &lt;/body&gt; у вашому HTML-коді.</p>
-            <div :class="{'tutorial': tutorial.currentStep == 18 && !tutorial.done}" class="widget-settings-code">
+            <div :class="{'tutorial': tutorial.currentStep == 20 && !tutorial.done}" class="widget-settings-code">
                 <p>{{ scriptCode }}</p>
                 <img @click="copyText" src="@/assets/images/copybutton.svg">
             </div>
         </div>
-        <div :class="{'tutorial': tutorial.currentStep == 16 && !tutorial.done}" class="widget-settings-adding-openai-key">
+        <div :class="{'tutorial': tutorial.currentStep == 19 && !tutorial.done}" class="widget-settings-adding-openai-key">
             <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>
             <p class="create-script-describe-creating-script">Ви хочете використовувати власний API-ключ OpenAI або орендувати наш? Використання власного ключа дає вам контроль над витратами, але вимагає самостійного управління балансом. Оренда ключа — це швидший та простіший спосіб</p>
             <div class="widget-settings-openai-div">

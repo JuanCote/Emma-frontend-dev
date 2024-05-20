@@ -16,6 +16,11 @@ export default {
         EmmaBotList,
     },
     props: ['socket', 'chatsLoaded'],
+    computed: {
+        chosenBot() {
+            return this.$store.state.bots.chosenBot
+        }
+    }
 }
 
 </script>
@@ -23,9 +28,10 @@ export default {
 <template>
 <div class="emma-right-block">
     <div class="emma-analytic-header">
-        <div>
+        <div class="emma-analytic-header-1">
             <img src="@/assets/images/analyticquestion.svg">
             <button>Підказки</button>
+            <div class="p-chosen-bot-div"><p>Обраний бот > Бот - {{ chosenBot.name }}</p></div>
         </div>
         <div>
             <img src="@/assets/images/user-question.svg">
@@ -43,6 +49,23 @@ export default {
 </template>
 
 <style>
+    .emma-analytic-header-1 {
+        display: flex;
+        align-items: center;
+    }
+    .p-chosen-bot-div p {
+        color: #5A5A76;
+    }
+    .p-chosen-bot-div {
+        font-size: 14px;
+        font-weight: 400;
+        background: #EAEAF3;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 20px 0 20px;
+        border-radius: 8px;
+    }
     .emma-right-block {
         display: flex;
         flex-direction: column;

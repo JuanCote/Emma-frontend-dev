@@ -167,23 +167,25 @@ export default {
             <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-knowledge-4"><p>Вкажіть чи повинен бот відповідати на повідомлення, що не стосуються теми вашої компанії</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
             <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-knowledge-5"><p>Напишіть на якій мові бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
             <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-knowledge-6"><p>Щоб зберегти заповнену "базу знань бота" натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 16 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p></div>
+            <div v-if="tutorial.currentStep == 19 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p></div>
             <div v-if="tutorial.currentStep == 7 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до подій бота</p></div>
             <div v-if="tutorial.currentStep == 8 && !tutorial.done" class="tutorial-block-add-script"><p>Створіть свій перший скрипт</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 7})">Пропустити крок</button></div>
             <div v-if="tutorial.currentStep == 9 && !tutorial.done" class="tutorial-block-form-script-1"><p>Тут ви можете описати подію, котра буде відпрацьовувати при певних повідомленнях від користувача. Спочатку напишіть назву, вона може бути будь-яка</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
             <div v-if="tutorial.currentStep == 10 && !tutorial.done" class="tutorial-block-form-script-2"><p>Тепер напишіть "Запитання" на яке подія буде реагувати, наприклад: "Як називається ваша компанія?"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
             <div v-if="tutorial.currentStep == 11 && !tutorial.done" class="tutorial-block-form-script-3"><p>Зараз напишіть як бот повинен відповідати на введене запитання, наприклад якщо запитання "Як називається ваша компанія", відповідь може бути "Neuroshop"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 13 && !tutorial.done" class="tutorial-block-form-script-5"><p>Щоб зберегти подію натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {}), $router.push('/emma/bot_events')">Пропустити крок</button></div>
+            <div v-if="tutorial.currentStep == 13 && !tutorial.done" class="tutorial-block-form-script-5"><p>Щоб зберегти подію натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2}), $router.push('/emma/bot_events')">Пропустити крок</button></div>
             <div v-if="tutorial.currentStep == 14 && !tutorial.done && $route.path != '/emma/bot_events/create_script'" class="tutorial-block-create-or-next"><p>Чудово! Можете ще додати інструкцію або продовжити налаштування, натиснувши "Пропустити крок"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Пропустити крок</button></div>
-            <div v-if="tutorial.currentStep == 15 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань бота</p></div>
-            <div v-if="tutorial.currentStep == 18 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
+            <div v-if="tutorial.currentStep == 15 && !tutorial.done" class="tutorial-block-add-document"><p>Додайте документ</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2})">Пропустити крок</button></div>
+            <div v-if="tutorial.currentStep == 17 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань бота</p></div>
+            <div v-if="tutorial.currentStep == 16 && !tutorial.done" class="tutorial-block-document-form"><p>В цій формі ви можете завантажити документ, по якому бот буде відповідати клієнтам, для цього виберіть або перетягніть документ в поле та натисніть кнопку "Завантажити"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Пропустити крок</button></div>
+            <div v-if="tutorial.currentStep == 20 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
                 <button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button>
             </div>
             <div v-if="!tutorial.done && (tutorial.currentStep != 14 || $route.path != '/emma/bot_events/create_script')" class="tutorial-background"></div>
-            <div v-if="tutorial.currentStep == 19 && !tutorial.done" class="tutorial-block-to-telegram"><p>Перейдіть до налаштувань телеграма</p></div>
-            <div v-if="tutorial.currentStep == 20 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм боту з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 21 && !tutorial.done" class="tutorial-block-to-bots"><p>Перейдіть до ботів</p></div>
-            <div v-if="tutorial.currentStep == 22 && !tutorial.done" class="tutorial-block-bots"><p>Тут ви можете побачити всіх своїх ботів та обрати поточного бота, якого ви хочете налаштувати. Також за необхідності ви можете додати нового бота натиснувши кнопку "Create bot"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 21 && !tutorial.done" class="tutorial-block-to-telegram"><p>Перейдіть до налаштувань телеграма</p></div>
+            <div v-if="tutorial.currentStep == 22 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм боту з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 23 && !tutorial.done" class="tutorial-block-to-bots"><p>Перейдіть до ботів</p></div>
+            <div v-if="tutorial.currentStep == 24 && !tutorial.done" class="tutorial-block-bots"><p>Тут ви можете побачити всіх своїх ботів та обрати поточного бота, якого ви хочете налаштувати. Також за необхідності ви можете додати нового бота натиснувши кнопку "Create bot"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <EmmaLeftMenu/>
             <div class="right-container">
                 <div v-if="!socket" class="right-container-loading">
@@ -192,7 +194,7 @@ export default {
                 <EmmaRightContainer v-if="socket" :socket="socket" :chatsLoaded="chatsLoaded"></EmmaRightContainer>
             </div>
         </div>
-        <div v-if="tutorial.currentStep == 17 && !tutorial.done" class="payment-form" :class="{'tutorial': tutorial.currentStep == 17}">
+        <div v-if="tutorial.currentStep == 18 && !tutorial.done" class="payment-form" :class="{'tutorial': tutorial.currentStep == 18}">
             <h1>Нажаль, Emma не є безкоштовною, щоб оплатити місячну підписку перейдіть за посиланням нижче</h1>
             <a v-if="paymentLink" :href="paymentLink"><p>Посилання для оплати</p></a>
             <button @click="checkPayment">Перевірити оплату</button>
@@ -201,6 +203,34 @@ export default {
 </template>
 
 <style scoped>
+    .tutorial-block-document-form {
+        color: white;
+        position: absolute;
+        text-align: center;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 22em; /* Позиционируйте контент в нужное место */
+        left: -2%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
+    .tutorial-block-add-document {
+        color: white;
+        position: absolute;
+        text-align: center;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        top: 8em; /* Позиционируйте контент в нужное место */
+        left: 45%;
+        width: 25em;
+        z-index: 101;
+        padding: 20px;
+    }
     .tutorial-block-bots {
         color: white;
         position: absolute;
@@ -209,7 +239,7 @@ export default {
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 15em; /* Позиционируйте контент в нужное место */
+        top: 18em; /* Позиционируйте контент в нужное место */
         left: 40%;
         width: 25em;
         z-index: 101;
@@ -257,11 +287,16 @@ export default {
         z-index: 101;
         padding: 20px;
     }
+    .payment-form button:hover {
+        background: linear-gradient(to top right, rgba(117, 112, 255, 0.9), rgba(188, 112, 255, 0.9));
+    }
     .payment-form button {
+        background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
         margin-top: 24px;
         border: none;
         border-radius: 8px;
         height: 40px;
+        color: white;
         padding: 0 8px 0 8px;
         cursor: pointer;
     }
@@ -318,7 +353,7 @@ export default {
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 8.5em; /* Позиционируйте контент в нужное место */
+        top: 12em; /* Позиционируйте контент в нужное место */
         left: -4%;
         width: 25em;
         z-index: 101;
@@ -332,8 +367,8 @@ export default {
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 4em; /* Позиционируйте контент в нужное место */
-        left: 40%;
+        top: 8em; /* Позиционируйте контент в нужное место */
+        left: 50%;
         width: 25em;
         z-index: 101;
         padding: 20px;
@@ -566,8 +601,8 @@ export default {
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 8%; /* Позиционируйте контент в нужное место */
-        left: 45%;
+        top: 13%; /* Позиционируйте контент в нужное место */
+        left: 65%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
         padding: 20px;

@@ -30,33 +30,19 @@ const state = {
         console.error('Ошибка загрузки алгоритмов:', error);
       }
     },
-    // async deleteAlgorithm({ commit }, id) {
-    //   try {
-    //     const response = await fetch(`${BACKEND_URL}/delete_algorithm?algorithm_id=${id}`, {
-    //       method: 'DELETE',
-    //       credentials: 'include'
-    //   });
-    //     const data = await response.json();
-    //     commit('updateAlgorithms', data);
-    //   } catch (error) {
-    //     console.error('Ошибка удаления алгоритма:', error);
-    //   }
-    // },
-    // async copyAlgorithm({commit, dispatch}, algorithm) {
-    //   try {
-    //     const response = await fetch(`${BACKEND_URL}/copy_algorithm?algorithm_id=${algorithm.id}`, {
-    //       method: 'GET',
-    //       credentials: 'include',
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //   }).then(() => {
-    //     dispatch('fetchAlgorithms')
-    //   })
-    //   } catch (error) {
-    //     console.error('Ошибка копирования алгоритма:', error);
-    //   }
-    // },
+    async deleteBot({ commit }, id) {
+      try {
+        const response = await fetch(`${BACKEND_URL}/delete_bot?bot_id=${id}`, {
+          method: 'DELETE',
+          credentials: 'include'
+      });
+        const data = await response.json();
+        commit('updateBots', data);
+        commit('updateChosenBot', data[0]);
+      } catch (error) {
+        console.error('Ошибка удаления алгоритма:', error);
+      }
+    },
     async createBot({commit, dispatch}) {
       try {
         const response = await fetch(`${BACKEND_URL}/add_telegram_bot`, {

@@ -64,30 +64,32 @@ router.beforeEach((to, from, next) => {
           break
         case 14:
         case 15:
+        case 16:
+        case 17:
           if (to.path != '/emma/bot_events' && to.path != '/emma/bot_events/create_script') {
             next('/emma/bot_events')
           } else {
             next()
           }
           break
-          case 16:
-          case 17:
           case 18:
           case 19:
+          case 20:
+          case 21:
             if (to.path != '/emma/settings/bot_settings/widget') {
               next('/emma/settings/bot_settings/widget')
             } else {
               next()
             }
             break
-          case 20:
-          case 21:
+
+          case 22:
             if (to.path != '/emma/settings/bot_settings/telegram') {
               next('/emma/settings/bot_settings/telegram')
             } else {
               next()
             }
-          case 22:
+          case 24:
             if (to.path != '/emma/all_bots') {
               next('/emma/all_bots')
             } else {

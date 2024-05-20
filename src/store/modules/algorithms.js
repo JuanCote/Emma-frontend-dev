@@ -19,7 +19,6 @@ const state = {
           credentials: 'include'
       });
         const data = await response.json();
-        console.log(data)
         commit('updateAlgorithms', data);
       } catch (error) {
         console.error('Ошибка загрузки алгоритмов:', error);

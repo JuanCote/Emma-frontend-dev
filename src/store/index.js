@@ -7,6 +7,7 @@ import User from './modules/user'
 import knowledgeBase from './modules/knowledgeBase'
 import tutorial from "./modules/tutorial";
 import bots from "./modules/bots"
+import documents from "./modules/documents";
 
 export default createStore({
   modules: {
@@ -15,7 +16,8 @@ export default createStore({
     user: User,
     knowledgeBase: knowledgeBase,
     tutorial: tutorial,
-    bots: bots
+    bots: bots,
+    documents: documents
   }
   
 });

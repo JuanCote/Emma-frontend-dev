@@ -2,7 +2,16 @@
 import algorithms from '@/store/modules/algorithms';
 
  export default {
+    data() {
+        return {
+            showFileUploading: false,
+            fileUploadText: 'Виберіть файл або перетяніть'
+        }
+    },
     methods: {
+        deleteDocument(id) {
+            this.$store.dispatch('deleteDocument', {id: id, botId: this.chosenBot.id})
+        },
         deleteAlgorithm(id) {
             this.$store.dispatch('deleteAlgorithm', {id: id, botId: this.chosenBot.id})
         },
@@ -14,8 +23,29 @@ import algorithms from '@/store/modules/algorithms';
                 this.$store.dispatch('setNextStep', {})
             }
             this.$router.push('/emma/bot_events/create_script')
+        },
+        triggerFileInput() {
+            this.$refs.fileInput.click();
+        },
+        handleFileUpload() { 
+            this.$store.dispatch('uploadDocument', {file: this.$refs.fileInput.files[0], botId: this.chosenBot.id}).then(() => {
+                this.showFileUploading = false
+                if (this.tutorial.currentStep == 16 && !this.tutorial.done) {
+                    this.$store.dispatch('setNextStep', {})
+                }
+            })
+        },
+        handleFileUploadToInput() {
+            this.fileUploadText = this.$refs.fileInput.files[0].name
+        },
+        showFileUploadingClick() {
+            if (this.tutorial.currentStep == 15 && !this.tutorial.done) {
+                this.$store.dispatch('setNextStep', {})
+            }
+            this.showFileUploading = true
+          
         }
-    },
+     },
     computed: {
         algorithms() {
             return this.$store.state.algorithms.algorithms
@@ -25,10 +55,17 @@ import algorithms from '@/store/modules/algorithms';
         },
         chosenBot() {
             return this.$store.state.bots.chosenBot
+        },
+        documents() {
+            return this.$store.state.documents.documents
         }
     },
     mounted() {
+        if (this.tutorial.currentStep == 16 && !this.tutorial.done) {
+            this.showFileUploading = true
+        }
         this.$store.dispatch('fetchAlgorithms', {botId: this.chosenBot.id})
+        this.$store.dispatch('fetchDocuments', {botId: this.chosenBot.id})
     }
  }
 </script>
@@ -42,6 +79,10 @@ import algorithms from '@/store/modules/algorithms';
                 <p class="bot-settings-right-menu-header-botSettings">Всі події</p>
             </div>
             <div class="bot-events-header-buttons">
+                <button :class="{'tutorial': (tutorial.currentStep == 15) && !tutorial.done}" @click="showFileUploadingClick" class="bot-events-header-button">
+                    <img src="@/assets/images/plus-instr.svg">
+                    <p>Завантажити документ</p>
+                </button>
                 <button :class="{'tutorial': (tutorial.currentStep == 8 || tutorial.currentStep == 14) && !tutorial.done}" @click="createScript" class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати інструкцію</p>
@@ -90,10 +131,94 @@ import algorithms from '@/store/modules/algorithms';
                 </div>
             </div>
         </div>
+        <div class="bot-events-scripts">
+            <div class="bot-events-script-header">
+                <p class="bot-events-script-header-p">Знайдені документи: {{ documents.length }}</p>
+            </div>
+            <div v-for="document in documents" class="bot-events-script">
+                <div class="bot-events-script-scripts">
+                    <div class="bot-events-script-script">
+                        <div class="bot-events-script-script-part1">
+                            <p>1</p>
+                            <h1>{{ document.file_name }}</h1>
+                        </div>
+                        <div class="bot-events-script-script-part2">
+                                            
+                            <div class="bot-events-script-script-part2-buttons">
+                                <div @click="deleteDocument(document.file_id)" class="bot-events-script-script-part2-button">
+                                    <img src="@/assets/images/deleteScript.svg">
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div @click="showFileUploading = false" v-if="showFileUploading && !(this.tutorial.currentStep == 17 && !this.tutorial.done)" class="upload-file-window-background"></div>
+    <div :class="{'tutorial': this.tutorial.currentStep == 16 && !this.tutorial.done}" v-if="showFileUploading && !(this.tutorial.currentStep == 17 && !this.tutorial.done)" class="upload-file-window">
+        <div class="upload-file-form">
+            <div @click="triggerFileInput" class="upload-file-form-window-to-drop">
+                <p>{{ fileUploadText }}</p>
+            </div>
+            <input @change="handleFileUploadToInput" type="file" ref="fileInput" style="display: none;" />
+            <button @click="handleFileUpload">Завантажити</button>
+        </div>
     </div>
 </template>
 
 <style>
+    .upload-file-window.tutorial {
+        z-index: 10000;
+    }
+    .upload-file-form-window-to-drop {
+        width: 100%;
+        height: 100%;
+        border: 1px dashed black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .upload-file-window-background {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    .upload-file-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        height: 100%;
+        width: 100%;
+    }
+    .upload-file-form button {
+        border: none;
+        background: linear-gradient(to bottom left, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+        height: 30px;
+        padding: 0 12px 0 12px;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+    }
+    .upload-file-window {
+        position: fixed;
+        height: 30%;
+        padding: 12px;
+        width: 40%;
+        top: 50%;
+        left: 50%;
+        border-radius: 8px;
+        transform: translateX(-50%) translateY(-50%);
+        background: white;
+    }
     .bot-events-script {
         height: 47px;
     }
@@ -101,6 +226,7 @@ import algorithms from '@/store/modules/algorithms';
         display: flex;
         flex-direction: column;
         gap: 8px;
+        margin-bottom: 24px;
     }
     .bot-events-script-script-part2-button {
         height: 32px;
@@ -224,10 +350,10 @@ import algorithms from '@/store/modules/algorithms';
         z-index: 10000;
     }
     .bot-events-header-button {
-        width: 171px;
         height: 43px;
         cursor: pointer;
         border: none;
+        padding: 0 24px 0 24px;
         display: flex;
         display: flex;
         gap: 8px;

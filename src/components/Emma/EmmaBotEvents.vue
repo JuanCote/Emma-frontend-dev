@@ -5,7 +5,7 @@ import algorithms from '@/store/modules/algorithms';
     data() {
         return {
             showFileUploading: false,
-            fileUploadText: 'Виберіть файл або перетяніть'
+            fileUploadText: 'Виберіть файл'
         }
     },
     methods: {

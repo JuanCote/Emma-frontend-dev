@@ -11,7 +11,8 @@ export default {
         return {
             socket: null,
             chatsLoaded: false,
-            paymentLink: String
+            paymentLink: String,
+            promoInput: ''
         }
     },
     components: {
@@ -132,6 +133,11 @@ export default {
                 console.error('Get payment link error', error);
             }
 
+        },
+        checkPromo() {
+            if (this.promoInput == '30NEURO30') {
+                this.$store.dispatch('setNextStep', {});
+            }
         }
     },
     computed: {
@@ -198,11 +204,22 @@ export default {
             <h1>Нажаль, Emma не є безкоштовною, щоб оплатити місячну підписку перейдіть за посиланням нижче</h1>
             <a v-if="paymentLink" :href="paymentLink"><p>Посилання для оплати</p></a>
             <button @click="checkPayment">Перевірити оплату</button>
+            <input placeholder="Промокод" v-model="promoInput" class="promo-input">
+            <button @click="checkPromo" class="promo-check-button">Перевірити промокод</button>
         </div>
     </div>
 </template>
 
-<style scoped>
+<style scoped> 
+    .promo-input {
+        margin-top: 24px;
+        border: 1px solid #f0e2ff;
+        border-radius: 8px;
+        height: 30px;
+        outline: none;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
     .tutorial-block-document-form {
         color: white;
         position: absolute;

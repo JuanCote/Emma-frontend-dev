@@ -56,9 +56,7 @@ const state = {
     async createAlgorithm({commit, dispatch}, payload) {
       try {
         const algorithmToSend = payload.algorithm
-        if (payload.tutorial) {
-          algorithmToSend.while_tutorial = true
-        }
+    
         const response = await fetch(`${BACKEND_URL}/create_algorithm`, {
           method: 'POST',
           credentials: 'include',

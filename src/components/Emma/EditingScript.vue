@@ -82,15 +82,15 @@ import { BACKEND_URL } from '@/config.js'
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати інструкцію</p>
                 </button>
-                <button class="bot-events-header-button">
+                <!-- <button class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати кнопку</p>
-                </button>
+                </button> -->
             </div>
         </div>
         <div class="create-script-main">
             <div class="create-script-form">
-                <div class="create-script-form-buttons">
+                <!-- <div class="create-script-form-buttons">
                     <div :class="{'chosen': true}" class="create-script-form-button">
                         <p>Головні налаштування</p>
                     </div>
@@ -106,14 +106,14 @@ import { BACKEND_URL } from '@/config.js'
                     <div class="create-script-form-button">
                         <p>Клавіатура</p>
                     </div>
-                </div>
+                </div> -->
                 <div class="create-script-form-content">
                     <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 9 && !tutorial.done}">
                         <p class="create-script-input-label-name">Назва</p>
                         <p class="create-script-describe-creating-script">Будь-яка</p>
                         <input v-model="newAlgorithm.name" placeholder="Введіть назву" class="create-script-input">
                     </div>
-                    <div class="create-script-radiobuttons">
+                    <!-- <div class="create-script-radiobuttons">
                         <div class="create-script-radiobutton">
                             <input name="messageType" type="radio">
                             <p>Стартова подія</p>
@@ -129,7 +129,7 @@ import { BACKEND_URL } from '@/config.js'
                             <p>Під'єднання оператора</p>
                             <img src="@/assets/images/question_creating_script.svg">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 10 && !tutorial.done}">
                         <p class="create-script-input-label">Запитання</p>
                         <p class="create-script-describe-creating-script">Напишіть запитання користувача, на котре повинна реагувати подія</p>
@@ -137,7 +137,7 @@ import { BACKEND_URL } from '@/config.js'
                     </div>
                     <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 11 && !tutorial.done}">
                         <p class="create-script-input-label">Відповідь</p>
-                        <p class="create-script-describe-creating-script">Що повинен відповісти бот на запитання</p>
+                        <p class="create-script-describe-creating-script">Що повинен відповісти помічник на запитання</p>
                         <input v-model="newAlgorithm.then" placeholder="Введіть відповідь" class="create-script-input">
                     </div>   
                     <div class="create-script-buttons">

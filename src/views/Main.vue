@@ -11,7 +11,7 @@ import Instruction from "@/components/Landing/Instruction.vue"
   <Features />
   <HowToStart />
   <Pricing />
-  <Instruction />
+  <!-- <Instruction /> -->
 </template>
 
 <style scoped>

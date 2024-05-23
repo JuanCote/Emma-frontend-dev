@@ -12,43 +12,58 @@ export default {
             tokenBalance: {
                 bonus_tokens: 0,
                 tokens: 0
-            }
+            },
+            tokenRentLoading: false,
+            addTokenLoading: false
         }
     },
     methods: {
         async createToken(leased=false) {
-            try {
-                const response = await fetch(`${BACKEND_URL}/create_openai_token`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        token: this.tokenInput,
-                        bot_id: this.chosenBot.id,
-                        leased_token: leased
-                    })
-                })
-                if (response.ok) {
-                    this.hasOpenaiToken = true
-                    const data = await response.json()
-                    if (data['message'] == 'token rented successfuly') {
-                        this.tokenRented = true
-                        this.placeholderInputOpenai = 'Токен орендовано'
-                        this.tokenInput = ''
+            if (!leased && this.tokenInput == ''){
+                
+            }else {
+                if (!this.addTokenLoading && !this.tokenRentLoading) {
+                    if (leased) {
+                        this.tokenRentLoading = true
+                    }else {
+                        this.addTokenLoading = true
                     }
-                    if (this.tutorial.currentStep == 19 && !this.tutorial.done) {
-                        this.$store.dispatch('setNextStep', {})
+                    try {
+                        const response = await fetch(`${BACKEND_URL}/create_openai_token`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                token: this.tokenInput,
+                                bot_id: this.chosenBot.id,
+                                leased_token: leased
+                            })
+                        })
+                        if (response.ok) {
+                            this.hasOpenaiToken = true
+                            const data = await response.json()
+                            this.tokenRentLoading = false
+                            this.addTokenLoading = false
+                            if (data['message'] == 'token rented successfuly') {
+                                this.tokenRented = true
+                                this.placeholderInputOpenai = 'Токен орендовано'
+                                this.tokenInput = ''
+                            }
+                            if (this.tutorial.currentStep == 19 && !this.tutorial.done) {
+                                this.$store.dispatch('setNextStep', {})
+                            }
+                        }else {
+                            this.tokenInput = ''
+                            this.tokenInputError = true
+                            this.placeholderInputOpenai = 'Невалідний OpenAI ключ'
+                        }
+                    } catch (error) {
+                        console.error('Error creating openai token:', error);
+                        throw error;
                     }
-                }else {
-                    this.tokenInput = ''
-                    this.tokenInputError = true
-                    this.placeholderInputOpenai = 'Невалідний OpenAI ключ'
                 }
-            } catch (error) {
-                console.error('Error creating openai token:', error);
-                throw error;
             }
         },
         copyText() {
@@ -59,43 +74,74 @@ export default {
             if (this.tutorial.currentStep == 17 && !this.tutorial.done) {
                 this.$store.dispatch('finishTutorial')
             }
+        },
+        replenishTokens() {
+            try {
+                fetch(`${BACKEND_URL}/stipe_generate_link_top_up`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Преобразуем тело ответа в JSON
+                })
+                .then(data => {
+                    console.log(data)
+                    // this.$router.push(data)
+                })
+                .catch(error => {
+                    console.error('Error getting openai token:', error);
+                    throw error;
+                });
+            } catch (error) {
+                console.error('Error in try block:', error);
+                throw error;
+            }
         }
     },
     mounted() {
-        try {
-            fetch(`${BACKEND_URL}/get_openai_tokens?bot_id=${this.chosenBot.id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json(); // Преобразуем тело ответа в JSON
-            })
-            .then(data => {
-                if (!('error' in data)) {
-                    this.hasOpenaiToken = true
-                    if (data.leased) {
-                        this.placeholderInputOpenai = 'Токен орендовано'
-                        this.tokenRented = true
-                    }else {
-                        const token = data.token;
-                        this.tokenInput = token 
+        if (this.tutorial.currentStep != 18) {
+            try {
+                fetch(`${BACKEND_URL}/get_openai_tokens?bot_id=${this.chosenBot.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                }
-            })
-            .catch(error => {
-                console.error('Error getting openai token:', error);
+                    return response.json(); // Преобразуем тело ответа в JSON
+                })
+                .then(data => {
+                    if (!('error' in data)) {
+                        this.hasOpenaiToken = true
+                        if (data.leased) {
+                            this.placeholderInputOpenai = 'Токен орендовано'
+                            this.tokenRented = true
+                        }else {
+                            const token = data.token;
+                            this.tokenInput = token 
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting openai token:', error);
+                    throw error;
+                });
+            } catch (error) {
+                console.error('Error in try block:', error);
                 throw error;
-            });
-        } catch (error) {
-            console.error('Error in try block:', error);
-            throw error;
+            }
         }
+        
         try {
             fetch(`${BACKEND_URL}/get_token_balance`, {
                 method: 'GET',
@@ -167,14 +213,15 @@ export default {
             <p class="create-script-describe-creating-script">Ви хочете використовувати власний API-ключ OpenAI або орендувати наш? Використання власного ключа дає вам контроль над витратами, але вимагає самостійного управління балансом. Оренда ключа — це швидший та простіший спосіб</p>
             <div class="widget-settings-openai-div">
                 <input :class="{'error': tokenInputError, 'rented': tokenRented}" v-model="tokenInput" :placeholder="placeholderInputOpenai">
-                <button @click="createToken()" class="colored"><p>Додати ключ</p></button>
-                <button @click="createToken(leased=true)" class="widget-settings-rent-button"><p>Орендувати ключ</p></button>
+                <button @click="createToken()" class="colored"><p>Додати ключ</p><img v-if="addTokenLoading" src="@/assets/images/load.gif"></button>
+                <button @click="createToken(leased=true)" class="widget-settings-rent-button"><p>Орендувати ключ</p><img v-if="tokenRentLoading" src="@/assets/images/load.gif"></button>
             </div>
             <div class="widget-settings-token-balance">
                 <ul>
                     <li>Бонусні токени: {{ tokenBalance.bonus_tokens }}</li>
                     <li>Токени: {{ tokenBalance.tokens }}</li>
                 </ul>
+                <button @click="replenishTokens" class="replenish-tokens-button">Поповнити токени</button>
             </div>
         </div>
     </div>
@@ -182,12 +229,29 @@ export default {
 </template>
 
 <style>
+    .replenish-tokens-button {
+        border-radius: 8px;
+        margin-top: 12px;
+        background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+        color: white;
+        padding: 16px 8px;
+        font-size: 12px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 120px;
+        cursor: pointer;
+    }
     .widget-settings-token-balance ul {
         list-style: none;
         display: flex;
         flex-direction: column;
         margin-top: 24px;
         gap: 8px
+    }
+    .widget-settings-rent-button img {
+        height: 10px;
     }
     .widget-settings-rent-button {
         transition: all 0.25s ease;

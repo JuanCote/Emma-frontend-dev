@@ -5,18 +5,36 @@ import algorithms from '@/store/modules/algorithms';
     data() {
         return {
             showFileUploading: false,
-            fileUploadText: 'Виберіть файл'
+            fileUploadText: 'Виберіть файл',
+            invalidExtensionFile: false,
+            uploadBlock: false,
+            generalBlock: false
         }
     },
     methods: {
         deleteDocument(id) {
-            this.$store.dispatch('deleteDocument', {id: id, botId: this.chosenBot.id})
+            if (!this.generalBlock) {
+                this.generalBlock = true
+                this.$store.dispatch('deleteDocument', {id: id, botId: this.chosenBot.id}).then(() => {
+                    this.generalBlock = false
+                })
+            }
         },
         deleteAlgorithm(id) {
-            this.$store.dispatch('deleteAlgorithm', {id: id, botId: this.chosenBot.id})
+            if (!this.generalBlock) {
+                this.generalBlock = true
+                this.$store.dispatch('deleteAlgorithm', {id: id, botId: this.chosenBot.id}).then(() => {
+                    this.generalBlock = false
+                })
+            }
         },
         copyAlgorithm(algorithm) {
-            this.$store.dispatch('copyAlgorithm', {id: algorithm.id, botId: this.chosenBot.id})
+            if (!this.generalBlock) {
+                this.generalBlock = true
+                this.$store.dispatch('copyAlgorithm', {id: algorithm.id, botId: this.chosenBot.id}).then(() => {
+                    this.generalBlock = false
+                })
+            }
         },
         createScript() {
             if (this.tutorial.currentStep == 8 && !this.tutorial.done) {
@@ -28,13 +46,48 @@ import algorithms from '@/store/modules/algorithms';
             this.$refs.fileInput.click();
         },
         handleFileUpload() { 
-            this.$store.dispatch('uploadDocument', {file: this.$refs.fileInput.files[0], botId: this.chosenBot.id}).then(() => {
-                this.showFileUploading = false
-                if (this.tutorial.currentStep == 16 && !this.tutorial.done) {
-                    this.$store.dispatch('setNextStep', {})
-                }
-            })
+            const allowedFileTypes = [
+                'text/x-c',
+                'text/x-csharp',
+                'text/x-c++',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'text/html',
+                'text/x-java',
+                'application/json',
+                'text/markdown',
+                'application/pdf',
+                'text/x-php',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'text/x-python',
+                'text/x-script.python',
+                'text/x-ruby',
+                'text/x-tex',
+                'text/plain',
+                'text/css',
+                'text/javascript',
+                'application/x-sh',
+                'application/typescript'
+            ];
+
+            const file = this.$refs.fileInput.files[0];
+
+            if (file && allowedFileTypes.includes(file.type) && !this.uploadBlock) {
+                this.generalBlock = true
+                this.uploadBlock = true
+                this.$store.dispatch('uploadDocument', { file, botId: this.chosenBot.id }).then(() => {
+                    this.uploadBlock = false
+                    this.generalBlock = false
+                    this.showFileUploading = false;
+                    if (this.tutorial.currentStep == 16 && !this.tutorial.done) {
+                        this.$store.dispatch('setNextStep', {});
+                    }
+                });
+            } else {
+                alert('Недопустимый тип файла. Пожалуйста, загрузите файл одного из следующих типов: .c, .cs, .cpp, .doc, .docx, .html, .java, .json, .md, .pdf, .php, .pptx, .py, .rb, .tex, .txt, .css, .js, .sh, .ts');
+            }
         },
+
         handleFileUploadToInput() {
             this.fileUploadText = this.$refs.fileInput.files[0].name
         },
@@ -42,6 +95,7 @@ import algorithms from '@/store/modules/algorithms';
             if (this.tutorial.currentStep == 15 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep', {})
             }
+            this.fileUploadText = 'Виберіть файл'
             this.showFileUploading = true
           
         }
@@ -72,6 +126,7 @@ import algorithms from '@/store/modules/algorithms';
 
 <template>
     <div class="bot-events">
+        <img class="general-loading" v-if="generalBlock" src="@/assets/images/load.gif">
         <div class="bot-events-header">
             <div class="bot-settings-right-menu-header">
                 <p class="bot-settings-right-menu-header-settings">Події</p>
@@ -87,22 +142,22 @@ import algorithms from '@/store/modules/algorithms';
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати інструкцію</p>
                 </button>
-                <button class="bot-events-header-button">
+                <!-- <button class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати кнопку</p>
-                </button>
+                </button> -->
             </div>
         </div>
-        <div class="bot-events-scripts">
+        <div v-if="algorithms.length" class="bot-events-scripts">
             <div class="bot-events-script-header">
                 <p class="bot-events-script-header-p">Знайдені події: {{ algorithms.length }}</p>
-                <div class="bot-events-script-header-search-and-bots">
+                <!-- <div class="bot-events-script-header-search-and-bots">
                     <div class="bot-events-script-bots">
-                        <p>Всі боти</p>
+                        <p>Всі помічники</p>
                         <img src="@/assets/images/bot-down-arrow.svg">
                     </div>
                     <input placeholder="Search chat"><img class="bot-events-script-bot-lupa" src="@/assets/images/search-script.svg"></input>
-                </div>
+                </div> -->
             </div>
             <div v-for="algorithm in algorithms" class="bot-events-script">
                 <div class="bot-events-script-scripts">
@@ -131,7 +186,7 @@ import algorithms from '@/store/modules/algorithms';
                 </div>
             </div>
         </div>
-        <div class="bot-events-scripts">
+        <div v-if="documents.length" class="bot-events-scripts">
             <div class="bot-events-script-header">
                 <p class="bot-events-script-header-p">Знайдені документи: {{ documents.length }}</p>
             </div>
@@ -155,6 +210,34 @@ import algorithms from '@/store/modules/algorithms';
                 </div>
             </div>
         </div>
+        <div v-if="!documents.length && !algorithms.length" class="bot-events-empty-container">
+            <img src="@/assets/images/404algorithms.svg">
+            <p>Події та Документи відсутні</p>
+            <!-- <div class="bot-events-block-guide">
+                <div class="bot-events-block-guide-1">
+                    <h1>Як налаштувати подію для вашого бота?</h1>
+                    <p>Виконайте ці дії:</p>
+                    <ul>
+                        <li>Завантажте інформацію про вашу компанію</li>
+                        <li>Створіть інструкції</li>
+                        <li>Додайте кнопку</li>
+                        <li>Опублікуйте бота</li>
+                    </ul>
+                </div>
+                <div class="bot-events-block-guide-2">
+                    <h1>Є питання, дивись на</h1>
+                    <div class="bot-events-block-guide-2-video">
+                        <img src="@/assets/images/youtube-logo.svg">
+                        <p>Відео туторіал</p>
+                    </div>
+                    <p>Напишіть нам:</p>
+                    <ul>
+                        <li>support@gerabot.com</li>
+                        <li>+38 (099) 000-00-00</li>
+                    </ul>
+                </div>
+            </div> -->
+        </div>
     </div>
     <div @click="showFileUploading = false" v-if="showFileUploading && !(this.tutorial.currentStep == 17 && !this.tutorial.done)" class="upload-file-window-background"></div>
     <div :class="{'tutorial': this.tutorial.currentStep == 16 && !this.tutorial.done}" v-if="showFileUploading && !(this.tutorial.currentStep == 17 && !this.tutorial.done)" class="upload-file-window">
@@ -163,12 +246,41 @@ import algorithms from '@/store/modules/algorithms';
                 <p>{{ fileUploadText }}</p>
             </div>
             <input @change="handleFileUploadToInput" type="file" ref="fileInput" style="display: none;" />
-            <button @click="handleFileUpload">Завантажити</button>
+            <button @click="handleFileUpload">Завантажити<img v-if="uploadBlock" src="@/assets/images/load.gif"></button>
         </div>
     </div>
 </template>
 
 <style>
+    .bot-events-block-guide {
+        margin-top: 72px;
+        border-radius: 8px;
+        width: 80%;
+        background: white;
+        padding: 16px;
+        display: flex;
+    }
+    .bot-events-empty-container img {
+        height: 170px;
+    }
+    .bot-events-empty-container p {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .bot-events-empty-container {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 70px;
+        justify-content: center;
+    }
+    .general-loading {
+        position: fixed;
+        left: 50%;
+        height: 3em;
+        transform: translateX(-50%) translateY(-50%);
+        top: 50%
+    }
     .upload-file-window.tutorial {
         z-index: 10000;
     }
@@ -199,6 +311,9 @@ import algorithms from '@/store/modules/algorithms';
         height: 100%;
         width: 100%;
     }
+    .upload-file-form button img {
+        height: 10px;
+    }
     .upload-file-form button {
         border: none;
         background: linear-gradient(to bottom left, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
@@ -207,12 +322,15 @@ import algorithms from '@/store/modules/algorithms';
         border-radius: 8px;
         color: white;
         cursor: pointer;
+        display: flex;
+        gap: 4px;
+        align-items: center;
     }
     .upload-file-window {
         position: fixed;
         height: 30%;
         padding: 12px;
-        width: 40%;
+        width: 30%;
         top: 50%;
         left: 50%;
         border-radius: 8px;

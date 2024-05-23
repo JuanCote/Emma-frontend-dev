@@ -34,31 +34,31 @@ import tutorial from '@/store/modules/tutorial';
 <div class="bot-settings-right-menu-header">
     <p class="bot-settings-right-menu-header-settings">Налаштування</p>
     <img src="@/assets/images/right-arrow.svg">
-    <p class="bot-settings-right-menu-header-botSettings">Налаштування бота</p>
+    <p class="bot-settings-right-menu-header-botSettings">Налаштування помічника</p>
 </div>
 <div class="bot-settings-right-menu-bots">
-    <div class="bot-settings-right-menu-bots-telegram" @click="choseTelegram" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings/telegram'), 'tutorial': this.tutorial.currentStep == 21 }">
-        <img v-if="!$route.path.startsWith('/emma/settings/bot_settings/telegram')" src="@/assets/images/telegram-icon.svg">
-        <img v-if="$route.path.startsWith('/emma/settings/bot_settings/telegram')" src="@/assets/images/telegram-icon-white.svg">
-        <p>Telegram</p>
-    </div>
-    <div>
-        <img src="@/assets/images/viber.svg">
-        <p>Viber</p>
-    </div>
     <div @click="choseWidget" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings/widget') }">
         <img v-if="!$route.path.startsWith('/emma/settings/bot_settings/widget')" src="@/assets/images/widget-black.svg">
         <img v-if="$route.path.startsWith('/emma/settings/bot_settings/widget')" src="@/assets/images/widget.svg">
         <p>Widget</p>
     </div>
-    <div>
+    <div class="bot-settings-right-menu-bots-telegram" @click="choseTelegram" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings/telegram'), 'tutorial': this.tutorial.currentStep == 21 }">
+        <img v-if="!$route.path.startsWith('/emma/settings/bot_settings/telegram')" src="@/assets/images/telegram-icon.svg">
+        <img v-if="$route.path.startsWith('/emma/settings/bot_settings/telegram')" src="@/assets/images/telegram-icon-white.svg">
+        <p>Telegram</p>
+    </div>
+    <!-- <div>
+        <img src="@/assets/images/viber.svg">
+        <p>Viber</p>
+    </div> -->
+    <!-- <div>
         <img src="@/assets/images/messanger.svg">
         <p>Messanger</p>
     </div>
     <div>
         <img src="@/assets/images/instagram.svg">
         <p>Instagram</p>
-    </div>
+    </div> -->
 </div>
 <WidgetSettings v-if="$route.path == '/emma/settings/bot_settings/widget'"></WidgetSettings>
 <TelegramSettings v-if="$route.path == '/emma/settings/bot_settings/telegram'"></TelegramSettings>

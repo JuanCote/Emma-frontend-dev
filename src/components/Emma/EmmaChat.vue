@@ -184,12 +184,6 @@ export default {
                     <img src="@/assets/images/right-arrow.svg">
                     <p class="bot-settings-right-menu-header-botSettings">Всі чати</p>
                 </div>
-                <div class="bot-events-header-buttons">
-                    <button class="bot-events-header-button">
-                        <img src="@/assets/images/plus-instr.svg">
-                        <p>Додати категорію</p>
-                    </button>
-                </div>
             </div>
             <div>
                 
@@ -197,14 +191,6 @@ export default {
             <div class="bot-events-script-header">
                     <p class="bot-events-script-header-p">Чати: {{ chats.length }}</p>
                     <div class="bot-events-script-header-search-and-bots">
-                        <div class="bot-events-script-bots">
-                            <p>Всі боти</p>
-                            <!-- <ul class="bot-events-script-bots-ul">
-                                <li>123</li>
-                                <li>212</li>
-                            </ul> -->
-                            <img src="@/assets/images/bot-down-arrow.svg">
-                        </div>
                         <input placeholder="Знайти чат"><img class="bot-events-script-bot-lupa" src="@/assets/images/search-script.svg"></input>
                     </div>
                 </div>

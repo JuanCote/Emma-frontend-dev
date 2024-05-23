@@ -11,49 +11,60 @@ export default {
             placeholderInputOpenai: 'API Key',
             placeholderTelegram: 'Телеграм токен',
             telegramTokenInput: '',
-            botRunning: Boolean
+            botRunning: Boolean,
+            botReloadingLoading: false,
+            addingTelegramTokenError: false,
+            addingTelegramTokenLoad: false
         }
     },
     methods: {
         async startBot() {
-            try {
-                const response = await fetch(`${BACKEND_URL}/start_telegram_bot?bot_id=${this.chosenBot.id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                })
-                if (response.ok) {
-                    const data = await response.json()
-                    if (data['message'] == 'Bot started successfully') {
-                        this.botRunning = true
+            if (!this.botReloadingLoading && this.telegramTokenInput) {
+                try {
+                    this.botReloadingLoading = true
+                    const response = await fetch(`${BACKEND_URL}/start_telegram_bot?bot_id=${this.chosenBot.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include',
+                    })
+                    if (response.ok) {
+                        const data = await response.json()
+                        this.botReloadingLoading = false
+                        if (data['message'] == 'Bot started successfully') {
+                            this.botRunning = true
+                        }
                     }
+                } catch (error) {
+                    console.error('Error starting telegram bot:', error);
+                    throw error;
                 }
-            } catch (error) {
-                console.error('Error starting telegram bot:', error);
-                throw error;
             }
         },
         async stopBot() {
-            try {
-                const response = await fetch(`${BACKEND_URL}/stop_telegram_bot?bot_id=${this.chosenBot.id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                })
-                if (response.ok) {
-                    const data = await response.json()
-                    if (data['message'] == 'Bot stopped successfully') {
-                        this.botRunning = false
+            if (!this.botReloadingLoading) {
+                try {
+                    this.botReloadingLoading = true
+                    const response = await fetch(`${BACKEND_URL}/stop_telegram_bot?bot_id=${this.chosenBot.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include',
+                    })
+                    if (response.ok) {
+                        const data = await response.json()
+                        this.botReloadingLoading = false
+                        if (data['message'] == 'Bot stopped successfully') {
+                            this.botRunning = false
+                        }
                     }
+                } catch (error) {
+                    console.error('Error starting telegram bot:', error);
+                    throw error;
                 }
-            } catch (error) {
-                console.error('Error starting telegram bot:', error);
-                throw error;
-            } 
+            }
         },
         async createToken(leased=false) {
             try {
@@ -91,6 +102,7 @@ export default {
             }
         },
         async addTelegramToken() {
+            this.addingTelegramTokenLoad = true
             try {
                 const response = await fetch(`${BACKEND_URL}/add_token_to_telegram_bot`, {
                     method: 'POST',
@@ -103,10 +115,18 @@ export default {
                         bot_id: this.chosenBot.id,
                     })
                 })
+                const data = await response.json()
+                if ('success' in data) {
+                    this.chosenBot.telegram_bot_token = this.telegramTokenInput
+                }else {
+                    this.addingTelegramTokenError = true
+                    this.telegramTokenInput = this.chosenBot.telegram_bot_token
+                }
             } catch (error) {
                 console.error('Error creating openai token:', error);
                 throw error;
             }
+            this.addingTelegramTokenLoad = false
             if (this.tutorial.currentStep == 22 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep', {})
                 this.$router.push('/emma/all_bots')
@@ -188,14 +208,15 @@ export default {
 <template>
     <div class="widget-settings">
         <div class="telegram-settings-adding-telegram-token" :class="{'tutorial': this.tutorial.currentStep == 22 && !this.tutorial.done}">
-            <p class="widget-settings-openai">Додавання токену бота</p>
-            <p class="create-script-describe-creating-script">Сюди треба вставити токен вашого телеграм бота, котрий отримується в BotFather</p>
+            <p class="widget-settings-openai">Додавання токену помічника</p>
+            <p class="create-script-describe-creating-script">Сюди треба вставити токен вашого телеграм помічника, котрий отримується в BotFather і натисніть на кнопку додати</p>
             <div class="telegram-settings-telegram-div">
                 <input v-model="telegramTokenInput" maxlength="46" :placeholder="placeholderTelegram">
-                <button @click="addTelegramToken">Додати</button>
+                <button :class="{'green': chosenBot.telegram_bot_token, 'red': !chosenBot.telegram_bot_token}" @click="addTelegramToken">Додати<img v-if="addingTelegramTokenLoad" src="@/assets/images/load.gif"></button>
             </div>
-            <button @click="startBot" v-if="!botRunning" class="telegram-bot-start">Запустити</button>
-            <button @click="stopBot" v-if="botRunning" class="telegram-bot-stop">Зупинити</button>
+            <p class="telegram-add-telegram-token-error" v-if="addingTelegramTokenError">Сталася помилка під час додавння токену, переконайтесь в валідності токена</p>
+            <button @click="startBot" v-if="!botRunning" class="telegram-bot-start">Запустити<img v-if="botReloadingLoading" src="@/assets/images/load.gif"></button>
+            <button @click="stopBot" v-if="botRunning" class="telegram-bot-stop">Зупинити<img v-if="botReloadingLoading" src="@/assets/images/load.gif"></button>
         </div>
         <div class="widget-settings-adding-openai-key">
             <p class="widget-settings-openai">Додавання API-ключа від OpenAI</p>
@@ -210,6 +231,11 @@ export default {
 </template>
 
 <style>
+    .telegram-add-telegram-token-error {
+        font-size: 12px;
+        margin-top: 12px;
+        color: red;
+    }
     .telegram-bot-stop {
         background: red;
         border-radius: 8px;
@@ -219,12 +245,24 @@ export default {
         color: white;
         margin-top: 12px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .telegram-bot-stop img {
+        height: 12px;
+    }
+    .telegram-bot-start img {
+        height: 12px;
     }
     .telegram-bot-start {
         background: green;
         border-radius: 8px;
         height: 40px;
         padding: 0 8px 0 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
         border: none;
         color: white;
         margin-top: 12px;
@@ -238,9 +276,24 @@ export default {
         border-radius: 8px;
         z-index: 10000;
     }
+    .telegram-settings-telegram-div button img {
+        height: 12px;
+
+    }
+    .telegram-settings-telegram-div button.green{
+        color: white;
+        background: green;
+    }
+    .telegram-settings-telegram-div button.red{
+        background: red;
+        color: white;
+    }
     .telegram-settings-telegram-div button {
         position: absolute;
         right: 8px;
+        display: flex;
+        gap: 4px;
+        align-items: center;
         top: 50%;
         transform: translateY(-50%);
         height: 32px;

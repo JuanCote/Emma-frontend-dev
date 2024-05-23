@@ -39,34 +39,26 @@
     <div class="bot-settings-right-menu-header">
         <p class="bot-settings-right-menu-header-settings">Налаштування</p>
         <img src="@/assets/images/right-arrow.svg">
-        <p class="bot-settings-right-menu-header-botSettings">База знань бота</p>
+        <p class="bot-settings-right-menu-header-botSettings">База знань помічника</p>
     </div>
 <p class="bot-knowledge-name">База знань</p>
-<p class="bot-knowledge-describe">Опишіть боту, в якій сфері він повинен розбиратися, яку роль відігравати та в якій манері спілкуватися. Вкажіть чи повинен бот відповідати на запитання, що не відносяться до теми компанії та на якій мові він повинен спілкуватися</p>
-<div class="bot-knowledge-sections">
-    <div class="bot-knowledge-section chosen">
-        <p>Секція</p>
-    </div>
-    <div class="bot-knowledge-section">
-        <p>Артиклі</p>
-    </div>
-</div>
+<p class="bot-knowledge-describe">Опишіть помічнику, в якій сфері він повинен розбиратися, яку роль відігравати та в якій манері спілкуватися. Вкажіть чи повинен помічник відповідати на запитання, що не відносяться до теми компанії та на якій мові він повинен спілкуватися</p>
 <p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Наразі жодного розділу до бази знань не додано</p>
 <ul class="bot-knowledge-inputs">
     <div :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}" class="bot-knowledge-input-div">
-        <p>У якій сфері бот повинен розбиратися?</p>
+        <p>У якій сфері помічник повинен розбиратися?</p>
         <input v-model="knowledgeBase.field" placeholder="Введіть сферу">
     </div>
     <div :class="{'tutorial': tutorial.currentStep == 2 && !tutorial.done}" class="bot-knowledge-input-div">
-        <p>Яку роль бот повинен відігравати?</p>
+        <p>Яку роль помічник повинен відігравати?</p>
         <input v-model="knowledgeBase.role" placeholder="Введіть роль">
     </div>
     <div :class="{'tutorial': tutorial.currentStep == 3 && !tutorial.done}" class="bot-knowledge-input-div">
-        <p>У якій манері бот повинен спілкуватися?</p>
+        <p>У якій манері помічник повинен спілкуватися?</p>
         <input v-model="knowledgeBase.manner" placeholder="Введіть манеру спілкування">
     </div>
     <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="bot-knowledge-input-div-question">
-        <p>Чи повинен бот відповідати на запитання, що не стосується теми або вашої компанії?</p>
+        <p>Чи повинен помічник відповідати на запитання, що не стосується теми або вашої компанії?</p>
         <div class="bot-knowledge-input-div-question-checkboxes">
             <div>
                 <input v-model="knowledgeBase.reply_to_non_company_topics" class="bot-knowledge-input-div-checkbox" type="radio" name="answer" value='true'>
@@ -80,7 +72,7 @@
 
     </div>
     <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="bot-knowledge-input-div">
-        <p>На якій мові бот повинен спілкуватися?</p>
+        <p>На якій мові помічник повинен спілкуватися?</p>
         <input v-model="knowledgeBase.language" placeholder="Введіть мову">
     </div>
     <div class="bot-knowledge-save-div" :class="{'tutorial': tutorial.currentStep == 6 && !tutorial.done}">

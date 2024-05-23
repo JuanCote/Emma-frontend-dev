@@ -12,7 +12,8 @@ export default {
             socket: null,
             chatsLoaded: false,
             paymentLink: String,
-            promoInput: ''
+            promoInput: '',
+            showInvalidPromo: false
         }
     },
     components: {
@@ -134,9 +135,48 @@ export default {
             }
 
         },
-        checkPromo() {
-            if (this.promoInput == '30NEURO30') {
-                this.$store.dispatch('setNextStep', {});
+        async checkPromo() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/check_promo?promo=${this.promoInput}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                const responseData = await response.json()
+                if ('success' in responseData) {
+                    try {
+                        const response = await fetch(`${BACKEND_URL}/create_openai_token`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                bot_id: this.chosenBot.id,
+                                leased_token: true
+                            })
+                        })
+                        if (response.ok) {
+                            const data = await response.json()
+                            if (data['message'] == 'token rented successfuly') {
+                                this.$store.dispatch('setNextStep', {})
+                                this.$router.go(0);
+                            }
+                        }else {
+                            
+                        }
+                    } catch (error) {
+                        console.error('Error creating openai token:', error);
+                        throw error;
+                    }
+                } else if ('error' in responseData) {
+                    this.showInvalidPromo = true
+                }
+                    
+            } catch (error) {
+                console.error('Checking promo error', error);
             }
         }
     },
@@ -167,31 +207,31 @@ export default {
     <div class="emma-background">
         <div class="emma-container">
             <!-- <button class="finish-button" @click="finishTutorial">Закінчити туторіал</button> -->
-            <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-knowledge-1"><p>Привіт! Щоб створити свого бота на базі штучного інтелекту спочатку необхідно заповнити форму "База знань бота". Почнемо з поля "сфери бота". Тут ви маєте описати в якій сфері бот повинен розбиратися. Для того щоб піти далі - натисніть "Далі"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge-2"><p>В цьому полі необхідно вказати роль, яку повинен відігравати бот</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-knowledge-3"><p>Опишіть манеру в якій бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-knowledge-4"><p>Вкажіть чи повинен бот відповідати на повідомлення, що не стосуються теми вашої компанії</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-knowledge-5"><p>Напишіть на якій мові бот повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-knowledge-6"><p>Щоб зберегти заповнену "базу знань бота" натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 19 && !tutorial.done" class="tutorial-block-api"><p>Тепер вставте ключ API OpenAI, щоб бот міг генерувати відповіді. Після цього натисніть кнопку "Додати ключ"</p></div>
-            <div v-if="tutorial.currentStep == 7 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до подій бота</p></div>
+            <div v-if="tutorial.currentStep == 1 && !tutorial.done" class="tutorial-block-knowledge-1"><p>Привіт! Щоб створити свого помічника на базі штучного інтелекту спочатку необхідно заповнити форму "База знань помічника". Почнемо з поля "сфери помічника". Тут ви маєте описати в якій сфері помічник повинен розбиратися. Для того щоб піти далі - натисніть "Далі"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 2 && !tutorial.done" class="tutorial-block-knowledge-2"><p>В цьому полі необхідно вказати роль, яку повинен відігравати помічник</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 3 && !tutorial.done" class="tutorial-block-knowledge-3"><p>Опишіть манеру в якій помічник повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 4 && !tutorial.done" class="tutorial-block-knowledge-4"><p>Вкажіть чи повинен помічник відповідати на повідомлення, що не стосуються теми вашої компанії</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 5 && !tutorial.done" class="tutorial-block-knowledge-5"><p>Напишіть на якій мові помічник повинен спілкуватися</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 6 && !tutorial.done" class="tutorial-block-knowledge-6"><p>Щоб зберегти заповнену "базу знань помічника" натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 19 && !tutorial.done" class="tutorial-block-api"><p>Це поле для ключа OpenAI. Зараз у вас ввімкнена оренда, тобто буде використовуватися наш ключ, за бажанням можна додати свій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 7 && !tutorial.done" class="tutorial-block-knowledge-transition"><p>Тепер перейдіть до подій помічника</p></div>
             <div v-if="tutorial.currentStep == 8 && !tutorial.done" class="tutorial-block-add-script"><p>Створіть свій перший скрипт</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 7})">Пропустити крок</button></div>
             <div v-if="tutorial.currentStep == 9 && !tutorial.done" class="tutorial-block-form-script-1"><p>Тут ви можете описати подію, котра буде відпрацьовувати при певних повідомленнях від користувача. Спочатку напишіть назву, вона може бути будь-яка</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
             <div v-if="tutorial.currentStep == 10 && !tutorial.done" class="tutorial-block-form-script-2"><p>Тепер напишіть "Запитання" на яке подія буде реагувати, наприклад: "Як називається ваша компанія?"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 11 && !tutorial.done" class="tutorial-block-form-script-3"><p>Зараз напишіть як бот повинен відповідати на введене запитання, наприклад якщо запитання "Як називається ваша компанія", відповідь може бути "Neuroshop"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 11 && !tutorial.done" class="tutorial-block-form-script-3"><p>Зараз напишіть як помічник повинен відповідати на введене запитання, наприклад якщо запитання "Як називається ваша компанія", відповідь може бути "Neuroshop"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2})">Далі</button></div>
             <div v-if="tutorial.currentStep == 13 && !tutorial.done" class="tutorial-block-form-script-5"><p>Щоб зберегти подію натисніть "Зберегти"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2}), $router.push('/emma/bot_events')">Пропустити крок</button></div>
             <div v-if="tutorial.currentStep == 14 && !tutorial.done && $route.path != '/emma/bot_events/create_script'" class="tutorial-block-create-or-next"><p>Чудово! Можете ще додати інструкцію або продовжити налаштування, натиснувши "Пропустити крок"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Пропустити крок</button></div>
             <div v-if="tutorial.currentStep == 15 && !tutorial.done" class="tutorial-block-add-document"><p>Додайте документ</p><button class="skip-step" @click="$store.dispatch('setNextStep', {step: 2})">Пропустити крок</button></div>
-            <div v-if="tutorial.currentStep == 17 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань бота</p></div>
-            <div v-if="tutorial.currentStep == 16 && !tutorial.done" class="tutorial-block-document-form"><p>В цій формі ви можете завантажити документ, по якому бот буде відповідати клієнтам, для цього виберіть або перетягніть документ в поле та натисніть кнопку "Завантажити"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Пропустити крок</button></div>
+            <div v-if="tutorial.currentStep == 17 && !tutorial.done" class="tutorial-block-to-settings"><p>Перейдіть до налаштувань помічника</p></div>
+            <div v-if="tutorial.currentStep == 16 && !tutorial.done" class="tutorial-block-document-form"><p>В цій формі ви можете завантажити документ, по якому помічник буде відповідати клієнтам, для цього виберіть або перетягніть документ в поле та натисніть кнопку "Завантажити"</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Пропустити крок</button></div>
             <div v-if="tutorial.currentStep == 20 && !tutorial.done" class="tutorial-block-get-widjet"><p>Щоб додати чат на ваш веб-сайт, скопіюйте цей код і вставте його прямо перед тегом &lt;/body&gt; у вашому HTML-коді.</p>
                 <button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button>
             </div>
             <div v-if="!tutorial.done && (tutorial.currentStep != 14 || $route.path != '/emma/bot_events/create_script')" class="tutorial-background"></div>
             <div v-if="tutorial.currentStep == 21 && !tutorial.done" class="tutorial-block-to-telegram"><p>Перейдіть до налаштувань телеграма</p></div>
-            <div v-if="tutorial.currentStep == 22 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм боту з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 23 && !tutorial.done" class="tutorial-block-to-bots"><p>Перейдіть до ботів</p></div>
-            <div v-if="tutorial.currentStep == 24 && !tutorial.done" class="tutorial-block-bots"><p>Тут ви можете побачити всіх своїх ботів та обрати поточного бота, якого ви хочете налаштувати. Також за необхідності ви можете додати нового бота натиснувши кнопку "Create bot"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 22 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм помічнику з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
+            <div v-if="tutorial.currentStep == 23 && !tutorial.done" class="tutorial-block-to-bots"><p>Перейдіть до помічників</p></div>
+            <div v-if="tutorial.currentStep == 24 && !tutorial.done" class="tutorial-block-bots"><p>Тут ви можете побачити всіх своїх помічників та обрати поточного помічника, якого ви хочете налаштувати. Також за необхідності ви можете додати нового помічника натиснувши кнопку "Create bot"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <EmmaLeftMenu/>
             <div class="right-container">
                 <div v-if="!socket" class="right-container-loading">
@@ -205,15 +245,20 @@ export default {
             <a v-if="paymentLink" :href="paymentLink"><p>Посилання для оплати</p></a>
             <button @click="checkPayment">Перевірити оплату</button>
             <input placeholder="Промокод" v-model="promoInput" class="promo-input">
+            <p v-if="showInvalidPromo" class="promo-invalid-p">Невірний токен</p>
             <button @click="checkPromo" class="promo-check-button">Перевірити промокод</button>
         </div>
     </div>
 </template>
 
 <style scoped> 
+    .promo-invalid-p {
+        text-align: center;
+        color: red;
+    }
     .promo-input {
         margin-top: 24px;
-        border: 1px solid #f0e2ff;
+        border: 1px solid #d9bff5;
         border-radius: 8px;
         height: 30px;
         outline: none;
@@ -652,7 +697,7 @@ export default {
         flex-direction: column; 
         align-items: center;
         justify-content: center;
-        top: 15em; /* Позиционируйте контент в нужное место */
+        top: 25em; /* Позиционируйте контент в нужное место */
         left: 15%;
         width: 20em;
         z-index: 101; /* убедитесь, что контент находится выше оверлея */
@@ -673,7 +718,6 @@ export default {
     .right-container {
         position: relative;
         width: 100%;
-        overflow-x: auto;
     }
     .right-container-loading img {
         height: 3em;

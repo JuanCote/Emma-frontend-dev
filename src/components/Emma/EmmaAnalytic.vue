@@ -22,7 +22,7 @@
     <div class="emma-analytic">
         <div class="emma-analytic-main">
             <div class="emma-analytic-menu">
-                <button @click="chosenMenu = 'botAnalytics'" :class="{ 'chosen': chosenMenu === 'botAnalytics' }">Аналітика бота</button>
+                <button @click="chosenMenu = 'botAnalytics'" :class="{ 'chosen': chosenMenu === 'botAnalytics' }">Аналітика помічника</button>
                 <button @click="chosenMenu = 'QueryAnalytics'" :class="{ 'chosen': chosenMenu === 'QueryAnalytics' }">Аналітика запитів</button>
             </div>
             <div class="emma-analytic-bot-analytics">

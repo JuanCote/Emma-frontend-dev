@@ -3,7 +3,8 @@ export default {
     data() {
         return {
             deleteConfirmation: false,
-            botToDelete: Object
+            botToDelete: Object,
+            generalBlock: false,
         };
     },
     methods: {
@@ -14,12 +15,19 @@ export default {
             this.$store.dispatch('choseBot', {bot: bot})
         },
         onDelete(bot) {
-            this.deleteConfirmation = true
-            this.botToDelete = bot
+            if (this.bots.length != 1) {
+                this.deleteConfirmation = true
+                this.botToDelete = bot
+            }
         },
         deleteBot() {
-            this.$store.dispatch('deleteBot', this.botToDelete.id)
-            this.deleteConfirmation = false
+            if (!this.generalBlock) {
+                this.generalBlock = true
+                this.deleteConfirmation = false
+                this.$store.dispatch('deleteBot', this.botToDelete.id).then(() => {
+                    this.generalBlock = false
+                })
+            }
         }
     },
     computed: {
@@ -38,21 +46,27 @@ export default {
 </script>
 
 <template>
+    <img class="general-loading" v-if="generalBlock" src="@/assets/images/load.gif">
     <div class="emma-bot-list">
         <div class="emma-bots-container" :class="{'tutorial': this.tutorial.currentStep == 24 && !this.tutorial.done}">
+            <div class="emma-bots-header">
+                <p>Your bots: {{ bots.length }}</p>
+                <div>
+                    <button @click="createBot" class="emma-bot-list-create-bot"><img src="@/assets/images/white-plus.svg"><p>Create bot</p></button>
+                </div>
+            </div>
             <ul>
                 <li v-for="bot in bots" @click="choseBot(bot)" :class="{'chosen': chosenBot.id == bot.id}">
-                    <p>Бот - {{ bot.name }}</p>
+                    <p>Помічник - {{ bot.name }}</p>
                     <div @click="onDelete(bot)" class="bot-events-script-script-part2-button">
                         <img src="@/assets/images/deleteScript.svg">
                     </div>
                 </li>
             </ul>
-            <div><button @click="createBot" class="emma-bot-list-create-bot">Create bot</button></div>
         </div>
         <div @click="deleteConfirmation = false" class="emma-bot-list-form-to-delete-background" v-if="deleteConfirmation"></div>
         <div v-if="deleteConfirmation" class="emma-bot-list-form-to-delete">
-            <p>Ви точно хочете видалити бота? Всі події/документи, базова інструкція та додані ключі будуть стерті</p>
+            <p>Ви точно хочете видалити помічника? Всі події/документи, базова інструкція та додані ключі будуть стерті</p>
             <div class="emma-bot-list-delete-form-buttons">
                 <button @click="deleteBot" class="yes">Так</button>
                 <button @click="deleteConfirmation = false">Ні</button>
@@ -62,6 +76,11 @@ export default {
 </template>
 
 <style>
+.emma-bots-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .emma-bot-list-delete-form-buttons button.yes {
     background: #ec4134;
 }
@@ -114,18 +133,24 @@ export default {
     padding: 24px;
     transform: translateX(-24px);
 }
+.emma-bot-list-create-bot p {
+    margin-top: 2px;
+}
 .emma-bot-list-create-bot {
     margin-top: 10px;
-    width: 120px;
+    padding: 12px 24px;
     height: 40px;
     border: none;
+    gap: 8px;
+    display: flex;
+    align-items: center;
     border-radius: 8px;
     cursor: pointer;
-    background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+    background: linear-gradient(to top right, #BC70FF, #7570FF);
     color: white;
 }
 .emma-bot-list ul li.chosen {
-    background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+    background: linear-gradient(to top right, #7570FF, #BC70FF);
     color: white;
 }
 .emma-bot-list ul li {
@@ -133,9 +158,11 @@ export default {
     padding: 10px;
     border-radius: 8px;
     font-size: 16px;
-    background: white;
+    border: 1px solid rgba(31, 31, 41, 0.16);
     color: black;
+    background: white;
     display: flex;
+    font-size: 12px;
     align-items: center;
     gap: 8px;
     justify-content: space-between;
@@ -149,6 +176,8 @@ export default {
 .emma-bot-list ul {
     list-style-type: none;
     display: inline-block;
+    width: 100%;
+    margin-top: 16px;
     flex-direction: column;
     gap: 8px;
 }

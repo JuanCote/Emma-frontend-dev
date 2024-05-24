@@ -93,15 +93,9 @@ router.beforeEach((to, from, next) => {
             } else {
               next()
             }
-          case 26:
-            if (to.path != '/emma/all_bots') {
-              next('/emma/all_bots')
-            } else {
-              next()
-            }
         } 
       } else  if (['/emma', '/emma/', '/'].includes(to.path)) {
-        next('/emma/all_bots')
+        next('/emma/chats')
       }else (
         next()
       )

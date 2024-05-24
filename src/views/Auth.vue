@@ -45,7 +45,7 @@ export default {
         })
         .then(response => {
             if (response.ok) {
-                this.$router.push('/emma/analytic')
+                this.$router.push('/emma/chats')
             } else {
                 throw new Error('Ошибка HTTP: ' + response.status);
             }

@@ -2,6 +2,7 @@
 export default {
   data() {
     return {
+        botNameInput: ''
     };
   },
   computed: {
@@ -18,8 +19,17 @@ export default {
   },
   methods: {
     choseBot(bot) {
-        this.$store.dispatch('choseBot', {bot: bot})
-        this.$router.push('/emma/all_bots')
+        if (bot.id != this.chosenBot.id) {
+            this.bots.forEach(element => {
+                if (bot != element) {
+                    element.editing = false
+                    element.popup = false
+                }
+            });
+            this.$store.dispatch('choseBot', {bot: bot})
+            
+            window.location.reload()
+        }
     },
     createBot() {
         if (this.tutorial.currentStep == 1) {
@@ -28,6 +38,13 @@ export default {
             this.$store.dispatch('createBot')
         }
     },
+    changeBotName(bot) {
+        if (this.botNameInput.length != 0){
+            this.$store.dispatch('changeBotName', {id: bot.id, name: this.botNameInput})
+            bot.name = this.botNameInput
+            bot.editing = false
+        }
+    }
   }
 };
 </script>
@@ -40,8 +57,17 @@ export default {
                 <h1 class="emma-left-menu-h1">EMMA</h1>
             </div>
             <ul class="emma-left-menu-ul">
-                <li v-if="tutorial.currentStep != 1" v-for="bot in bots" @click="choseBot(bot)" class="emma-left-menu-li" :class="{ 'chosen': chosenBot.id == bot.id }">
-                  <p>Помічник {{bot.name}}</p>
+                <li v-if="tutorial.currentStep != 1" v-for="(bot, index) in bots" @click="choseBot(bot)" class="emma-left-menu-li" :class="{ 'chosen': chosenBot.id == bot.id }">
+                  <div class="emma-left-menu-li-1">
+                    <p v-if="!bot.editing && bot.name != bot.id">Помічник {{bot.name}}</p>
+                    <p v-if="!bot.editing && bot.name == bot.id">Помічник {{index + 1}}</p>
+                    <input v-model="botNameInput" maxlength="20" class="" v-if="bot.editing">
+                    <img @click="bot.popup = !bot.popup; bot.editing = false" src="@/assets/images/3dots.png">
+                    <div @click="bot.editing = true; bot.popup = false" v-if="bot.popup" class="emma-left-menu-li-popup">
+                        <p>Змінити назву</p>
+                    </div>
+                  </div>
+                  <button @click="changeBotName(bot)" v-if="bot.editing" class="emma-left-menu-save-name">Зберегти</button>
                 </li>
             </ul>
             <div :class="{'tutorial': tutorial.currentStep == 1}" @click="createBot" class="emma-left-menu-create-bot">
@@ -53,6 +79,42 @@ export default {
 </template>
 
 <style>
+    .emma-left-menu-li-1 input {
+        height: 25px;
+        outline: none;
+        border: none;
+        border-radius: 4px;
+        padding-left: 8px;
+    }
+    .emma-left-menu-save-name {
+        margin-top: -12px;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+    }
+    .emma-left-menu-li-1 {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .emma-left-menu-li-popup p {
+        cursor: pointer;
+    }
+    .emma-left-menu-li-popup {
+        position: absolute;
+        right: 0;
+        color: black;
+        padding: 8px;
+        z-index: 1;
+        border-radius: 8px;
+        transform: translateX(100%);
+        background: #EAEAF3;
+    }
+    .emma-left-menu-li-1 img {
+        height: 15px;
+    }
     .emma-left-menu-create-bot.tutorial {
         position: relative;
         z-index: 10000;
@@ -114,7 +176,7 @@ export default {
         background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
         border-radius: 0 8px 8px 0;
     }
-    .emma-left-menu-li p {
+    .emma-left-menu-li-1 p {
         margin-top: 4px;
         word-break: break-all;
     }
@@ -127,11 +189,12 @@ export default {
     }
     .emma-left-menu-li {
         display: flex;
+        flex-direction: column;
         padding: 13px 24px;
         gap: 16px;
+        justify-content: space-between;
         font-size: 14px;
         cursor: pointer;
-        height: 51px;
         align-items: center;
     }
     .emma-left-menu-ul {
@@ -141,7 +204,7 @@ export default {
     .emma-left-menu-container {
         display: flex;
         height: 100vh;
-        width: 15%;
+        width: 20%;
         flex-direction: column;
         border-right: 1px solid rgba(31, 31, 41, 0.15);
     }

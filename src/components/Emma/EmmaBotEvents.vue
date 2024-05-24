@@ -168,10 +168,7 @@ import algorithms from '@/store/modules/algorithms';
                         </div>
                         <div class="bot-events-script-script-part2">
                     
-                            <div class="bot-events-script-script-selection">
-                                <p>Не вибрано</p>
-                                <img src="@/assets/images/bot-down-arrow.svg">
-                            </div>
+                        
                             <div class="bot-events-script-script-part2-buttons">
                                 <div @click="copyAlgorithm(algorithm)" class="bot-events-script-script-part2-button">
                                     <img src="@/assets/images/copyscript.svg">

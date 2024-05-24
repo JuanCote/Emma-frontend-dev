@@ -22,7 +22,7 @@ export default {
         EmmaRightContainer
     },
     created() {
-        if (this.tutorial.currentStep == 17 && !this.tutorial.done) {
+        if (this.tutorial.currentStep == 20 && !this.tutorial.done) {
             try {
                 const response = fetch(`${BACKEND_URL}/stipe_generate_link_monthly`, {
                 method: 'GET',
@@ -232,9 +232,7 @@ export default {
             </div>
             <div v-if="!tutorial.done && (tutorial.currentStep != 16 || $route.path != '/emma/bot_events/create_script')" class="tutorial-background"></div>
             <div v-if="tutorial.currentStep == 23 && !tutorial.done" class="tutorial-block-to-telegram"><p>Перейдіть до налаштувань телеграма</p></div>
-            <div v-if="tutorial.currentStep == 24 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм помічнику з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="skip-step" @click="$store.dispatch('setNextStep', {})">Далі</button></div>
-            <div v-if="tutorial.currentStep == 25 && !tutorial.done" class="tutorial-block-to-bots"><p>Перейдіть до помічників</p></div>
-            <div v-if="tutorial.currentStep == 26 && !tutorial.done" class="tutorial-block-bots"><p>Тут ви можете побачити всіх своїх помічників та обрати поточного помічника, якого ви хочете налаштувати. Також за необхідності ви можете додати нового помічника натиснувши кнопку "Create bot"</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
+            <div v-if="tutorial.currentStep == 24 && !tutorial.done" class="tutorial-block-to-telegram-input"><p>Тут ви можете додати токен вашого телеграм помічнику з BotFather та запустити/зупинити його роботу. Запущений телеграм бот буде відповідати на основі наданих інструкцій</p><button class="finish-button" @click="finishTutorial">Закінчити туторіал</button></div>
             <EmmaLeftMenu/>
             <div class="right-container">
                 <div v-if="!socket" class="right-container-loading">
@@ -781,7 +779,7 @@ export default {
     }
     .emma-container {
         display: flex;
-        width: 1280px;
+        width: 1400px;
         position: relative;
         margin: auto;
         background-color: white;

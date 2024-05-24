@@ -1,12 +1,15 @@
 <script>
     import BotKnowledgeBase from '@/components/Emma/BotKnowledgeBase.vue'
     import BotSettings from '@/components/Emma/BotSettings.vue'
-import router from '@/router';
-import knowledgeBase from '@/store/modules/knowledgeBase';
+    import Templates from '@/components/Emma/Templates.vue'
+    
+    import knowledgeBase from '@/store/modules/knowledgeBase';
+
     export default {
         components: {
             BotKnowledgeBase,
-            BotSettings
+            BotSettings,
+            Templates
         },
         computed: {
             tutorial() {
@@ -37,6 +40,7 @@ import knowledgeBase from '@/store/modules/knowledgeBase';
         <div v-if="tutorial.currentStep != 3" class="bot-settings-right-menu">
             <BotSettings v-if="$route.path.startsWith('/emma/settings/bot_settings')"></BotSettings>
             <BotKnowledgeBase v-if="$route.path.startsWith('/emma/settings/knowledge_base')"></BotKnowledgeBase>
+            <Templates v-if="$route.path.startsWith('/emma/settings/templates')"></Templates>
         </div>
     </div>
 </template>

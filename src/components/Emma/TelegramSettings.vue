@@ -95,7 +95,6 @@ export default {
             this.addingTelegramTokenLoad = false
             if (this.tutorial.currentStep == 24 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep', {})
-                this.$router.push('/emma/all_bots')
             }
         }
     },

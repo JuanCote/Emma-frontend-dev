@@ -221,7 +221,7 @@ export default {
                     <li>Бонусні токени: {{ tokenBalance.bonus_tokens }}</li>
                     <li>Токени: {{ tokenBalance.tokens }}</li>
                 </ul>
-                <button @click="replenishTokens" class="replenish-tokens-button">Поповнити токени</button>
+                <!-- <button @click="replenishTokens" class="replenish-tokens-button">Поповнити токени</button> -->
             </div>
         </div>
     </div>

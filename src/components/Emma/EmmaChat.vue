@@ -80,39 +80,40 @@ export default {
             } 
         },
         sendMessage(event) {
-            if (!event.shiftKey) {
-                    if (this.selectedChat.input || this.image) {
-                    if (this.image) {
-                        this.selectedChat.messages.push({sender: 'assistant', message: this.selectedChat.input, imageUrl: this.imageUrl})
-                    }else {
-                        this.selectedChat.messages.push({sender: 'assistant', message: this.selectedChat.input})
-                    }
-
-                    const data = {
-                        type: 'message',
-                        from: 'manager',
-                        bot_id: this.chosenBot.id,
-                        user_id: this.user.id,
-                        to: this.selectedChat.name,
-                        text: this.selectedChat.input
-                    };
-                    this.socket.send(JSON.stringify(data));
-
-                    this.selectedChat.input = ''
-                    this.selectedChat.displayProposal = false
-                    this.image = null
-                    this.imageUrl = null
-                    this.archive.forEach(element => {
-                        if (element.id == this.selectedChat.id) {
-                            this.fromArchive()
-                            this.selectChatById(element.id, this.chats)
+            if (this.selectedChat.input.length != 0) {
+                if (!event.shiftKey) {
+                        if (this.selectedChat.input || this.image) {
+                        if (this.image) {
+                            this.selectedChat.messages.push({sender: 'assistant', message: this.selectedChat.input, imageUrl: this.imageUrl})
+                        }else {
+                            this.selectedChat.messages.push({sender: 'assistant', message: this.selectedChat.input})
                         }
-                    });
-                    this.$nextTick(() => {
-                        let container = document.querySelector('.emma-chat-messages');
-                        container.scrollTop = container.scrollHeight;
-                    });
+                        const data = {
+                            type: 'message',
+                            from: 'manager',
+                            bot_id: this.chosenBot.id,
+                            user_id: this.user.id,
+                            to: this.selectedChat.name,
+                            text: this.selectedChat.input
+                        };
+                        this.socket.send(JSON.stringify(data));
+                        this.selectedChat.input = ''
+                        this.selectedChat.displayProposal = false
+                        this.image = null
+                        this.imageUrl = null
+                        this.archive.forEach(element => {
+                            if (element.id == this.selectedChat.id) {
+                                this.fromArchive()
+                                this.selectChatById(element.id, this.chats)
+                            }
+                        });
+                        this.$nextTick(() => {
+                            let container = document.querySelector('.emma-chat-messages');
+                            container.scrollTop = container.scrollHeight;
+                        });
+                    }
                 }
+                
             }
         },
         openFilePicker() {
@@ -190,9 +191,9 @@ export default {
             </div>
             <div class="bot-events-script-header">
                     <p class="bot-events-script-header-p">Чати: {{ chats.length }}</p>
-                    <div class="bot-events-script-header-search-and-bots">
+                    <!-- <div class="bot-events-script-header-search-and-bots">
                         <input placeholder="Знайти чат"><img class="bot-events-script-bot-lupa" src="@/assets/images/search-script.svg"></input>
-                    </div>
+                    </div> -->
                 </div>
             <div class="emma-chat-container">
                 <div class="emma-chat-chats">
@@ -243,9 +244,7 @@ export default {
                     </div>
                     <img class="emma-chat-chosen-image" :src="imageUrl" alt="Selected Image" v-if="imageUrl" />
                     <div class="emma-chat-input-and-clip">
-                        <img @click="openFilePicker" src="@/assets/images/clip.svg" class="emma-chat-input-clip">
                         <div class="emma-chat-chat-input-container">
-                            <input type="file" ref="fileInput" class="emma-chat-fileinput" @change="handleFileUpload">
                             <textarea @keyup.enter="sendMessage" v-model="selectedChat.input" class="emma-chat-input" placeholder="Текст"></textarea>
                             <img @click="sendMessage" class="emma-chat-input-send" src="@/assets/images/send.svg">
                         </div>

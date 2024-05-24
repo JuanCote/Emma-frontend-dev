@@ -4,7 +4,6 @@ import EmmaBotSettings from "@/components/Emma/EmmaBotSettings.vue"
 import EmmaBotEvents from "@/components/Emma/EmmaBotEvents.vue"
 import EditingScript from "@/components/Emma/EditingScript.vue"
 import EmmaChat from "./EmmaChat.vue"
-import EmmaBotList from "./EmmaBotList.vue"
 
 import { BACKEND_URL } from '@/config.js'
 import tutorial from "@/store/modules/tutorial"
@@ -14,7 +13,8 @@ export default {
     data() {
         return {
             showTokenWarning: false,
-            menuExpanded: true
+            menuExpanded: true,
+            deleteConfirmation: false
         }
     },
     components: {
@@ -23,7 +23,6 @@ export default {
         EmmaBotEvents,
         EditingScript,
         EmmaChat,
-        EmmaBotList,
     },
     methods: {
         botEvents() {
@@ -47,14 +46,16 @@ export default {
                 this.$router.push('/emma/settings/bot_settings/widget')
             }
         },
-        botList() {
-            if (this.tutorial.currentStep == 25 && !this.tutorial.done) {
-                this.$store.dispatch('setNextStep', {})
-                this.$router.push('/emma/all_bots')
+        deleteBot() {
+            if (this.bots.length != 1) {
+                this.$store.dispatch('deleteBot', this.chosenBot.id).then(() => {
+                    this.deleteConfirmation = false
+                })
             }else {
-                this.$router.push('/emma/all_bots')
+                this.deleteConfirmation = false
+                alert('Ви не можете видалити останнього бота')
             }
-        }
+        },
     },
     props: ['socket', 'chatsLoaded'],
     mounted() {
@@ -92,6 +93,9 @@ export default {
         },
         tutorial() {
             return this.$store.state.tutorial.tutorial
+        },
+        bots() {
+            return this.$store.state.bots.bots
         }
     }
 }
@@ -116,25 +120,24 @@ export default {
             <div class="emma-right-container-left-part-container">
                 <div>
                     <ul class="emma-left-menu-ul">
-                        <li @click="this.$router.push('/emma/chats')" class="emma-left-menu-li" :class="{ 'chosen': $route.path == '/emma/chats' }">
+                        <li @click="this.$router.push('/emma/chats')" class="emma-right-container-left-menu-li" :class="{ 'chosen': $route.path == '/emma/chats' }">
                         <img v-if="$route.path != '/emma/chats'" src="@/assets/images/chats.svg">
                         <img v-if="$route.path == '/emma/chats'" src="@/assets/images/chats-white.svg">
                         <p v-if="menuExpanded">Чати</p>
                         </li>
-                        <li @click="botList" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/all_bots'), 'tutorial': tutorial.currentStep == 25 && !tutorial.done }">
-                        <img v-if="$route.path.startsWith('/emma/all_bots')" src="@/assets/images/all-bots-white.svg">
-                        <img v-if="!($route.path.startsWith('/emma/all_bots'))" src="@/assets/images/all-bots-black.svg">
-                        <p v-if="menuExpanded">Всі помічники</p>
-                        </li>
-                        <li @click="botSettings" class="emma-left-menu-li" :class="{ 'chosen': ($route.path.startsWith('/emma/settings') && tutorial.currentStep != 2), 'tutorial': (tutorial.currentStep == 19 || tutorial.currentStep == 2) && !tutorial.done }">
+                        <li @click="botSettings" class="emma-right-container-left-menu-li" :class="{ 'chosen': ($route.path.startsWith('/emma/settings') && tutorial.currentStep != 2), 'tutorial': (tutorial.currentStep == 19 || tutorial.currentStep == 2) && !tutorial.done }">
                         <img v-if="$route.path.startsWith('/emma/settings') && tutorial.currentStep != 2" src="@/assets/images/bot_settings_white.svg">
                         <img v-if="tutorial.currentStep == 2 || !($route.path.startsWith('/emma/settings'))" src="@/assets/images/bot_settings.svg">
                         <p v-if="menuExpanded">Налаштування помічника</p>
                         </li>
-                        <li @click="botEvents" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/bot_events'), 'tutorial': tutorial.currentStep == 10 && !tutorial.done }">
+                        <li @click="botEvents" class="emma-right-container-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/bot_events'), 'tutorial': tutorial.currentStep == 10 && !tutorial.done }">
                         <img v-if="!($route.path.startsWith('/emma/bot_events'))" src="@/assets/images/bot-events.svg">
                         <img v-if="$route.path.startsWith('/emma/bot_events')" src="@/assets/images/bot_events_white.svg">
                         <p v-if="menuExpanded">Події помічника</p>
+                        </li>
+                        <li @click="deleteConfirmation = true" class="emma-right-container-left-menu-li">
+                        <img class="trash-can" src="@/assets/images/trash.png">
+                        <p class="emma-right-container-delete-bot-p" v-if="menuExpanded">Видалити бота</p>
                         </li>
                     </ul>
                 </div>
@@ -153,14 +156,81 @@ export default {
             <EmmaBotEvents v-if="$route.path == '/emma/bot_events'"></EmmaBotEvents>
             <EditingScript v-if="$route.path == '/emma/bot_events/create_script'"></EditingScript>
             <EditingScript v-if="$route.path == '/emma/bot_events/edit_script'"></EditingScript>
-            <EmmaBotList v-if="$route.path == '/emma/all_bots'"></EmmaBotList>
             <EmmaChat :chatsLoaded="chatsLoaded" :socket="socket" v-if="$route.path == '/emma/chats'"></EmmaChat>
+        </div>
+    </div>
+    <div @click="deleteConfirmation = false" class="emma-bot-list-form-to-delete-background" v-if="deleteConfirmation"></div>
+    <div v-if="deleteConfirmation" class="emma-bot-list-form-to-delete">
+        <p>Ви точно хочете видалити помічника? Всі події/документи, базова інструкція та додані ключі будуть стерті</p>
+        <div class="emma-bot-list-delete-form-buttons">
+            <button @click="deleteBot" class="yes">Так</button>
+            <button @click="deleteConfirmation = false">Ні</button>
         </div>
     </div>
 </div>
 </template>
 
 <style>
+    .emma-bot-list-delete-form-buttons button.yes {
+        background: #ec4134;
+    }
+    .emma-bot-list-delete-form-buttons button {
+        padding: 12px 24px;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        background: #36c26d;
+        color: white;
+
+    }
+    .emma-bot-list-delete-form-buttons {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .emma-bot-list-form-to-delete p {
+        text-align: center;
+    }
+    .emma-bot-list-form-to-delete {
+        position: fixed;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        top: 50%;
+        width: 20%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+    .emma-bot-list-form-to-delete-background {
+        background: rgba(0, 0, 0, 0.5);
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+    }
+    .emma-right-container-delete-bot-p {
+        margin-top: 3px;
+    }
+    .trash-can {
+        height: 15px;
+    }
+    .emma-right-container-left-menu-li.chosen {
+        color: white;
+        background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+        border-radius: 0 8px 8px 0;
+    }
+    .emma-right-container-left-menu-li {
+        display: flex;
+        align-items: center;
+        height: 51px;
+        padding-left: 24px;
+        gap: 16px;
+        cursor: pointer;
+    }
     .emma-right-container-left-part-container {
         transition: width 0.5s ease;
         display: flex;
@@ -171,6 +241,7 @@ export default {
     .emma-right-container-parts {
         display: flex;
         height: 100%;
+        overflow-y: hidden;
         width: 100%;
     }
     .emma-right-container-left-part.expanded {

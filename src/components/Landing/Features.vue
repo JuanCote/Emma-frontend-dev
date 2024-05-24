@@ -26,10 +26,10 @@
                     </li>
                 </ul>
                 <div class="features-squares">
-                    <div class="features-square"></div>
-                    <div class="features-square"></div>
-                    <div class="features-square"></div>
-                    <div class="features-square"></div>
+                    <div class="features-square"><img src="@/assets/images/landing-feature-1.svg"></div>
+                    <div class="features-square"><img src="@/assets/images/landing-feature-2.svg"></div>
+                    <div class="features-square"><img src="@/assets/images/landing-feature-3.svg"></div>
+                    <div class="features-square"><img src="@/assets/images/landing-feature-4.svg"></div>
                 </div>
             </div>
             <h1 class="main-h1-2">BENEFITS</h1>
@@ -145,6 +145,9 @@
     .features-square {
         border-radius: 40px;
         width: 288.5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         height: 288.5px;
         box-shadow: 0 5px 20px rgba(114, 141, 254, 0.2);
     }

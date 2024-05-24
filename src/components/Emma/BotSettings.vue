@@ -13,7 +13,7 @@ import tutorial from '@/store/modules/tutorial';
         },
         methods: {
             choseTelegram() {
-                if (this.tutorial.currentStep == 21 && !this.tutorial.done) {
+                if (this.tutorial.currentStep == 23 && !this.tutorial.done) {
                     this.$store.dispatch('setNextStep', {})
                 }
                 this.$router.push('/emma/settings/bot_settings/telegram')
@@ -42,7 +42,7 @@ import tutorial from '@/store/modules/tutorial';
         <img v-if="$route.path.startsWith('/emma/settings/bot_settings/widget')" src="@/assets/images/widget.svg">
         <p>Widget</p>
     </div>
-    <div class="bot-settings-right-menu-bots-telegram" @click="choseTelegram" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings/telegram'), 'tutorial': this.tutorial.currentStep == 21 }">
+    <div class="bot-settings-right-menu-bots-telegram" @click="choseTelegram" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings/telegram'), 'tutorial': this.tutorial.currentStep == 23 }">
         <img v-if="!$route.path.startsWith('/emma/settings/bot_settings/telegram')" src="@/assets/images/telegram-icon.svg">
         <img v-if="$route.path.startsWith('/emma/settings/bot_settings/telegram')" src="@/assets/images/telegram-icon-white.svg">
         <p>Telegram</p>

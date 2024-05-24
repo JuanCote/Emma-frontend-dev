@@ -15,8 +15,8 @@ import knowledgeBase from '@/store/modules/knowledgeBase';
         },
         methods: {
             knowledgeBase() {
-                if (this.tutorial.currentStep == 2 && !this.tutorial.done) {
-                    this.$store.dispatch('setNextStep')
+                if (this.tutorial.currentStep == 3 && !this.tutorial.done) {
+                    this.$store.dispatch('setNextStep', {})
                     this.$router.push('/emma/settings/knowledge_base')
                 }
                 this.$router.push('/emma/settings/knowledge_base')
@@ -29,12 +29,12 @@ import knowledgeBase from '@/store/modules/knowledgeBase';
     <div class="bot-settings">
         <div class="bot-settings-left-menu">
             <ul>
-                <li @click="this.$router.push('/emma/settings/bot_settings/widget')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/bot_settings')}">Налаштування помічників</li>
-                <li @click="knowledgeBase" :class="{ 'chosen': $route.path.startsWith('/emma/settings/knowledge_base')}">База знань помічника</li>
+                <li @click="this.$router.push('/emma/settings/bot_settings/widget')" :class="{ 'chosen': ($route.path.startsWith('/emma/settings/bot_settings'))}">Налаштування помічників</li>
+                <li @click="knowledgeBase" :class="{ 'chosen': ($route.path.startsWith('/emma/settings/knowledge_base') && tutorial.currentStep != 3), 'tutorial': tutorial.currentStep == 3 && !tutorial.done}">База знань помічника</li>
                 <li @click="this.$router.push('/emma/settings/templates')" :class="{ 'chosen': $route.path.startsWith('/emma/settings/templates')}">Шаблони</li>
             </ul>
         </div>
-        <div class="bot-settings-right-menu">
+        <div v-if="tutorial.currentStep != 3" class="bot-settings-right-menu">
             <BotSettings v-if="$route.path.startsWith('/emma/settings/bot_settings')"></BotSettings>
             <BotKnowledgeBase v-if="$route.path.startsWith('/emma/settings/knowledge_base')"></BotKnowledgeBase>
         </div>
@@ -110,7 +110,7 @@ import knowledgeBase from '@/store/modules/knowledgeBase';
         width: 100%;
     }
     .bot-settings-left-menu {
-        width: 30%;
+        width: 34%;
         border-radius: 0 8px 8px 0;
         border-right: 1px solid rgba(31, 31, 41, 0.16);
     }

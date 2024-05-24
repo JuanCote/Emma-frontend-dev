@@ -7,6 +7,7 @@ import EmmaChat from "./EmmaChat.vue"
 import EmmaBotList from "./EmmaBotList.vue"
 
 import { BACKEND_URL } from '@/config.js'
+import tutorial from "@/store/modules/tutorial"
 
 
 export default {
@@ -26,7 +27,7 @@ export default {
     },
     methods: {
         botEvents() {
-            if (this.tutorial.currentStep == 7 && !this.tutorial.done) {
+            if (this.tutorial.currentStep == 10 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep', {})
                 this.$router.push('/emma/bot_events')
             }else {
@@ -34,15 +35,20 @@ export default {
             }
         },
         botSettings() {
-            if (this.tutorial.currentStep == 17 && !this.tutorial.done) {
+
+            if (this.tutorial.currentStep == 19 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep', {})
                 this.$router.push('/emma/settings/bot_settings/widget')
-            }else {
+            }else if (this.tutorial.currentStep == 2 && !this.tutorial.done) {
+                this.$store.dispatch('setNextStep', {})
+                this.$router.push('/emma/settings/knowledge_base')
+            }   
+            else {
                 this.$router.push('/emma/settings/bot_settings/widget')
             }
         },
         botList() {
-            if (this.tutorial.currentStep == 23 && !this.tutorial.done) {
+            if (this.tutorial.currentStep == 25 && !this.tutorial.done) {
                 this.$store.dispatch('setNextStep', {})
                 this.$router.push('/emma/all_bots')
             }else {
@@ -83,6 +89,9 @@ export default {
     computed: {
         chosenBot() {
             return this.$store.state.bots.chosenBot
+        },
+        tutorial() {
+            return this.$store.state.tutorial.tutorial
         }
     }
 }
@@ -90,21 +99,21 @@ export default {
 </script>
 
 <template>
-<div class="emma-right-block">
+<div v-if="tutorial.currentStep != 1" class="emma-right-block">
     <div class="emma-analytic-header">
         <div class="emma-analytic-header-1">
             <!-- <button>Підказки</button> -->
-            <div class="p-chosen-bot-div"><p>Обраний помічник > Помічник - {{ chosenBot.name }}</p></div>
-            <div v-if="showTokenWarning" class="low-token-balance-warning"><p>Вам потрібно поповнити баланс</p></div>
+            <div class="p-chosen-bot-div"><p>> Помічник {{ chosenBot.name }}</p></div>
+            <div v-if="showTokenWarning && tutorial.done" class="low-token-balance-warning"><p>Вам потрібно поповнити баланс</p></div>
         </div>
         <!-- <div>
             <img src="@/assets/images/user-question.svg">
             <img src="@/assets/images/analytic-chats-question.svg">
         </div> -->
     </div>
-    <!-- <div class="emma-right-container-parts">
-        <div class="emma-right-container-left-part">
-            <div class="emma-left-menu-container" :class="{'expanded': !menuExpanded}">
+    <div class="emma-right-container-parts">
+        <div class="emma-right-container-left-part" :class="{'expanded': !menuExpanded}">
+            <div class="emma-right-container-left-part-container">
                 <div>
                     <ul class="emma-left-menu-ul">
                         <li @click="this.$router.push('/emma/chats')" class="emma-left-menu-li" :class="{ 'chosen': $route.path == '/emma/chats' }">
@@ -112,19 +121,17 @@ export default {
                         <img v-if="$route.path == '/emma/chats'" src="@/assets/images/chats-white.svg">
                         <p v-if="menuExpanded">Чати</p>
                         </li>
-                        <li @click="botList" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/all_bots'), 'tutorial': tutorial.currentStep == 23 && !tutorial.done }">
+                        <li @click="botList" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/all_bots'), 'tutorial': tutorial.currentStep == 25 && !tutorial.done }">
                         <img v-if="$route.path.startsWith('/emma/all_bots')" src="@/assets/images/all-bots-white.svg">
                         <img v-if="!($route.path.startsWith('/emma/all_bots'))" src="@/assets/images/all-bots-black.svg">
                         <p v-if="menuExpanded">Всі помічники</p>
                         </li>
-                        <li @click="botSettings" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/settings'), 'tutorial': tutorial.currentStep == 17 && !tutorial.done }">
-                        <img v-if="$route.path.startsWith('/emma/settings')" src="@/assets/images/bot_settings_white.svg">
-                        <img v-if="!($route.path.startsWith('/emma/settings'))" src="@/assets/images/bot_settings.svg">
+                        <li @click="botSettings" class="emma-left-menu-li" :class="{ 'chosen': ($route.path.startsWith('/emma/settings') && tutorial.currentStep != 2), 'tutorial': (tutorial.currentStep == 19 || tutorial.currentStep == 2) && !tutorial.done }">
+                        <img v-if="$route.path.startsWith('/emma/settings') && tutorial.currentStep != 2" src="@/assets/images/bot_settings_white.svg">
+                        <img v-if="tutorial.currentStep == 2 || !($route.path.startsWith('/emma/settings'))" src="@/assets/images/bot_settings.svg">
                         <p v-if="menuExpanded">Налаштування помічника</p>
                         </li>
-                        
-                        
-                        <li @click="botEvents" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/bot_events'), 'tutorial': tutorial.currentStep == 7 && !tutorial.done }">
+                        <li @click="botEvents" class="emma-left-menu-li" :class="{ 'chosen': $route.path.startsWith('/emma/bot_events'), 'tutorial': tutorial.currentStep == 10 && !tutorial.done }">
                         <img v-if="!($route.path.startsWith('/emma/bot_events'))" src="@/assets/images/bot-events.svg">
                         <img v-if="$route.path.startsWith('/emma/bot_events')" src="@/assets/images/bot_events_white.svg">
                         <p v-if="menuExpanded">Події помічника</p>
@@ -140,7 +147,7 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="emma-right-container-right-part">
+        <div v-if="tutorial.currentStep != 2" class="emma-right-container-right-part">
             <EmmaAnalytic v-if="$route.path == '/emma/analytic'"></EmmaAnalytic>
             <EmmaBotSettings v-if="$route.path.startsWith('/emma/settings')"></EmmaBotSettings>
             <EmmaBotEvents v-if="$route.path == '/emma/bot_events'"></EmmaBotEvents>
@@ -149,26 +156,30 @@ export default {
             <EmmaBotList v-if="$route.path == '/emma/all_bots'"></EmmaBotList>
             <EmmaChat :chatsLoaded="chatsLoaded" :socket="socket" v-if="$route.path == '/emma/chats'"></EmmaChat>
         </div>
-    </div> -->
-    <EmmaAnalytic v-if="$route.path == '/emma/analytic'"></EmmaAnalytic>
-            <EmmaBotSettings v-if="$route.path.startsWith('/emma/settings')"></EmmaBotSettings>
-            <EmmaBotEvents v-if="$route.path == '/emma/bot_events'"></EmmaBotEvents>
-            <EditingScript v-if="$route.path == '/emma/bot_events/create_script'"></EditingScript>
-            <EditingScript v-if="$route.path == '/emma/bot_events/edit_script'"></EditingScript>
-            <EmmaBotList v-if="$route.path == '/emma/all_bots'"></EmmaBotList>
-            <EmmaChat :chatsLoaded="chatsLoaded" :socket="socket" v-if="$route.path == '/emma/chats'"></EmmaChat>
+    </div>
 </div>
 </template>
 
 <style>
+    .emma-right-container-left-part-container {
+        transition: width 0.5s ease;
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        border-right: 1px solid rgba(31, 31, 41, 0.15);
+    }
     .emma-right-container-parts {
         display: flex;
         height: 100%;
         width: 100%;
     }
+    .emma-right-container-left-part.expanded {
+        width: 7%;
+    }
     .emma-right-container-left-part {
         height: 100%;
-        
+        width: 31%;
+        transition: width 0.5s ease;
     }
     .emma-right-container-right-part {
         height: 100%;
@@ -189,6 +200,7 @@ export default {
     }
     .emma-analytic-header-1 {
         display: flex;
+        height: 33px;
         align-items: center;
     }
     .p-chosen-bot-div p {

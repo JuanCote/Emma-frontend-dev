@@ -12,7 +12,7 @@ const state = {
       state.bots = bots;
     },
     updateChosenBot(state, bot) {
-        state.chosenBot = bot
+      state.chosenBot = bot
     }
   };
   
@@ -24,8 +24,14 @@ const state = {
           credentials: 'include'
       });
         const data = await response.json();
-        state.chosenBot = data[0]
         commit('updateBots', data);
+        const chosenBot = JSON.parse(localStorage.getItem('chosenBot'));
+        if(!chosenBot) {
+          commit('updateChosenBot', data[0])
+          localStorage.setItem('chosenBot', JSON.stringify(data[0]));
+        }else {
+          commit('updateChosenBot', chosenBot)
+        }
       } catch (error) {
         console.error('Ошибка загрузки алгоритмов:', error);
       }
@@ -39,6 +45,7 @@ const state = {
         const data = await response.json();
         commit('updateBots', data);
         commit('updateChosenBot', data[0]);
+        localStorage.setItem('chosenBot', JSON.stringify(data[0]));
       } catch (error) {
         console.error('Ошибка удаления алгоритма:', error);
       }
@@ -59,7 +66,26 @@ const state = {
       }
     },
     async choseBot({commit, dispatch}, payload) {
-        commit('updateChosenBot', payload.bot)
+      commit('updateChosenBot', payload.bot)
+      localStorage.setItem('chosenBot', JSON.stringify(payload.bot));
+       
+    },
+    async changeBotName({commit, dispatch}, payload) {
+      try {
+        const response = await fetch(`${BACKEND_URL}/change_bot_name`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            bot_id: payload.id,
+            name: payload.name
+          }),
+      })
+      } catch (error) {
+        console.error('Ошибка создания алгоритма:', error);
+      }
     }
   };
   

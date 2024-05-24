@@ -2,10 +2,9 @@
     export default{
         methods: {
             saveKnowledgeBase() {
-                if (this.tutorial.currentStep == 6 && !this.tutorial.done) {
+                if (this.tutorial.currentStep == 9 && !this.tutorial.done) {
                     this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id})
                     this.$store.dispatch('setNextStep', {})
-                    this.$router.push('/emma/bot_events')
                 }else {
                     this.$store.dispatch('saveKnowledgeBase', {bot_id: this.chosenBot.id})
                 }
@@ -45,19 +44,19 @@
 <p class="bot-knowledge-describe">Опишіть помічнику, в якій сфері він повинен розбиратися, яку роль відігравати та в якій манері спілкуватися. Вкажіть чи повинен помічник відповідати на запитання, що не відносяться до теми компанії та на якій мові він повинен спілкуватися</p>
 <p v-if="noKnowledgeBase" class="bot-knowledge-no-base">Наразі жодного розділу до бази знань не додано</p>
 <ul class="bot-knowledge-inputs">
-    <div :class="{'tutorial': tutorial.currentStep == 1 && !tutorial.done}" class="bot-knowledge-input-div">
+    <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="bot-knowledge-input-div">
         <p>У якій сфері помічник повинен розбиратися?</p>
         <input v-model="knowledgeBase.field" placeholder="Введіть сферу">
     </div>
-    <div :class="{'tutorial': tutorial.currentStep == 2 && !tutorial.done}" class="bot-knowledge-input-div">
+    <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="bot-knowledge-input-div">
         <p>Яку роль помічник повинен відігравати?</p>
         <input v-model="knowledgeBase.role" placeholder="Введіть роль">
     </div>
-    <div :class="{'tutorial': tutorial.currentStep == 3 && !tutorial.done}" class="bot-knowledge-input-div">
+    <div :class="{'tutorial': tutorial.currentStep == 6 && !tutorial.done}" class="bot-knowledge-input-div">
         <p>У якій манері помічник повинен спілкуватися?</p>
         <input v-model="knowledgeBase.manner" placeholder="Введіть манеру спілкування">
     </div>
-    <div :class="{'tutorial': tutorial.currentStep == 4 && !tutorial.done}" class="bot-knowledge-input-div-question">
+    <div :class="{'tutorial': tutorial.currentStep == 7 && !tutorial.done}" class="bot-knowledge-input-div-question">
         <p>Чи повинен помічник відповідати на запитання, що не стосується теми або вашої компанії?</p>
         <div class="bot-knowledge-input-div-question-checkboxes">
             <div>
@@ -71,11 +70,11 @@
         </div>
 
     </div>
-    <div :class="{'tutorial': tutorial.currentStep == 5 && !tutorial.done}" class="bot-knowledge-input-div">
+    <div :class="{'tutorial': tutorial.currentStep == 8 && !tutorial.done}" class="bot-knowledge-input-div">
         <p>На якій мові помічник повинен спілкуватися?</p>
         <input v-model="knowledgeBase.language" placeholder="Введіть мову">
     </div>
-    <div class="bot-knowledge-save-div" :class="{'tutorial': tutorial.currentStep == 6 && !tutorial.done}">
+    <div class="bot-knowledge-save-div" :class="{'tutorial': tutorial.currentStep == 9 && !tutorial.done}">
         <button @click="saveKnowledgeBase" class="bot-knowledge-save">Зберегти</button>
     </div>
 </ul>

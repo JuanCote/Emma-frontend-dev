@@ -27,7 +27,7 @@ import { BACKEND_URL } from '@/config.js'
                     }else {
                         this.buttonBlock = true
                         this.$store.dispatch('createAlgorithm', {algorithm: this.newAlgorithm}).then(() => {
-                            if (this.tutorial.currentStep == 13 && !this.tutorial.done) {
+                            if (this.tutorial.currentStep == 15 && !this.tutorial.done) {
                                 this.$router.push('/emma/bot_events')
                                 this.$store.dispatch('setNextStep', {})
                             }else {
@@ -108,7 +108,7 @@ import { BACKEND_URL } from '@/config.js'
                     </div>
                 </div> -->
                 <div class="create-script-form-content">
-                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 9 && !tutorial.done}">
+                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 12 && !tutorial.done}">
                         <p class="create-script-input-label-name">Назва</p>
                         <p class="create-script-describe-creating-script">Будь-яка</p>
                         <input v-model="newAlgorithm.name" placeholder="Введіть назву" class="create-script-input">
@@ -130,18 +130,18 @@ import { BACKEND_URL } from '@/config.js'
                             <img src="@/assets/images/question_creating_script.svg">
                         </div>
                     </div> -->
-                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 10 && !tutorial.done}">
+                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 13 && !tutorial.done}">
                         <p class="create-script-input-label">Запитання</p>
                         <p class="create-script-describe-creating-script">Напишіть запитання користувача, на котре повинна реагувати подія</p>
                         <input v-model="newAlgorithm.if_the_user" placeholder="Введіть запитання" class="create-script-input">
                     </div>
-                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 11 && !tutorial.done}">
+                    <div class="create-script-div" :class="{'tutorial': tutorial.currentStep == 14 && !tutorial.done}">
                         <p class="create-script-input-label">Відповідь</p>
                         <p class="create-script-describe-creating-script">Що повинен відповісти помічник на запитання</p>
                         <input v-model="newAlgorithm.then" placeholder="Введіть відповідь" class="create-script-input">
                     </div>   
                     <div class="create-script-buttons">
-                        <div :class="{'tutorial': tutorial.currentStep == 13 && !tutorial.done}" class="create-script-save-button-div">
+                        <div :class="{'tutorial': tutorial.currentStep == 15 && !tutorial.done}" class="create-script-save-button-div">
                             <button @click="createAlgorithm" class="create-script-button chosen">Зберегти<img v-if="buttonBlock" src="@/assets/images/load.gif"></button>
                         </div>
                         <button class="create-script-button"><p>Видалити</p></button>

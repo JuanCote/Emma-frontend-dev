@@ -12,15 +12,14 @@
             <img class="logo" src="@/assets/images/neuroshop-logo.png">
             <h2 class="logo-text">NEUROSHOP</h2>
           </li>
-          <li>About</li>
-          <li>Micromarkets</li>
-          <li>Retrofit Kit</li>
-          <li>Franchising</li>
-          <li>
-            <p>Cooperation</p>
-            <img src="@/assets/images/down_arrow.png">
+          <li class="header-ul-center">
+            <li>About</li>
+            <li>
+              <p>Cooperation</p>
+              <img src="@/assets/images/down_arrow.png">
+            </li>
+            <li>EMMA - AI support</li>
           </li>
-          <li>EMMA - AI support</li>
           <li>
             <p>ENG</p>
             <img src="@/assets/images/down_arrow.png">
@@ -31,6 +30,7 @@
         <div>
           <h1 class="center-block-h1">EMMA THE AI-POWERED SUPPORT SOLUTION</h1>
           <p class="center-block-p1">Revolutionise Your Customer Support with Intelligent Automation.</p>
+          <button @click="this.$router.push('/emma')" class="try-the-product-button">Try the product</button>
           <p class="center-block-p2">Emma is a cutting-edge AI support solution tailored to your business needs. <br>With customizable algorithms, communication styles, and seamless database integration, Emma streamlines your support process, ensuring efficient and consistent customer interactions.</p>
         </div>
         <div class="center-block-images">
@@ -47,6 +47,20 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  }
+  .try-the-product-button {
+    margin-top: 48px;
+    padding: 32px 48.5px;
+    border-radius: 16px;
+    background: linear-gradient(to top right, rgba(117, 112, 255, 1), rgba(188, 112, 255, 1));
+    font-size: 20px;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  .header-ul-center {
+    display: flex;
+    gap: 24px;
   }
  .background-image {
   position: absolute; /* Позиционирование абсолютно внутри родительского контейнера */

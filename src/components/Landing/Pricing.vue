@@ -8,18 +8,6 @@
             <h1 class="pricing-h1">PRICING PLANS</h1>
             <div class="prices">
                 <div class="price-type">
-                    <h2 class="price-name">START</h2>
-                    <ul class="price-ul"> 
-                        <li><img src="@/assets/images/done.png"><p>Initial setup by user</p></li>
-                        <li><img src="@/assets/images/done.png"><p>Up to 40 algorithms</p></li>
-                        <li><img src="@/assets/images/close.png"><p class="off">Connecting to your back-end data via API</p></li>
-                        <li><img src="@/assets/images/close.png"><p class="off">Connecting via API to your front-end solution</p></li>
-                        <li><img src="@/assets/images/close.png"><p class="off">Fully autonomous mode</p></li>
-                        <li><img src="@/assets/images/done.png"><p>200 Messages/month</p></li>
-                    </ul>
-                    <h2 class="price">Free</h2>
-                </div>
-                <div class="price-type">
                     <h2 class="price-name">PRO</h2>
                     <ul class="price-ul"> 
                         <li><img src="@/assets/images/done-color.png"><p>Initial setup with our assistance</p></li>
@@ -47,7 +35,7 @@
             <div class="demo-block">
                 <div class="demo-block-part first">
                     <p class="demo-p">Experience Emma's capabilities firsthand. Book a personalised demo today</p>
-                    <button>Request a Demo</button>
+                    <button @click="$router.push('/emma')">Try the product</button>
                 </div>
                 <div class="demo-block-part">
                     <button>Contact Sales</button>
@@ -76,6 +64,8 @@
         margin-top: 80px;
         display: flex;
         gap: 16px;
+        width: 100%;
+        justify-content: center;
         border-radius: 56px;
         padding: 16px;
         background: linear-gradient(to top right, rgba(117, 112, 255, 0.2), rgba(188, 112, 255, 0.22));
@@ -157,6 +147,7 @@
     .demo-block-part button {
         width: 240px;
         height: 94px;
+        cursor: pointer;
         border-radius: 24px;
         background-color: white;
         border: none;

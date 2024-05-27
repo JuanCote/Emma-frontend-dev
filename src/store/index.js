@@ -8,6 +8,7 @@ import knowledgeBase from './modules/knowledgeBase'
 import tutorial from "./modules/tutorial";
 import bots from "./modules/bots"
 import documents from "./modules/documents";
+import buttons from "./modules/buttons"
 
 export default createStore({
   modules: {
@@ -17,7 +18,8 @@ export default createStore({
     knowledgeBase: knowledgeBase,
     tutorial: tutorial,
     bots: bots,
-    documents: documents
+    documents: documents,
+    buttons: buttons
   }
   
 });

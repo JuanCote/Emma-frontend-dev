@@ -59,7 +59,7 @@ export default {
             <ul class="emma-left-menu-ul">
                 <li v-if="tutorial.currentStep != 1" v-for="(bot, index) in bots" @click="choseBot(bot)" class="emma-left-menu-li" :class="{ 'chosen': chosenBot.id == bot.id }">
                   <div class="emma-left-menu-li-1">
-                    <p v-if="!bot.editing && bot.name != bot.id">Помічник {{bot.name}}</p>
+                    <p v-if="!bot.editing && bot.name != bot.id">{{bot.name}}</p>
                     <p v-if="!bot.editing && bot.name == bot.id">Помічник {{index + 1}}</p>
                     <input v-model="botNameInput" maxlength="20" class="" v-if="bot.editing">
                     <img @click="bot.popup = !bot.popup; bot.editing = false" src="@/assets/images/3dots.png">

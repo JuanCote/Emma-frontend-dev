@@ -290,7 +290,7 @@ export default {
         align-items: center;
         justify-content: center;
         top: 7em; /* Позиционируйте контент в нужное место */
-        left: 12%;
+        left: 15%;
         width: 25em;
         z-index: 101;
         padding: 20px;

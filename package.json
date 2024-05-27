@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueup/vue-quill": "^1.2.0",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
     "vue3-google-login": "^2.0.26",

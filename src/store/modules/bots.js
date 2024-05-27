@@ -30,7 +30,13 @@ const state = {
           commit('updateChosenBot', data[0])
           localStorage.setItem('chosenBot', JSON.stringify(data[0]));
         }else {
-          commit('updateChosenBot', chosenBot)
+          let chosenBotInData = Object
+          data.forEach(bot => {
+            if (bot.id == chosenBot.id) {
+              chosenBotInData = bot
+            }
+          });
+          commit('updateChosenBot', chosenBotInData)
         }
       } catch (error) {
         console.error('Ошибка загрузки алгоритмов:', error);

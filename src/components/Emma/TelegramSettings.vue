@@ -84,6 +84,7 @@ export default {
                 const data = await response.json()
                 if ('success' in data) {
                     this.chosenBot.telegram_bot_token = this.telegramTokenInput
+                    this.botRunning = false
                 }else {
                     this.addingTelegramTokenError = true
                     this.telegramTokenInput = this.chosenBot.telegram_bot_token
@@ -99,24 +100,7 @@ export default {
         }
     },
     mounted() {        
-        fetch(`${BACKEND_URL}/check_telegram_bot_status?bot_id=${this.chosenBot.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-        })
-        .then(response => {
-            return response.json();
-        })
-        .then(responseData => {
-            this.botRunning = responseData
-        })
-        .catch(error => {
-            console.error('Error getting openai token:', error);
-            throw error;
-        });
-
+        this.botRunning = this.chosenBot.running
         this.telegramTokenInput = this.chosenBot.telegram_bot_token ? this.chosenBot.telegram_bot_token : ''
 
     },

@@ -88,6 +88,7 @@
         width: 100%;
         position: relative;
         background: #f0f3fa;
+        overflow-y: auto;
     }
     .bot-settings-left-menu ul li.tutorial {
         position: relative;

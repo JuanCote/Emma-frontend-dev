@@ -4,6 +4,7 @@ import EmmaBotSettings from "@/components/Emma/EmmaBotSettings.vue"
 import EmmaBotEvents from "@/components/Emma/EmmaBotEvents.vue"
 import EditingScript from "@/components/Emma/EditingScript.vue"
 import EmmaChat from "./EmmaChat.vue"
+import EditingButton from "@/components/Emma/EditingButton.vue"
 
 import { BACKEND_URL } from '@/config.js'
 import tutorial from "@/store/modules/tutorial"
@@ -23,6 +24,7 @@ export default {
         EmmaBotEvents,
         EditingScript,
         EmmaChat,
+        EditingButton
     },
     methods: {
         botEvents() {
@@ -156,6 +158,8 @@ export default {
             <EmmaBotEvents v-if="$route.path == '/emma/bot_events'"></EmmaBotEvents>
             <EditingScript v-if="$route.path == '/emma/bot_events/create_script'"></EditingScript>
             <EditingScript v-if="$route.path == '/emma/bot_events/edit_script'"></EditingScript>
+            <EditingButton v-if="$route.path == '/emma/bot_events/create_button'"></EditingButton>
+            <EditingButton v-if="$route.path == '/emma/bot_events/edit_button'"></EditingButton>
             <EmmaChat :chatsLoaded="chatsLoaded" :socket="socket" v-if="$route.path == '/emma/chats'"></EmmaChat>
         </div>
     </div>

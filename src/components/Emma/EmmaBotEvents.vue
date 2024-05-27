@@ -1,5 +1,6 @@
 <script>
 import algorithms from '@/store/modules/algorithms';
+import { BACKEND_URL } from '@/config.js'
 
  export default {
     data() {
@@ -8,7 +9,8 @@ import algorithms from '@/store/modules/algorithms';
             fileUploadText: '',
             invalidExtensionFile: false,
             uploadBlock: false,
-            generalBlock: false
+            generalBlock: false,
+            file: null
         }
     },
     methods: {
@@ -70,7 +72,7 @@ import algorithms from '@/store/modules/algorithms';
                 'application/typescript'
             ];
 
-            const file = this.$refs.fileInput.files[0];
+            const file = this.file
 
             if (file && allowedFileTypes.includes(file.type) && !this.uploadBlock) {
                 this.generalBlock = true
@@ -90,6 +92,7 @@ import algorithms from '@/store/modules/algorithms';
 
         handleFileUploadToInput() {
             this.fileUploadText = this.$refs.fileInput.files[0].name
+            this.file = this.$refs.fileInput.files[0]
         },
         showFileUploadingClick() {
             if (this.tutorial.currentStep == 17 && !this.tutorial.done) {
@@ -98,11 +101,72 @@ import algorithms from '@/store/modules/algorithms';
             this.fileUploadText = ''
             this.showFileUploading = true
           
-        }
+        },
+        async downloadFile(fileId) {
+            try {
+                const response = await fetch(`${BACKEND_URL}/retrieve_file_content?bot_id=${this.chosenBot.id}&file_id=${fileId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/octet-stream'
+                    },
+                    credentials: 'include',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const blob = await response.blob();
+
+                // Получите имя файла из заголовка Content-Disposition
+                const contentDisposition = response.headers.get('Content-Disposition');
+                const filename = contentDisposition.split('filename=')[1].replace(/['"]/g, '')
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;  // Используем полученное имя файла
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+            } catch (error) {
+                console.error('There was an error!', error);
+            }
+        },
+        createButton() {
+            this.$router.push('/emma/bot_events/create_button')
+        },
+        deleteButton(id) {
+            if (!this.generalBlock) {
+                this.generalBlock = true
+                this.$store.dispatch('deleteButton', {id: id, botId: this.chosenBot.id}).then(() => {
+                    this.generalBlock = false
+                })
+            }
+        },
+        copyButton(button) {
+            if (!this.generalBlock) {
+                this.generalBlock = true
+                this.$store.dispatch('copyButton', {id: button.id, botId: this.chosenBot.id}).then(() => {
+                    this.generalBlock = false
+                })
+            }
+        },
+        handleDragOver(event) {
+            event.preventDefault();
+        },
+        handleDrop(event) {
+            this.file = event.dataTransfer.files[0]
+            this.fileUploadText = this.file.name
+        },
      },
     computed: {
         algorithms() {
             return this.$store.state.algorithms.algorithms
+        },
+        buttons() {
+            return this.$store.state.buttons.buttons
         },
         tutorial() {
             return this.$store.getters.getTutorial
@@ -120,6 +184,7 @@ import algorithms from '@/store/modules/algorithms';
         }
         this.$store.dispatch('fetchAlgorithms', {botId: this.chosenBot.id})
         this.$store.dispatch('fetchDocuments', {botId: this.chosenBot.id})
+        this.$store.dispatch('fetchButtons', {botId: this.chosenBot.id})
     }
  }
 </script>
@@ -142,10 +207,10 @@ import algorithms from '@/store/modules/algorithms';
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати інструкцію</p>
                 </button>
-                <!-- <button class="bot-events-header-button">
+                <button @click="createButton" class="bot-events-header-button">
                     <img src="@/assets/images/plus-instr.svg">
                     <p>Додати кнопку</p>
-                </button> -->
+                </button>
             </div>
         </div>
         <div v-if="algorithms.length" class="bot-events-scripts">
@@ -192,7 +257,7 @@ import algorithms from '@/store/modules/algorithms';
                     <div class="bot-events-script-script">
                         <div class="bot-events-script-script-part1">
                             <p>1</p>
-                            <h1>{{ document.file_name }}</h1>
+                            <h1 @click="downloadFile(document.id)">{{ document.file_name }}</h1>
                         </div>
                         <div class="bot-events-script-script-part2">
                                             
@@ -207,7 +272,34 @@ import algorithms from '@/store/modules/algorithms';
                 </div>
             </div>
         </div>
-        <div v-if="!documents.length && !algorithms.length" class="bot-events-empty-container">
+        <div v-if="buttons.length" class="bot-events-scripts">
+            <div class="bot-events-script-header">
+                <p class="bot-events-script-header-p">Знайдені кнопки: {{ buttons.length }}</p>
+            </div>
+            <div v-for="button in buttons" class="bot-events-script">
+                <div class="bot-events-script-scripts">
+                    <div class="bot-events-script-script">
+                        <div class="bot-events-script-script-part1">
+                            <p>1</p>
+                            <h1 @click="$router.push(`/emma/bot_events/edit_button?button_id=${button.id}`)">{{ button.button_text }}</h1>
+                        </div>
+                        <div class="bot-events-script-script-part2">
+                                            
+                            <div class="bot-events-script-script-part2-buttons">
+                                <div @click="copyButton(button)" class="bot-events-script-script-part2-button">
+                                    <img src="@/assets/images/copyscript.svg">
+                                </div>
+                                <div @click="deleteButton(button.id)" class="bot-events-script-script-part2-button">
+                                    <img src="@/assets/images/deleteScript.svg">
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="!documents.length && !algorithms.length && !buttons.length" class="bot-events-empty-container">
             <img src="@/assets/images/404algorithms.svg">
             <p>Події та Документи відсутні</p>
             <!-- <div class="bot-events-block-guide">
@@ -241,7 +333,7 @@ import algorithms from '@/store/modules/algorithms';
         <div class="upload-file-form">
             <img class="upload-file-cross" @click="showFileUploading = false" src="@/assets/images/file-downloading-cross.svg">
             <h1>Завантажити документ</h1>
-            <div class="upload-file-form-window-to-drop">
+            <div class="upload-file-form-window-to-drop" @dragover.prevent="handleDragOver" @drop.prevent="handleDrop">
                 <img src="@/assets/images/file-upload.svg">
                 <p v-if="fileUploadText.length == 0"><span @click="triggerFileInput">Виберіть файл</span></p>
                 <p v-if="fileUploadText.length != 0">{{ fileUploadText }}</p>
